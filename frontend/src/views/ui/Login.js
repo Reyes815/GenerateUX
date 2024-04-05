@@ -26,22 +26,26 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/login", {
-        username,
-        password,
-      });
+        const { data: userData } = await axios.get("http://localhost:4000/users");
 
-      if (response.data.message === "success") {
-        setUser_id(response.data.user.user_id);
-        navigate(`/user`);
-      } else if (response.data.error) {
-        setMessage(response.data.error);
-      }
+        // Check if any user matches the provided username and password
+        const user = userData.find(user => user.username === username && user.password === password);
+
+        if (user) {
+            // If a user is found, perform actions accordingly
+            console.log("Login successful:", user);
+            setUser_id(user.id);
+            navigate(`/user`);
+        } else {
+            // If no user is found, display an error message
+            setMessage("Invalid username or password.");
+        }
     } catch (error) {
-      console.error("Error:", error);
-      setMessage("An error occurred. Please try again later.");
+        console.error("Error:", error);
+        setMessage("An error occurred. Please try again later.");
     }
-  };
+};
+
 
   return (
     <Row>

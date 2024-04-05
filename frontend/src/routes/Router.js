@@ -2,7 +2,6 @@
 import { lazy, useState } from "react";
 import { Navigate } from "react-router-dom";
 import Login from "../views/ui/Login";
-import Attendees from "../Attendees.js";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -23,7 +22,6 @@ const ThemeRoutes = [
     children: [
       { path: "/user", exact: true, element: <User /> }, // Updated route for User with dynamic parameter
       { path: "/profile", exact: true, element: <Profile /> },
-      { path: "/user/attendees", exact: true, element: <Attendees />}
     ],
   },
   {
