@@ -85,7 +85,7 @@ const Login = () => {
                 />
               </FormGroup>
               <div style={linkContainerStyle}>
-                <p style={linkStyle}>
+                <p style={normalLinkStyle}>
                   Don't have an account?
                 </p>
                 <a href="/#/register" style={linkStyle}>
@@ -118,10 +118,17 @@ const linkContainerStyle = {
   marginTop: "10px",
 };
 
-const linkStyle = {
+const normalLinkStyle = {
   display: "inline",
   textDecoration: "none",
   color: "#000000",
+  marginRight: "5px",
+};
+
+const linkStyle = {
+  display: "inline",
+  textDecoration: "none",
+  color: "#41C9E2",
   marginRight: "5px",
 };
 

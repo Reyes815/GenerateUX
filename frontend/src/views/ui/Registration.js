@@ -11,29 +11,34 @@ const Registration = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
 
+  const axiosPostData = async() => {
+    const postData = {
+      firstName: firstName,
+      lastname: lastName,
+      username: username,
+      password: password,
+    }
+
+    await axios.post('http://localhost:4000/registration', postData)
+    .then(res => setMessage(<p>{res.data}</p>))
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append('username', username);
-    formData.append('password', password);
-    formData.append('firstName', firstName);
-    formData.append('lastName', lastName);
+    if(!firstName) {
+      setMessage('Firstname is empty')
+    } else if(!lastName) {
+      setMessage('Lastname is empty')
+    } else if(!username) {
+      setMessage('Username is empty')
+    } else if(!password) {
+      setMessage('Password is empty')
+    } else {
+      setMessage('Error')
+    } 
 
-    try {
-      const response = await axios.post('http://localhost/metro events/create_user.php', formData);
-
-      console.log(response);
-
-      if (response.data === 'Welcome') {
-        setMessage(response.data);
-        navigate('/');
-      } else {
-        setMessage('Username already exists');
-      }
-    } catch (error) {
-      setMessage('Error submitting the form');
-    }
+    axiosPostData()
   };
 
   return (
