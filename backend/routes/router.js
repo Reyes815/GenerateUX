@@ -22,6 +22,17 @@ router.post('/registration', async (req, res) => {
     res.end()
 });
 
+router.post('/login', async (req, res) => {
+    try {
+        const { username, password } = req.body
+        const user = await schemas.Users.findOne({ username: username, password: password });
+        res.send(user); 
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).send('Error fetching users');
+    }
+});
+
 router.get('/users', async (req, res) => {
     try {
         const users = await schemas.Users.find();
