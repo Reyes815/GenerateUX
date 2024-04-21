@@ -7,6 +7,7 @@ const Sidebar = () => {
   const [rectangle, setRectangle] = useState([]);
   const [diamonds, setDiamond] = useState([]);
   const stageRef = useRef(null);
+  const [r, setR] = useState(1);
 
   // Update stage size when the window is resized
   useEffect(() => {
@@ -91,6 +92,7 @@ const Sidebar = () => {
                 y={eachCircle.y}
                 radius={25}
                 fill={eachCircle.fill}
+                draggable
               />
             ))}
             {rectangle.map((eachRect, index) => (
@@ -101,6 +103,7 @@ const Sidebar = () => {
                 width={100}
                 height={50}
                 fill={eachRect.fill}
+                draggable
               />
             ))}
             {diamonds.map((eachDia, index) => (
@@ -109,6 +112,7 @@ const Sidebar = () => {
                 x={eachDia.x}
                 y={eachDia.y}
                 fill={eachDia.fill}
+                handleDrop={() => setR(2)}
                 />
               ))}
             {console.log(diamonds)}
