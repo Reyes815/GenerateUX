@@ -32,19 +32,18 @@ const Sidebar = () => {
     // Check if the drop position is outside the stage
     
       if (componentType === "circle") {
-        setCircles((prevCircles) => [
-          ...prevCircles,
-          { x: e.target.x(), y: e.target.y(), fill: "red" }
-        ]);
+        const newCircle = { x: e.target.x(), y: e.target.y(), fill: "red" };
+        setCircles((prevCircles) => [...prevCircles, newCircle]);
+
+        // Reset the draggable component to its original position
+        e.target.position({ x: 50, y: 50 });
       } else if (componentType === "rectangle") {
-        setRectangle((prevRectangles) => [
-          ...prevRectangles,
-          { x: e.target.x(), y: e.target.y(), fill: "red" }
-        ]);
+        const newRect = { x: e.target.x(), y: e.target.y(), fill: "red" };
+        setRectangle((prevRectangles) => [...prevRectangles, newRect]);
+        // Reset the draggable component to its original position
+        e.target.position({ x: 100, y: 100 });
       }
 
-    // Reset the draggable component to its original position
-    e.target.position({ x: 50, y: 50 });
   };
 
   return (
@@ -53,8 +52,8 @@ const Sidebar = () => {
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
           <Layer>
             <Rect
-              x={10}
-              y={10}
+              x={100}
+              y={100}
               width={100}
               height={50}
               fill="blue"
