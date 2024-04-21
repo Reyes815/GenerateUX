@@ -1,7 +1,6 @@
 // ThemeRoutes.js
-import { lazy, useState } from "react";
+import { lazy } from "react";
 import { Navigate } from "react-router-dom";
-import Login from "../views/ui/Login";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -28,9 +27,11 @@ const ThemeRoutes = [
     path: "/",
     element: <OutsideLayout />,
     children: [
-      { path: "/", element: <Navigate to="/login" /> },
-      { path: "/login", exact: true, element: <Login /> },
-      { path: "/register", exact: true, element: <Registration /> },
+      { path: "/", element: <Navigate to="/user" /> },
+      { path: "/user", exact: true, element: <User /> },
+      // { path: "/", element: <Navigate to="/login" /> },
+      // { path: "/login", exact: true, element: <Login /> },
+      // { path: "/register", exact: true, element: <Registration /> },
     ],
   },
 ];

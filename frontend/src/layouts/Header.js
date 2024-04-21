@@ -53,9 +53,6 @@ const Header = () => {
   return (
     <Navbar color="primary" expand="md">
       <div className="d-flex align-items-center">
-        <NavbarBrand href="/" className="d-lg-none">
-          <LogoWhite />
-        </NavbarBrand>
         <Button
           color="primary"
           className="d-lg-none"
@@ -77,7 +74,7 @@ const Header = () => {
             </Link>
           </NavItem>
         </Nav>
-        <Nav className="ml-auto" navbar>
+        {/* <Nav className="ml-auto" navbar>
           <NavItem>
             <Link to="/profile" className="nav-link">
               <img
@@ -87,8 +84,8 @@ const Header = () => {
                 width="35"
               ></img>
             </Link>
-          </NavItem>
-        </Nav>
+          </NavItem> */}
+        {/* </Nav> */}
       </Collapse>
     </Navbar>
   );
