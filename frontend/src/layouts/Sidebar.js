@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Circle, Layer, Rect, Stage } from "react-konva";
+import { Circle, Layer, Rect, Stage, Shape } from "react-konva";
+import DiamondShape from "./Diamond_Comp";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
   const [rectangle, setRectangle] = useState([]);
+  const [diamonds, setDiamond] = useState([]);
   const stageRef = useRef(null);
 
   // Update stage size when the window is resized
@@ -42,9 +44,17 @@ const Sidebar = () => {
         setRectangle((prevRectangles) => [...prevRectangles, newRect]);
         // Reset the draggable component to its original position
         e.target.position({ x: 100, y: 100 });
+      } else if (componentType === "diamondShape") {
+        const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "red" };
+
+        setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
+
+        e.target.position({ x: 100, y: 200 }); // Reset position
       }
 
   };
+
+  
 
   return (
     <div className="p-3">
@@ -68,6 +78,12 @@ const Sidebar = () => {
               draggable
               onDragEnd={(e) => handleDrop(e, "circle")}
             />
+            <DiamondShape
+              x={100}
+              y={200}
+              fill="orange"
+              handleDrop={handleDrop}
+            />
             {circles.map((eachCircle, index) => (
               <Circle
                 key={index}
@@ -87,6 +103,15 @@ const Sidebar = () => {
                 fill={eachRect.fill}
               />
             ))}
+            {diamonds.map((eachDia, index) => (
+              <DiamondShape 
+                key={index}
+                x={eachDia.x}
+                y={eachDia.y}
+                fill={eachDia.fill}
+                />
+              ))}
+            {console.log(diamonds)}
           </Layer>
         </Stage>
       </div>
