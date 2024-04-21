@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Circle, Layer, Rect, Stage, Shape } from "react-konva";
+import { Circle, Layer, Rect, Stage, Shape, Group } from "react-konva";
 import DiamondShape from "./Diamond_Comp";
+import CircleWithRing from "./End_Comp";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
   const [rectangle, setRectangle] = useState([]);
   const [diamonds, setDiamond] = useState([]);
+  const [end_shape, setEndShape] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
 
@@ -51,6 +53,12 @@ const Sidebar = () => {
         setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
 
         e.target.position({ x: 100, y: 200 }); // Reset position
+      } else if (componentType === "end") {
+        const newEndShape = { x: e.target.x(), y: e.target.y() };
+
+        setEndShape((prevEnd) => [...prevEnd, newEndShape]);
+
+        e.target.position({ x: 100, y: 300 }); // Reset position
       }
 
   };
@@ -85,6 +93,11 @@ const Sidebar = () => {
               fill="orange"
               handleDrop={handleDrop}
             />
+            <CircleWithRing
+              x={100}
+              y={300}
+              handleDrop={handleDrop}
+            />
             {circles.map((eachCircle, index) => (
               <Circle
                 key={index}
@@ -115,7 +128,15 @@ const Sidebar = () => {
                 handleDrop={() => setR(2)}
                 />
               ))}
-            {console.log(diamonds)}
+              {end_shape.map((eachEnd, index) => (
+              <CircleWithRing 
+                key={index}
+                x={eachEnd.x}
+                y={eachEnd.y}
+                handleDrop={() => setR(2)}
+                />
+              ))}
+            {console.log(end_shape)}
           </Layer>
         </Stage>
       </div>
