@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from "react";
 import { Circle, Layer, Rect, Stage, Shape, Group } from "react-konva";
 import DiamondShape from "./Diamond_Comp";
 import CircleWithRing from "./End_Comp";
+import ProcessShape from "./ProcessShape";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
   const [rectangle, setRectangle] = useState([]);
   const [diamonds, setDiamond] = useState([]);
   const [end_shape, setEndShape] = useState([]);
+  const [processes, setProcesses] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
 
@@ -59,6 +61,10 @@ const Sidebar = () => {
         setEndShape((prevEnd) => [...prevEnd, newEndShape]);
 
         e.target.position({ x: 100, y: 300 }); // Reset position
+      }else if (componentType === "process") {
+        const newProcess = { x: e.target.x(), y: e.target.y(), fill: "red" };
+        setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
+        e.target.position({ x: 100, y: 450 }); 
       }
 
   };
@@ -86,6 +92,12 @@ const Sidebar = () => {
               fill="green"
               draggable
               onDragEnd={(e) => handleDrop(e, "circle")}
+            />
+            <ProcessShape
+              x={100}
+              y={450}
+              fill="orange"
+              handleDrop={handleDrop}
             />
             <DiamondShape
               x={100}
@@ -137,6 +149,15 @@ const Sidebar = () => {
                 />
               ))}
             {console.log(end_shape)}
+            {processes.map((eachProcess, index) => (
+              <ProcessShape
+                key={index}
+                x={eachProcess.x}
+                y={eachProcess.y}
+                fill={eachProcess.fill}
+                handleDrop={() => setR(2)}
+              />
+            ))}
           </Layer>
         </Stage>
       </div>
