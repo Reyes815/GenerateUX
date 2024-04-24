@@ -5,6 +5,7 @@ import CircleWithRing from "./End_Comp";
 import ProcessShape from "./ProcessShape";
 import LineShape from "./LineShape";
 import ArrowLineShape from "./ArrowLineShape";
+import CancelShape from "./CancelShape";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
@@ -14,6 +15,7 @@ const Sidebar = () => {
   const [processes, setProcesses] = useState([]);
   const [line, setLine] = useState([]);
   const [arrow, setArrow] = useState([]);
+  const [cancel, setCancel] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
 
@@ -77,6 +79,10 @@ const Sidebar = () => {
         const newArrow = { x: e.target.x(), y: e.target.y(), fill: "red" };
         setArrow((prevArrow) => [...prevArrow, newArrow]);
         e.target.position({ x: 200, y: 200 }); 
+      }else if (componentType === "cancel") {
+        const newCancel = { x: e.target.x(), y: e.target.y(), fill: "white" };
+        setCancel((prevCancel) => [...prevCancel, newCancel]);
+        e.target.position({ x: 200, y: 300 }); 
       }
 
   };
@@ -133,6 +139,13 @@ const Sidebar = () => {
             <CircleWithRing
               x={50}
               y={300}
+              handleDrop={handleDrop}
+            />
+            <CancelShape
+              x={200}
+              y={300}
+              radius={25}
+              fill="white"
               handleDrop={handleDrop}
             />
             {circles.map((eachCircle, index) => (
@@ -198,6 +211,15 @@ const Sidebar = () => {
                 x={eachArrow.x}
                 y={eachArrow.y}
                 fill={eachArrow.fill}
+                handleDrop={() => setR(2)}
+              />
+            ))}
+            {cancel.map((eachCancel, index) => (
+              <CancelShape
+                key={index}
+                x={eachCancel.x}
+                y={eachCancel.y}
+                fill={eachCancel.fill}
                 handleDrop={() => setR(2)}
               />
             ))}
