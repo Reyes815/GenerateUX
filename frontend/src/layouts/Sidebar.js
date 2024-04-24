@@ -25,11 +25,11 @@ const Sidebar = () => {
     handleResize(); // Initial size setup
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+        window.removeEventListener("resize", handleResize);
+      };
+    }, []);
 
-  const handleDrop = (e, componentType) => {
+    const handleDrop = (e, componentType) => {
     const stage = stageRef.current;
     const container = stage.container();
     const pos = stage.getPointerPosition();
@@ -70,6 +70,7 @@ const Sidebar = () => {
       <div className="d-flex align-items-center">
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
           <Layer>
+            
             <Rect
               x={100}
               y={100}
@@ -84,6 +85,7 @@ const Sidebar = () => {
               y={50}
               radius={25}
               fill="green"
+              
               draggable
               onDragEnd={(e) => handleDrop(e, "circle")}
             />
