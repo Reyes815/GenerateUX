@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Layer, Stage } from "react-konva";
+import { Arrow, Layer, Stage } from "react-konva";
 import DiamondShape from "../components/Diamond_Comp";
 import CircleWithRing from "../components/End_Comp";
 import ProcessShape from "../components/ProcessShape";
@@ -10,6 +10,7 @@ const Sidebar = () => {
   const [diamonds, setDiamond] = useState([]);
   const [end_shape, setEndShape] = useState([]);
   const [processes, setProcesses] = useState([]);
+  const [arrows, setArrows] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
   const [sidebarSize, setSidebarSize] = useState({ width: 0, height: 0 });
@@ -62,7 +63,23 @@ const Sidebar = () => {
         e.target.position({ x: 100, y: 450 }); 
       }
 
+       // Create arrows based on the newly added shapes
+    const newArrows = [];
+    if (circles.length > 1) {
+      for (let i = 0; i < circles.length - 1; i++) {
+        const startX = circles[i].x + 25; // Assuming radius of circle is 25
+        const startY = circles[i].y + 25;
+        const endX = circles[i + 1].x + 25;
+        const endY = circles[i + 1].y + 25;
+        newArrows.push({ points: [startX, startY, endX, endY], fill: "black", stroke: "black" });
+      }
+    }
+    setArrows(newArrows);
   };
+
+
+  const cellWidth = sidebarSize.width;
+  const cellHeight = sidebarSize.height;
 
   
 
@@ -72,15 +89,15 @@ const Sidebar = () => {
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
           <Layer>
             <CircleShape
-              x={100}
-              y={50}
+              x={cellWidth / 2}
+              y={cellHeight / 2}
               fill="skyblue"
               draggable
               handleDrop={handleDrop}
             />
             <ProcessShape
-              x={50}
-              y={150}
+              x={cellWidth}
+              y={cellHeight / 2}
               fill="skyblue"
               stroke="black"
               strokeWidth={4}
@@ -97,6 +114,9 @@ const Sidebar = () => {
               y={350}
               handleDrop={handleDrop}
             />
+            {arrows.map((arrow, index) => (
+              <Arrow key={index} points={arrow.points} fill={arrow.fill} stroke={arrow.stroke} />
+            ))}
             {circles.map((eachCircle, index) => (
               <CircleShape
                 key={index}
