@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Circle, Layer, Rect, Stage, Shape, Group } from "react-konva";
-import DiamondShape from "./Diamond_Comp";
-import CircleWithRing from "./End_Comp";
-import ProcessShape from "./ProcessShape";
+import { Circle, Layer, Stage } from "react-konva";
+import DiamondShape from "../components/Diamond_Comp";
+import CircleWithRing from "../components/End_Comp";
+import ProcessShape from "../components/ProcessShape";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
-  const [rectangle, setRectangle] = useState([]);
   const [diamonds, setDiamond] = useState([]);
   const [end_shape, setEndShape] = useState([]);
   const [processes, setProcesses] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
+  const [sidebarSize, setSidebarSize] = useState({ width: 0, height: 0 });
 
   // Update stage size when the window is resized
   useEffect(() => {
@@ -44,11 +44,6 @@ const Sidebar = () => {
 
         // Reset the draggable component to its original position
         e.target.position({ x: 50, y: 50 });
-      } else if (componentType === "rectangle") {
-        const newRect = { x: e.target.x(), y: e.target.y(), fill: "red" };
-        setRectangle((prevRectangles) => [...prevRectangles, newRect]);
-        // Reset the draggable component to its original position
-        e.target.position({ x: 100, y: 100 });
       } else if (componentType === "diamondShape") {
         const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "red" };
 
@@ -76,40 +71,33 @@ const Sidebar = () => {
       <div className="d-flex align-items-center">
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
           <Layer>
-            
-            <Rect
-              x={100}
-              y={100}
-              width={100}
-              height={50}
-              fill="blue"
-              draggable
-              onDragEnd={(e) => handleDrop(e, "rectangle")}
-            />
             <Circle
-              x={50}
+              x={100}
               y={50}
               radius={25}
-              fill="green"
-              
+              fill="skyblue"
+              stroke="black"
+              strokeWidth={1}
               draggable
               onDragEnd={(e) => handleDrop(e, "circle")}
             />
             <ProcessShape
-              x={100}
-              y={450}
-              fill="orange"
+              x={50}
+              y={150}
+              fill="skyblue"
+              stroke="black"
+              strokeWidth={4}
               handleDrop={handleDrop}
             />
             <DiamondShape
-              x={100}
-              y={200}
-              fill="orange"
+              x={50}
+              y={250}
+              fill="skyblue"
               handleDrop={handleDrop}
             />
             <CircleWithRing
-              x={100}
-              y={300}
+              x={50}
+              y={350}
               handleDrop={handleDrop}
             />
             {circles.map((eachCircle, index) => (
@@ -122,15 +110,13 @@ const Sidebar = () => {
                 draggable
               />
             ))}
-            {rectangle.map((eachRect, index) => (
-              <Rect
+            {processes.map((eachProcess, index) => (
+              <ProcessShape
                 key={index}
-                x={eachRect.x}
-                y={eachRect.y}
-                width={100}
-                height={50}
-                fill={eachRect.fill}
-                draggable
+                x={eachProcess.x}
+                y={eachProcess.y}
+                fill={eachProcess.fill}
+                handleDrop={() => setR(2)}
               />
             ))}
             {diamonds.map((eachDia, index) => (
@@ -151,15 +137,7 @@ const Sidebar = () => {
                 />
               ))}
             {console.log(end_shape)}
-            {processes.map((eachProcess, index) => (
-              <ProcessShape
-                key={index}
-                x={eachProcess.x}
-                y={eachProcess.y}
-                fill={eachProcess.fill}
-                handleDrop={() => setR(2)}
-              />
-            ))}
+            
           </Layer>
         </Stage>
       </div>

@@ -6,7 +6,7 @@ const ProcessShape = ({ x, y, fill, handleDrop }) => (
     x={x}
     y={y}
     width={100}
-    height={35}
+    height={50}
     sceneFunc={(context, shape) => {
       const width = shape.width();
       const height = shape.height();
@@ -24,6 +24,8 @@ const ProcessShape = ({ x, y, fill, handleDrop }) => (
       context.fillStrokeShape(shape);
     }}
     fill={fill}
+    stroke="black" // Add stroke color here
+    strokeWidth={1} // Add stroke width here
     draggable
     onDragEnd={(e) => handleDrop(e, "process")}
   />

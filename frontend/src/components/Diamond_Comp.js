@@ -6,8 +6,8 @@ function DiamondShape({ x, y, fill, handleDrop }) {
     <Shape
       x={x}
       y={y}
-      width={100}
-      height={50}
+      width={50}
+      height={60}
       sceneFunc={(context, shape) => {
         const width = shape.width();
         const height = shape.height();
@@ -26,6 +26,8 @@ function DiamondShape({ x, y, fill, handleDrop }) {
       }}
       fill={fill}
       draggable
+      stroke="black" // Add stroke color here
+      strokeWidth={1} // Add stroke width here
       onDragEnd={(e) => handleDrop(e, "diamondShape")}
     />
   );
