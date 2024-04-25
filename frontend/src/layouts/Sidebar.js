@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Circle, Layer, Stage } from "react-konva";
+import { Layer, Stage } from "react-konva";
 import DiamondShape from "../components/Diamond_Comp";
 import CircleWithRing from "../components/End_Comp";
 import ProcessShape from "../components/ProcessShape";
+import CircleShape from "../components/Start_Comp";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
@@ -39,14 +40,13 @@ const Sidebar = () => {
     // Check if the drop position is outside the stage
     
       if (componentType === "circle") {
-        const newCircle = { x: e.target.x(), y: e.target.y(), fill: "red" };
+        const newCircle = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setCircles((prevCircles) => [...prevCircles, newCircle]);
 
         // Reset the draggable component to its original position
         e.target.position({ x: 50, y: 50 });
       } else if (componentType === "diamondShape") {
-        const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "red" };
-
+        const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
 
         e.target.position({ x: 100, y: 200 }); // Reset position
@@ -57,7 +57,7 @@ const Sidebar = () => {
 
         e.target.position({ x: 100, y: 300 }); // Reset position
       }else if (componentType === "process") {
-        const newProcess = { x: e.target.x(), y: e.target.y(), fill: "red" };
+        const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
         e.target.position({ x: 100, y: 450 }); 
       }
@@ -71,15 +71,12 @@ const Sidebar = () => {
       <div className="d-flex align-items-center">
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
           <Layer>
-            <Circle
+            <CircleShape
               x={100}
               y={50}
-              radius={25}
               fill="skyblue"
-              stroke="black"
-              strokeWidth={1}
               draggable
-              onDragEnd={(e) => handleDrop(e, "circle")}
+              handleDrop={handleDrop}
             />
             <ProcessShape
               x={50}
@@ -101,7 +98,7 @@ const Sidebar = () => {
               handleDrop={handleDrop}
             />
             {circles.map((eachCircle, index) => (
-              <Circle
+              <CircleShape
                 key={index}
                 x={eachCircle.x}
                 y={eachCircle.y}
