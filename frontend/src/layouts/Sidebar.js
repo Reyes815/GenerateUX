@@ -1,3 +1,4 @@
+import { Grid } from '@mui/material';
 import React, { useEffect, useRef, useState } from "react";
 import { Arrow, Layer, Stage } from "react-konva";
 import DiamondShape from "../components/Diamond_Comp";
@@ -14,6 +15,8 @@ const Sidebar = () => {
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
   const [sidebarSize, setSidebarSize] = useState({ width: 0, height: 0 });
+
+  
 
   // Update stage size when the window is resized
   useEffect(() => {
@@ -38,29 +41,25 @@ const Sidebar = () => {
     const container = stage.container();
     const pos = stage.getPointerPosition();
 
-    // Check if the drop position is outside the stage
-    
       if (componentType === "circle") {
         const newCircle = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setCircles((prevCircles) => [...prevCircles, newCircle]);
-
-        // Reset the draggable component to its original position
         e.target.position({ x: 50, y: 50 });
+
       } else if (componentType === "diamondShape") {
         const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
+        e.target.position({ x: 50, y: 250 }); // Reset position
 
-        e.target.position({ x: 100, y: 200 }); // Reset position
       } else if (componentType === "end") {
         const newEndShape = { x: e.target.x(), y: e.target.y() };
-
         setEndShape((prevEnd) => [...prevEnd, newEndShape]);
-
         e.target.position({ x: 100, y: 300 }); // Reset position
+
       }else if (componentType === "process") {
         const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
-        e.target.position({ x: 100, y: 450 }); 
+        e.target.position({ x: 50, y: 150 }); 
       }
 
        // Create arrows based on the newly added shapes
@@ -88,35 +87,43 @@ const Sidebar = () => {
       <div className="d-flex align-items-center">
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
           <Layer>
-            <CircleShape
-              x={cellWidth / 2}
-              y={cellHeight / 2}
-              fill="skyblue"
-              draggable
-              handleDrop={handleDrop}
-            />
-            <ProcessShape
-              x={cellWidth}
-              y={cellHeight / 2}
-              fill="skyblue"
-              stroke="black"
-              strokeWidth={4}
-              handleDrop={handleDrop}
-            />
-            <DiamondShape
-              x={50}
-              y={250}
-              fill="skyblue"
-              handleDrop={handleDrop}
-            />
-            <CircleWithRing
-              x={50}
-              y={350}
-              handleDrop={handleDrop}
-            />
-            {arrows.map((arrow, index) => (
-              <Arrow key={index} points={arrow.points} fill={arrow.fill} stroke={arrow.stroke} />
-            ))}
+            <Grid container spacing={2} justifyContent="center" alignItems="center">
+                <Grid item xs={6}>
+                  <CircleShape
+                    x={10}
+                    y={10}
+                    fill="skyblue"
+                    handleDrop={handleDrop}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <ProcessShape
+                    x={100}
+                    y={10}
+                    fill="skyblue"
+                    stroke="black"
+                    strokeWidth={4}
+                    handleDrop={handleDrop}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <DiamondShape
+                    x={50}
+                    y={250}
+                    fill="skyblue"
+                    handleDrop={handleDrop}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <CircleWithRing
+                    x={50}
+                    y={350}
+                    handleDrop={handleDrop}
+                  />
+                </Grid>
+              </Grid>
+            
+            
             {circles.map((eachCircle, index) => (
               <CircleShape
                 key={index}
@@ -124,7 +131,7 @@ const Sidebar = () => {
                 y={eachCircle.y}
                 radius={25}
                 fill={eachCircle.fill}
-                draggable
+                handleDrop={() => setR(2)}
               />
             ))}
             {processes.map((eachProcess, index) => (
