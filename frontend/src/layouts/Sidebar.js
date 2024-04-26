@@ -8,6 +8,7 @@ import CircleShape from "../components/Start_Comp";
 import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
 import LineShape from '../components/LineShape';
+import Object from '../components/Object';
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
@@ -17,6 +18,7 @@ const Sidebar = () => {
   const [cancelShapes, setCancelShapes] = useState([]);
   const [lines, setLines] = useState([]);
   const [arrow, setArrow] = useState([]);
+  const [object, setObjects] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
   const [sidebarSize, setSidebarSize] = useState({ width: 0, height: 0 });
@@ -63,6 +65,10 @@ const Sidebar = () => {
         const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
         e.target.position({ x: 100, y: 25 }); 
+      }else if (componentType === "object") {
+        const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+        setObjects((prevObjects) => [...prevObjects, newObjects]);
+        e.target.position({ x: 100, y: 170 }); 
       } else if (componentType === "arrow") {
         const newArrow = { x: e.target.x(), y: e.target.y() };
         setArrow((prevArrow) => [...prevArrow, newArrow]);
@@ -105,6 +111,16 @@ const Sidebar = () => {
                   <ProcessShape
                     x={100}
                     y={25}
+                    fill="skyblue"
+                    stroke="black"
+                    strokeWidth={4}
+                    handleDrop={handleDrop}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Object
+                    x={100}
+                    y={170}
                     fill="skyblue"
                     stroke="black"
                     strokeWidth={4}
@@ -165,6 +181,15 @@ const Sidebar = () => {
                 x={eachProcess.x}
                 y={eachProcess.y}
                 fill={eachProcess.fill}
+                handleDrop={() => setR(2)}
+              />
+            ))}
+            {object.map((eachObjects, index) => (
+              <Object
+                key={index}
+                x={eachObjects.x}
+                y={eachObjects.y}
+                fill={eachObjects.fill}
                 handleDrop={() => setR(2)}
               />
             ))}

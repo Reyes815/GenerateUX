@@ -1,7 +1,7 @@
 import React from "react";
 import { Shape } from "react-konva";
 
-const ProcessShape = ({ x, y, fill, handleDrop }) => (
+const Object = ({ x, y, fill, handleDrop }) => (
   <Shape
     x={x}
     y={y}
@@ -10,7 +10,7 @@ const ProcessShape = ({ x, y, fill, handleDrop }) => (
     sceneFunc={(context, shape) => {
       const width = shape.width();
       const height = shape.height();
-      const cornerRadius = 10; // Adjust this value to change the roundness of corners
+      const cornerRadius = 0; // Adjust this value to change the roundness of corners
 
       context.beginPath();
       context.moveTo(cornerRadius, 0); // Top-left corner
@@ -27,8 +27,8 @@ const ProcessShape = ({ x, y, fill, handleDrop }) => (
     stroke="black" // Add stroke color here
     strokeWidth={1} // Add stroke width here
     draggable
-    onDragEnd={(e) => handleDrop(e, "process")}
+    onDragEnd={(e) => handleDrop(e, "object")}
   />
 );
 
-export default ProcessShape;
+export default Object;
