@@ -1,14 +1,14 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useRef, useState } from "react";
-import { Arrow, Layer, Stage } from "react-konva";
-import DiamondShape from "../components/Diamond_Comp";
-import CircleWithRing from "../components/End_Comp";
-import ProcessShape from "../components/ProcessShape";
-import CircleShape from "../components/Start_Comp";
+import { Layer, Stage } from "react-konva";
 import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
+import DiamondShape from "../components/Diamond_Comp";
+import CircleWithRing from "../components/End_Comp";
 import LineShape from '../components/LineShape';
 import Object from '../components/Object';
+import ProcessShape from "../components/ProcessShape";
+import CircleShape from "../components/Start_Comp";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
@@ -23,12 +23,19 @@ const Sidebar = () => {
   const [r, setR] = useState(1);
   const [sidebarSize, setSidebarSize] = useState({ width: 0, height: 0 });
 
-  
+  function invalid(e, x, y) {
+    e.target.to({
+      x: x,
+      y: y,
+      duration: 0.1, // Adjust the duration as needed
+    });
+  }
 
   // Update stage size when the window is resized
   useEffect(() => {
     const handleResize = () => {
       const container = stageRef.current.container();
+      //container.style.marginLeft = '260px';
       const width = container.clientWidth;
       const height = container.clientHeight;
       stageRef.current.width(width);
@@ -45,53 +52,106 @@ const Sidebar = () => {
 
     const handleDrop = (e, componentType) => {
     const stage = stageRef.current;
+      // Get the mouse position relative to the stage container
+    const mousePos = stage.getPointerPosition();
 
       if (componentType === "circle") {
         const newCircle = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 0, 0);
+          return; // Exit the function without performing the drop
+        }
+
         setCircles((prevCircles) => [...prevCircles, newCircle]);
         e.target.position({ x: 0, y: 0 });
 
       } else if (componentType === "diamondShape") {
         const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 125, 90);
+          return; // Exit the function without performing the drop
+        }
+
         setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
         e.target.position({ x: 125, y: 90 }); // Reset position
 
       } else if (componentType === "end") {
         const newEndShape = { x: e.target.x(), y: e.target.y() };
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 0, 155);
+          return; // Exit the function without performing the drop
+        }
+
         setEndShape((prevEnd) => [...prevEnd, newEndShape]);
         e.target.position({ x: 0, y: 155 }); // Reset position
 
       }else if (componentType === "process") {
         const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 100, 25);
+          return; // Exit the function without performing the drop
+        }
+
         setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
         e.target.position({ x: 100, y: 25 }); 
       }else if (componentType === "object") {
         const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 100, 170);
+          return; // Exit the function without performing the drop
+        }
+
         setObjects((prevObjects) => [...prevObjects, newObjects]);
         e.target.position({ x: 100, y: 170 }); 
       } else if (componentType === "arrow") {
         const newArrow = { x: e.target.x(), y: e.target.y() };
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 50, 250);
+          return; // Exit the function without performing the drop
+        }
+
         setArrow((prevArrow) => [...prevArrow, newArrow]);
         e.target.position({ x: 50 , y: 250 })
       } else if (componentType === "cancel") {
         const newCancel = { x: e.target.x(), y: e.target.y(),radius: 25};
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 50, 125);
+          return; // Exit the function without performing the drop
+        }
+
         setCancelShapes((prevCancelShapes) => [...prevCancelShapes, newCancel]);
-        
         e.target.position({ x: 50 , y: 125 })
       } else if (componentType === "line") {
         const newLine = { x: e.target.x(), y: e.target.y()};
+
+        if (mousePos.x < 260) {
+          console.log("Cannot drop in the restricted area.");
+          invalid(e, 50, 300);
+          return; // Exit the function without performing the drop
+        }
+
         setLines((prevLines) => [...prevLines, newLine]);
-        
         e.target.position({ x: 50 , y: 300 })
       }
 
   };
 
-
-  const cellWidth = sidebarSize.width;
-  const cellHeight = sidebarSize.height;
-
-  
+  const cellWidth = 0;
+  const cellHeight = 0;
 
   return (
     <div className="p-3">
@@ -101,8 +161,8 @@ const Sidebar = () => {
             <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={6}>
                   <CircleShape
-                    x={0}
-                    y={0}
+                    x={cellWidth}
+                    y={cellHeight}
                     fill="skyblue"
                     handleDrop={handleDrop}
                   />
