@@ -1,7 +1,7 @@
 import React from "react";
 import { Arrow } from "react-konva";
 
-const LineShape = ({ x, y, fill, handleDrop }) => (
+const LineShape = ({ x, y, handleDrop }) => (
   <Arrow
     x={x} 
     y={y} 

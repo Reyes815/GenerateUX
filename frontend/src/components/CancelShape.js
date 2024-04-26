@@ -1,7 +1,7 @@
 import React from "react";
 import { Circle, Group, Line } from "react-konva";
 
-const CancelShape = ({ x, y, radius, fill, handleDrop }) => (
+const CancelShape = ({ x, y, radius, handleDrop }) => (
     <Group
       x={x}
       y={y}
@@ -18,7 +18,6 @@ const CancelShape = ({ x, y, radius, fill, handleDrop }) => (
      
       <Circle
         radius={radius}
-        fill={fill}
       />
     
       <Line

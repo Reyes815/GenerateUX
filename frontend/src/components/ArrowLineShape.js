@@ -1,14 +1,14 @@
 import React from "react";
 import { Arrow } from "react-konva";
 
-const ArrowShape = ({ x, y, fill, handleDrop }) => (
+const ArrowLineShape = ({ x, y, handleDrop }) => (
   <Arrow
     x={x} 
     y={y} 
     points={[0, 0, 0, 35]} 
     pointerLength={10} 
     pointerWidth={10} 
-    fill="black" 
+    fill="black"
     stroke="black" 
     strokeWidth={2} 
     draggable
@@ -16,4 +16,4 @@ const ArrowShape = ({ x, y, fill, handleDrop }) => (
   />
 );
 
-export default ArrowShape;
+export default ArrowLineShape;
