@@ -13,8 +13,8 @@ function CircleShape({ x, y, fill, handleDrop, sidebar }) {
       stroke="black" 
       strokeWidth={1} 
       onDragEnd={(e) => handleDrop(e, "circle")}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseDown={() => setIsHovered(true)}
+      onMouseUp={() => setIsHovered(false)}
     >
       <Circle
             x={100 / 2}
