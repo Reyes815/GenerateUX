@@ -165,6 +165,7 @@ const Sidebar = () => {
                     y={cellHeight}
                     fill="skyblue"
                     handleDrop={handleDrop}
+                    sidebar={true}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -232,6 +233,7 @@ const Sidebar = () => {
                 y={eachCircle.y}
                 radius={25}
                 fill={eachCircle.fill}
+                sidebar={false}
                 handleDrop={() => setR(2)}
               />
             ))}
