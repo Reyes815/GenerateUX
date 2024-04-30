@@ -101,7 +101,7 @@ const Sidebar = () => {
         }
 
         setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
-        e.target.position({ x: 100, y: 25 }); 
+        e.target.position({ x: 0, y: 0 }); 
       }else if (componentType === "object") {
         const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
 
@@ -112,7 +112,7 @@ const Sidebar = () => {
         }
 
         setObjects((prevObjects) => [...prevObjects, newObjects]);
-        e.target.position({ x: 100, y: 170 }); 
+        e.target.position({ x: 0, y: 0 }); 
       } else if (componentType === "arrow") {
         const newArrow = { x: e.target.x(), y: e.target.y() };
 

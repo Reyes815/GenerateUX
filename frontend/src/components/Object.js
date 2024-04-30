@@ -24,7 +24,12 @@ const Object = ({ x, y, fill, handleDrop }) => {
   }, []);
 
   return (
-    <Group>
+    <Group
+    
+    
+    draggable
+    onDragEnd={(e) => handleDrop(e, "object")}
+    >
       {/* Resize handle at bottom right corner */}
       <Line
         ref={handleRef}
@@ -58,7 +63,6 @@ const Object = ({ x, y, fill, handleDrop }) => {
         fill={fill}
         stroke="black" // Add stroke color here
         strokeWidth={1} // Add stroke width here
-        draggable
         onDragEnd={(e) => handleDrop(e, "object")}
       />
     </Group>
