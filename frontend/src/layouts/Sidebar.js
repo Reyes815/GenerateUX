@@ -27,15 +27,13 @@ const Sidebar = () => {
     e.target.to({
       x: x,
       y: y,
-      duration: 0.1, // Adjust the duration as needed
+      duration: 0.1,
     });
   }
 
-  // Update stage size when the window is resized
   useEffect(() => {
     const handleResize = () => {
       const container = stageRef.current.container();
-      //container.style.marginLeft = '260px';
       const width = container.clientWidth;
       const height = container.clientHeight;
       stageRef.current.width(width);
@@ -96,7 +94,7 @@ const Sidebar = () => {
         }
         const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
-        e.target.position({ x: 100, y: 25 });
+        e.target.position({ x: 0, y: 0 });
         break;
     
       case "object":
@@ -105,6 +103,7 @@ const Sidebar = () => {
           invalid(e, 100, 170);
           return;
         }
+
         const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setObjects((prevObjects) => [...prevObjects, newObjects]);
         e.target.position({ x: 100, y: 170 });
@@ -140,7 +139,7 @@ const Sidebar = () => {
         }
         const newLine = { x: e.target.x(), y: e.target.y() };
         setLines((prevLines) => [...prevLines, newLine]);
-        e.target.position({ x: 50, y: 300 });
+        e.target.position({ x: 150, y: 250 });
         break;
     
       default:
@@ -208,7 +207,7 @@ const Sidebar = () => {
                   />
                 </Grid><Grid item xs={6}>
                   <LineShape
-                    x={100}
+                    x={150}
                     y={250}
                     handleDrop={handleDrop}
                   />
