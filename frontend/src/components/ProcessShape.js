@@ -25,7 +25,6 @@ const ProcessShape = ({ x, y, fill, handleDrop }) => {
 
   return (
     <Group
-    
     draggable
     onDragEnd={(e) => handleDrop(e, "process")}
     >
@@ -38,8 +37,8 @@ const ProcessShape = ({ x, y, fill, handleDrop }) => {
         draggable
       />
       <Shape
-        x={x}
-        y={y}
+      x={x}
+      y={y}
         width={100}
         height={50}
         ref={shapeRef}

@@ -106,7 +106,7 @@ const Sidebar = () => {
 
         const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setObjects((prevObjects) => [...prevObjects, newObjects]);
-        e.target.position({ x: 100, y: 170 });
+        e.target.position({ x: 0, y: 0 });
         break;
     
       case "arrow":
