@@ -6,8 +6,8 @@ function DiamondShape({ x, y, fill, handleDrop }) {
     <Shape
       x={x}
       y={y}
-      width={50}
-      height={60}
+      width={40}
+      height={40}
       sceneFunc={(context, shape) => {
         const width = shape.width();
         const height = shape.height();

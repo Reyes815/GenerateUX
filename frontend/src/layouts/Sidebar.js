@@ -135,7 +135,7 @@ const Sidebar = () => {
       case "line":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
-          invalid(e, 50, 300);
+          invalid(e, 100, 250);
           return;
         }
         const newLine = { x: e.target.x(), y: e.target.y() };
@@ -162,6 +162,7 @@ const Sidebar = () => {
                     y={0}
                     fill="skyblue"
                     handleDrop={handleDrop}
+                    sidebar={true}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -207,8 +208,8 @@ const Sidebar = () => {
                   />
                 </Grid><Grid item xs={6}>
                   <LineShape
-                    x={50}
-                    y={300}
+                    x={100}
+                    y={250}
                     handleDrop={handleDrop}
                   />
                 </Grid><Grid item xs={6}>
@@ -229,6 +230,7 @@ const Sidebar = () => {
                 y={eachCircle.y}
                 radius={CircleShape.radius}
                 fill={eachCircle.fill}
+                sidebar={false}
                 handleDrop={() => setR(2)}
               />
             ))}
