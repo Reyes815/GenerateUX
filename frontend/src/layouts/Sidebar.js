@@ -52,106 +52,103 @@ const Sidebar = () => {
 
     const handleDrop = (e, componentType) => {
     const stage = stageRef.current;
-      // Get the mouse position relative to the stage container
     const mousePos = stage.getPointerPosition();
 
-      if (componentType === "circle") {
-        const newCircle = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
-
+    switch (componentType) {
+      case "circle":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 0, 0);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newCircle = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setCircles((prevCircles) => [...prevCircles, newCircle]);
         e.target.position({ x: 0, y: 0 });
-
-      } else if (componentType === "diamondShape") {
-        const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
-
+        break;
+    
+      case "diamondShape":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 125, 90);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
-        e.target.position({ x: 125, y: 90 }); // Reset position
-
-      } else if (componentType === "end") {
-        const newEndShape = { x: e.target.x(), y: e.target.y() };
-
+        e.target.position({ x: 125, y: 90 });
+        break;
+    
+      case "end":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 0, 155);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newEndShape = { x: e.target.x(), y: e.target.y() };
         setEndShape((prevEnd) => [...prevEnd, newEndShape]);
-        e.target.position({ x: 0, y: 155 }); // Reset position
-
-      }else if (componentType === "process") {
-        const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
-
+        e.target.position({ x: 0, y: 155 });
+        break;
+    
+      case "process":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 100, 25);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
-        e.target.position({ x: 100, y: 25 }); 
-      }else if (componentType === "object") {
-        const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
-
+        e.target.position({ x: 100, y: 25 });
+        break;
+    
+      case "object":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 100, 170);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setObjects((prevObjects) => [...prevObjects, newObjects]);
-        e.target.position({ x: 100, y: 170 }); 
-      } else if (componentType === "arrow") {
-        const newArrow = { x: e.target.x(), y: e.target.y() };
-
+        e.target.position({ x: 100, y: 170 });
+        break;
+    
+      case "arrow":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 50, 250);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newArrow = { x: e.target.x(), y: e.target.y() };
         setArrow((prevArrow) => [...prevArrow, newArrow]);
-        e.target.position({ x: 50 , y: 250 })
-      } else if (componentType === "cancel") {
-        const newCancel = { x: e.target.x(), y: e.target.y(),radius: 25};
-
+        e.target.position({ x: 50, y: 250 });
+        break;
+    
+      case "cancel":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 50, 125);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newCancel = { x: e.target.x(), y: e.target.y(), radius: 25 };
         setCancelShapes((prevCancelShapes) => [...prevCancelShapes, newCancel]);
-        e.target.position({ x: 50 , y: 125 })
-      } else if (componentType === "line") {
-        const newLine = { x: e.target.x(), y: e.target.y()};
-
+        e.target.position({ x: 50, y: 125 });
+        break;
+    
+      case "line":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
           invalid(e, 50, 300);
-          return; // Exit the function without performing the drop
+          return;
         }
-
+        const newLine = { x: e.target.x(), y: e.target.y() };
         setLines((prevLines) => [...prevLines, newLine]);
-        e.target.position({ x: 50 , y: 300 })
-      }
+        e.target.position({ x: 50, y: 300 });
+        break;
+    
+      default:
+        break;
+    }
+    
 
   };
-
-  const cellWidth = 0;
-  const cellHeight = 0;
 
   return (
     <div className="p-3">
@@ -161,8 +158,8 @@ const Sidebar = () => {
             <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={6}>
                   <CircleShape
-                    x={cellWidth}
-                    y={cellHeight}
+                    x={0}
+                    y={0}
                     fill="skyblue"
                     handleDrop={handleDrop}
                   />
@@ -230,7 +227,7 @@ const Sidebar = () => {
                 key={index}
                 x={eachCircle.x}
                 y={eachCircle.y}
-                radius={25}
+                radius={CircleShape.radius}
                 fill={eachCircle.fill}
                 handleDrop={() => setR(2)}
               />

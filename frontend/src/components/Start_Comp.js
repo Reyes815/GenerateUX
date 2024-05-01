@@ -1,7 +1,7 @@
-import React from 'react';
-import { Group,Circle } from 'react-konva';
+import React from "react";
+import { Circle, Group } from 'react-konva';
 
-function CircleShape({ x, y, fill, handleDrop }) {
+function CircleShape({ x, y, fill, handleDro, handleResize }) {
 
   return (
     <Group
