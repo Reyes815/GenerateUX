@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useRef, useState } from "react";
-import { Layer, Stage } from "react-konva";
+import { Layer, Line, Stage } from "react-konva";
 import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
 import DiamondShape from "../components/Diamond_Comp";
@@ -22,6 +22,12 @@ const Sidebar = () => {
   const [object, setObjects] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
+  const [selectedShape, setSelectedShape] = useState(null);
+  const Circleid = useRef(0);
+  const [isCreatingLine, setIsCreatingLine] = useState(false);
+  const [startPoint, setStartPoint] = useState(null);
+  const [endPoint, setEndPoint] = useState(null);
+  const [line4shape, setline4shape] = useState(false);
 
   function invalid(e, x, y) {
     e.target.to({
@@ -59,7 +65,7 @@ const Sidebar = () => {
           invalid(e, 0, 0);
           return;
         }
-        const newCircle = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+        const newCircle = { id: ++Circleid.current, x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setCircles((prevCircles) => [...prevCircles, newCircle]);
         e.target.position({ x: 0, y: 0 });
         break;
@@ -163,16 +169,16 @@ const Sidebar = () => {
         e.target.position({ x: 50, y: 125 });
         break;
     
-      case "line":
-        if (mousePos.x < 260) {
-          console.log("Cannot drop in the restricted area.");
-          invalid(e, 100, 250);
-          return;
-        }
-        const newLine = { x: e.target.x(), y: e.target.y() };
-        setLines((prevLines) => [...prevLines, newLine]);
-        e.target.position({ x: 100, y: 250 });
-        break;
+      // case "line":
+      //   if (mousePos.x < 260) {
+      //     console.log("Cannot drop in the restricted area.");
+      //     invalid(e, 100, 250);
+      //     return;
+      //   }
+      //   const newLine = { x: e.target.x(), y: e.target.y() };
+      //   setLines((prevLines) => [...prevLines, newLine]);
+      //   e.target.position({ x: 100, y: 250 });
+      //   break;
     
       default:
         break;
@@ -181,19 +187,90 @@ const Sidebar = () => {
 
   };
 
+  const handleUpdate = (newX, newY, id) => {
+    const updatedCircles = circles.map(circle =>
+      circle.id === id ? { ...circle, x: newX, y: newY } : circle
+    );
+    setCircles(updatedCircles);
+  };
+
+  const circleOnclick = (e) => {
+    const container = stageRef.current.container();
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    const newCircle = { id: ++Circleid.current, x: Math.floor(width/3), y: Math.floor(height/3), fill: "skyblue" };
+    setCircles((prevCircles) => [...prevCircles, newCircle]);
+  };
+
+  const handleDoubleClick = (e) => {
+    // const { layerX, layerY } = e.evt;
+
+    if (circles.length !=0 && line4shape) {
+      setStartPoint({ x: selectedShape.x + 25, y: selectedShape.y + 25 });
+      setIsCreatingLine(true);
+    }
+  };
+
+  const handleMouseMove = (e) => {
+    const { layerX, layerY } = e.evt;
+
+    if (startPoint && isCreatingLine) {
+      setEndPoint({ x: layerX, y: layerY });
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (startPoint) {
+      // Check if there is a shape below the mouse pointer
+      // const shapeBelow = selectedShape;
+      if (selectedShape) {
+        // Create endpoint only if there is a shape below
+        setIsCreatingLine(false);
+        const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x, selectedShape.y] };
+        setLines((prevLines) => [...prevLines, newLine]);
+        setStartPoint(null);
+        setEndPoint(null);
+      }
+    }
+  };
+
+
   return (
     <div className="p-3">
       <div className="d-flex align-items-center">
-        <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}>
+        <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}
+              onMouseDown={handleDoubleClick}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+        >
           <Layer>
+          {lines.map((line, index) => (
+              <Line
+                key={index}
+                points={line.points}
+                stroke="black"
+                strokeWidth={2}
+              />
+            ))}
+
+          {startPoint && endPoint && (
+                        <Line
+                          points={[startPoint.x, startPoint.y, endPoint.x, endPoint.y]}
+                          stroke="black"
+                          strokeWidth={2}
+                        />
+                      )}
             <Grid container spacing={2} justifyContent="center" alignItems="center">
                 <Grid item xs={6}>
                   <CircleShape
+                    id={0}
                     x={0}
                     y={0}
                     fill="skyblue"
                     handleDrop={handleDrop}
                     sidebar={true}
+                    circleOnclick={circleOnclick}
+                    setSelectedShape={setSelectedShape}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -254,15 +331,19 @@ const Sidebar = () => {
               </Grid>
             
             
-            {circles.map((eachCircle, index) => (
+            {circles.map((eachCircle) => (
               <CircleShape
-                key={index}
+                key={eachCircle.id}
+                id={eachCircle.id}
                 x={eachCircle.x}
                 y={eachCircle.y}
                 radius={CircleShape.radius}
                 fill={eachCircle.fill}
                 sidebar={false}
-                handleDrop={() => setR(2)}
+                handleDrop={(newX, newY) => handleUpdate(newX, newY, eachCircle.id)}
+                isSelected={selectedShape === eachCircle}
+                setSelectedShape={setSelectedShape}
+                setline4shape={setline4shape}
               />
             ))}
             {processes.map((eachProcess, index) => (
@@ -330,6 +411,7 @@ const Sidebar = () => {
           ))}
           </Layer>
         </Stage>
+        {console.log(selectedShape)}
       </div>
     </div>
   );
