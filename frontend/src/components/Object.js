@@ -1,6 +1,6 @@
 import React from "react";
 import { Shape, Group, Line } from "react-konva";
-import Shapes from "./Shapes"; // Import the Shapes class
+import Shapes from "./Shapes";
 
 class Object extends Shapes {
   constructor(props) {
@@ -9,14 +9,29 @@ class Object extends Shapes {
     this.handleRef = React.createRef();
   }
 
+  componentDidMount() {
+    const shapeNode = this.shapeRef.current;
+    const handleNode = this.handleRef.current;
+
+    const onMouseMoveResize = (event) => {
+      const dx = event.evt.movementX;
+      const dy = event.evt.movementY;
+      shapeNode.width(shapeNode.width() + dx);
+      shapeNode.height(shapeNode.height() + dy);
+    };
+
+    handleNode.on("dragmove", onMouseMoveResize);
+    // Cleanup on unmount
+    return () => {
+      handleNode.off("dragmove", onMouseMoveResize);
+    };
+  }
+
   render() {
     const { x, y, fill, handleDrop } = this.props;
 
     return (
-      <Group
-        draggable
-        onDragEnd={(e) => handleDrop(e, "object")}
-      >
+      <Group draggable onDragEnd={(e) => handleDrop(e, "object")}>
         {/* Resize handle at bottom right corner */}
         <Line
           ref={this.handleRef}
@@ -38,9 +53,27 @@ class Object extends Shapes {
 
             context.beginPath();
             context.moveTo(cornerRadius, 0); // Top-left corner
-            context.arcTo(width, 0, width, cornerRadius, cornerRadius); // Top-right corner
-            context.arcTo(width, height, width - cornerRadius, height, cornerRadius); // Bottom-right corner
-            context.arcTo(0, height, 0, height - cornerRadius, cornerRadius); // Bottom-left corner
+            context.arcTo(
+              width,
+              0,
+              width,
+              cornerRadius,
+              cornerRadius
+            ); // Top-right corner
+            context.arcTo(
+              width,
+              height,
+              width - cornerRadius,
+              height,
+              cornerRadius
+            ); // Bottom-right corner
+            context.arcTo(
+              0,
+              height,
+              0,
+              height - cornerRadius,
+              cornerRadius
+            ); // Bottom-left corner
             context.arcTo(0, 0, cornerRadius, 0, cornerRadius); // Back to Top-left corner
             context.closePath();
 
@@ -50,11 +83,10 @@ class Object extends Shapes {
           fill={fill}
           stroke="black" // Add stroke color here
           strokeWidth={1} // Add stroke width here
-          onDragEnd={(e) => handleDrop(e, "object")}
         />
-    </Group>
-  );
-}
+      </Group>
+    );
+  }
 }
 
 export default Object;

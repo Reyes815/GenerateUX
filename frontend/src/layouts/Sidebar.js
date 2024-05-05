@@ -121,7 +121,7 @@ const Sidebar = () => {
       case "object":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
-          invalid(e, 100, 170);
+          invalid(e, 0, 0);
           return;
         }
 
