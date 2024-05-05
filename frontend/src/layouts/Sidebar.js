@@ -8,6 +8,7 @@ import CircleWithRing from "../components/End_Comp";
 import LineShape from '../components/LineShape';
 import Object from '../components/Object';
 import ProcessShape from "../components/ProcessShape";
+import Shapes from '../components/Shapes';
 import CircleShape from "../components/Start_Comp";
 
 const Sidebar = () => {
@@ -21,7 +22,6 @@ const Sidebar = () => {
   const [object, setObjects] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
-  const [sidebarSize, setSidebarSize] = useState({ width: 0, height: 0 });
 
   function invalid(e, x, y) {
     e.target.to({
@@ -86,17 +86,32 @@ const Sidebar = () => {
         e.target.position({ x: 0, y: 155 });
         break;
     
-      case "process":
-        if (mousePos.x < 260) {
-          console.log("Cannot drop in the restricted area.");
-          invalid(e, 100, 25);
-          return;
-        }
-        const newProcess = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
-        setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
-        e.target.position({ x: 0, y: 0 });
-        break;
-    
+        case "process":
+          if (mousePos.x < 260) {
+            console.log("Cannot drop in the restricted area.");
+            invalid(e, 0, 0);
+            return;
+          }
+          
+          const newX = e.target.x();
+          const newY = e.target.y();
+          
+          // Check if the new process overlaps with any existing processes
+          const overlapping = Shapes.processes.some(process => Shapes.isWithin('rectangle', process.x, process.y, process.radius, newX, newY));
+
+          if (overlapping) {
+            console.log("Cannot drop within another shape.");
+            invalid(e, 0, 0);
+            return;
+          }
+
+          const newProcess = { x: newX, y: newY, fill: "skyblue" };
+          setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
+          //Shapes.addProcess(newProcess);
+          console.log("new shape added");
+          e.target.position({ x: 0, y: 0 });
+          break;
+
       case "object":
         if (mousePos.x < 260) {
           console.log("Cannot drop in the restricted area.");
@@ -109,16 +124,33 @@ const Sidebar = () => {
         e.target.position({ x: 0, y: 0 });
         break;
     
-      case "arrow":
-        if (mousePos.x < 260) {
-          console.log("Cannot drop in the restricted area.");
-          invalid(e, 50, 250);
-          return;
-        }
-        const newArrow = { x: e.target.x(), y: e.target.y() };
-        setArrow((prevArrow) => [...prevArrow, newArrow]);
-        e.target.position({ x: 50, y: 250 });
-        break;
+        case "arrow":
+          if (mousePos.x < 260) {
+            console.log("Cannot drop in the restricted area.");
+            invalid(e, 50, 250);
+            return;
+          }
+          
+          // const newX = e.target.x();
+          // const newY = e.target.y();
+          
+          // // Check if the new process overlaps with any existing processes
+          // const overlapping = Shapes.processes.some(process => Shapes.isWithin('rectangle', process.x, process.y, process.radius, newX, newY));
+
+          // if (overlapping) {
+          //   console.log("Cannot drop within another shape.");
+          //   invalid(e, 0, 0);
+          //   return;
+          // }
+        
+          const newArrow = { x: e.target.x(), y: e.target.y() };
+          // Assuming setArrow is a state updater function
+          setArrow((prevArrows) => [...prevArrows, newArrow]); // Add the new arrow to the array of arrows
+          //console.log("new shape added");
+          e.target.position({ x: 50, y: 250 });
+          break;
+        
+
     
       case "cancel":
         if (mousePos.x < 260) {
@@ -139,7 +171,7 @@ const Sidebar = () => {
         }
         const newLine = { x: e.target.x(), y: e.target.y() };
         setLines((prevLines) => [...prevLines, newLine]);
-        e.target.position({ x: 150, y: 250 });
+        e.target.position({ x: 100, y: 250 });
         break;
     
       default:

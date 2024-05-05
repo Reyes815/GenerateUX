@@ -1,19 +1,26 @@
 import React from "react";
 import { Arrow } from "react-konva";
+import Shapes from './Shapes'; // Import the Shapes class
 
-const LineShape = ({ x, y, handleDrop }) => (
-  <Arrow
-    x={x} 
-    y={y} 
-    points={[0, 0, 0, 35]} 
-    pointerLength={0} 
-    pointerWidth={0} 
-    fill="black"
-    stroke="black" 
-    strokeWidth={2} 
-    draggable
-    onDragEnd={(e) => handleDrop(e, "line")}
-  />
-);
+class CustomLineShape extends Shapes {
+  render() {
+    const { x, y, handleDrop } = this.props;
 
-export default LineShape;
+    return (
+      <Arrow
+        x={x}
+        y={y}
+        points={[0, 0, 0, 35]}
+        pointerLength={0}
+        pointerWidth={0}
+        fill="black"
+        stroke="black"
+        strokeWidth={2}
+        draggable
+        onDragEnd={(e) => handleDrop(e, "line")}
+      />
+    );
+  }
+}
+
+export default CustomLineShape;
