@@ -36,9 +36,9 @@ class CircleShape extends Shapes {
 
   handleonClick = (e) => {
     if (this.props.id > 0) {
-      this.props.setSelectedShape(this.props)
+      this.props.setSelectedShape({props: this.props, isDraggable: this.state.isDraggable})
     } else {
-      this.props.setSelectedShape(this.props)
+      this.props.setSelectedShape({props: this.props, isDraggable: this.state.isDraggable})
       this.props.circleOnclick(e)
     }
   };
@@ -47,12 +47,21 @@ class CircleShape extends Shapes {
     this.setState({ isDraggable: false }); // Disable draggable property
     this.props.setline4shape(true);
     this.setState({ line: true });
-    console.log("hello")
+    console.log("hello" + this.props.id)
   }
 
-  handleMouseEnter = () => {
+  na_makeline = (e) => {
+    this.setState({ isDraggable: true }); // Disable draggable property
+    // this.props.setline4shape(false);
+    this.setState({ line: false });
+    // console.log(this.props.selectedShape.toString() + "sfsdfsdf");
+  }
+
+  handleMouseEnter = (e) => {
     this.setState({ isHovered: true });
     this.props.setSelectedShape(this.props)
+    // console.log(e.target.getClientRect(), "sdfsdfsdfs");
+
   };
 
   handleMouseLeave = () => {
@@ -76,9 +85,10 @@ class CircleShape extends Shapes {
         onDragEnd={this.handleDragEnd}
         onDragMove={this.handleDragMove}
         onClick={this.handleonClick} // Set selected shape on mouse down
-        onMouseUp={this.handleMouseUp}
+        onMouseUp={this.na_makeline}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
+        fill='red'
       >
         <Circle
           x={100 / 2}
@@ -97,15 +107,16 @@ class CircleShape extends Shapes {
         />
 
         {/* Dot in the middle of the inner circle */}
-        {isHovered && (
+        {/* {isHovered && ( */}
         <Circle
           x={100 / 2} // Center of the inner circle
           y={100 / 2} // Center of the inner circle
           radius={5} // Adjust the radius as needed for the dot size
           fill='black' // Color of the dot
           onMouseDown={this.makeline}
+          // onMouseUp={this.na_makeline}
         />
-      )}
+      {/* )} */}
       </Group>
     );
   }

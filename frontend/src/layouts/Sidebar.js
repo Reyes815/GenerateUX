@@ -188,11 +188,34 @@ const Sidebar = () => {
   };
 
   const handleUpdate = (newX, newY, id) => {
+    // Update the circles
+    const circletoUpdate = circles.find(circle => circle.id === id);
+
+    const x = circletoUpdate.x + 50;
+
+    
+  
+    // Update the endpoints of the lines connected to the moved circle
+    const updatedLines = lines.map(line => {
+      if (line.points[0] == x) {
+        // Update the first endpoint of the line
+        console.log("sdfsdfsdfsdf")
+        return { ...line, points: [newX + 50, newY + 50, line.points[2], line.points[3]] };
+      } else if (line.points[2] == x) {
+    // //     // Update the second endpoint of the line
+        return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 50] };
+      }
+      return line;
+    });
+    setLines(updatedLines);
+
     const updatedCircles = circles.map(circle =>
       circle.id === id ? { ...circle, x: newX, y: newY } : circle
     );
     setCircles(updatedCircles);
+    console.log(x)
   };
+  
 
   const circleOnclick = (e) => {
     const container = stageRef.current.container();
@@ -206,7 +229,7 @@ const Sidebar = () => {
     // const { layerX, layerY } = e.evt;
 
     if (circles.length !=0 && line4shape) {
-      setStartPoint({ x: selectedShape.x + 25, y: selectedShape.y + 25 });
+      setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 50});
       setIsCreatingLine(true);
     }
   };
@@ -226,10 +249,12 @@ const Sidebar = () => {
       if (selectedShape) {
         // Create endpoint only if there is a shape below
         setIsCreatingLine(false);
-        const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x, selectedShape.y] };
+        const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x + 50, selectedShape.y + 50] };
         setLines((prevLines) => [...prevLines, newLine]);
         setStartPoint(null);
         setEndPoint(null);
+        setSelectedShape(null);
+        setline4shape(false)
       }
     }
   };
@@ -244,15 +269,6 @@ const Sidebar = () => {
               onMouseUp={handleMouseUp}
         >
           <Layer>
-          {lines.map((line, index) => (
-              <Line
-                key={index}
-                points={line.points}
-                stroke="black"
-                strokeWidth={2}
-              />
-            ))}
-
           {startPoint && endPoint && (
                         <Line
                           points={[startPoint.x, startPoint.y, endPoint.x, endPoint.y]}
@@ -342,6 +358,7 @@ const Sidebar = () => {
                 sidebar={false}
                 handleDrop={(newX, newY) => handleUpdate(newX, newY, eachCircle.id)}
                 isSelected={selectedShape === eachCircle}
+                selectedShape={selectedShape}
                 setSelectedShape={setSelectedShape}
                 setline4shape={setline4shape}
               />
@@ -409,9 +426,19 @@ const Sidebar = () => {
               handleDrop={handleDrop}
             />
           ))}
+
+{lines.map((line, index) => (
+              <Line
+                key={index}
+                points={line.points}
+                stroke="black"
+                strokeWidth={2}
+              />
+            ))}
           </Layer>
         </Stage>
-        {console.log(selectedShape)}
+        {/* {console.log(lines)}
+        {console.log(selectedShape)} */}
       </div>
     </div>
   );
