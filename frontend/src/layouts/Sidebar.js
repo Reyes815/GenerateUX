@@ -130,12 +130,12 @@ const Sidebar = () => {
         e.target.position({ x: 0, y: 0 });
         break;
     
-        case "arrow":
-          if (mousePos.x < 260) {
-            console.log("Cannot drop in the restricted area.");
-            invalid(e, 50, 250);
-            return;
-          }
+        // case "arrow":
+        //   if (mousePos.x < 260) {
+        //     console.log("Cannot drop in the restricted area.");
+        //     invalid(e, 50, 250);
+        //     return;
+        //   }
           
           // const newX = e.target.x();
           // const newY = e.target.y();
@@ -149,12 +149,12 @@ const Sidebar = () => {
           //   return;
           // }
         
-          const newArrow = { x: e.target.x(), y: e.target.y() };
-          // Assuming setArrow is a state updater function
-          setArrow((prevArrows) => [...prevArrows, newArrow]); // Add the new arrow to the array of arrows
-          //console.log("new shape added");
-          e.target.position({ x: 50, y: 250 });
-          break;
+          // const newArrow = { x: e.target.x(), y: e.target.y() };
+          // // Assuming setArrow is a state updater function
+          // setArrow((prevArrows) => [...prevArrows, newArrow]); // Add the new arrow to the array of arrows
+          // //console.log("new shape added");
+          // e.target.position({ x: 50, y: 250 });
+          // break;
         
 
     
@@ -324,19 +324,20 @@ const Sidebar = () => {
                     handleDrop={handleDrop}
                   />
                 </Grid>
-                <Grid item xs={6}>
+                {/* <Grid item xs={6}>
                   <ArrowLineShape
                     x={50}
                     y={250}
                     handleDrop={handleDrop}
-                  />
-                </Grid><Grid item xs={6}>
+                  /> */}
+                {/* </Grid><Grid item xs={6}>
                   <LineShape
                     x={150}
                     y={250}
                     handleDrop={handleDrop}
-                  />
-                </Grid><Grid item xs={6}>
+                  /> */}
+                {/* </Grid> */}
+                <Grid item xs={6}>
                   <CancelShape
                     x={50}
                     y={125}
@@ -399,14 +400,14 @@ const Sidebar = () => {
                 />
               ))}
             {console.log(end_shape)}
-          {arrow.map((arrow, index) => (
+          {/* {arrow.map((arrow, index) => (
             <ArrowLineShape
               key={index}
               x={arrow.x}
               y={arrow.y}
               handleDrop={handleDrop}
             />
-          ))}
+          ))} */}
 
           {cancelShapes.map((cancel, index) => (
             <CancelShape
@@ -418,23 +419,23 @@ const Sidebar = () => {
             />
           ))}
 
-          {lines.map((line, index) => (
+          {/* {lines.map((line, index) => (
             <LineShape
               key={index}
               x={line.x}
               y={line.y}
               handleDrop={handleDrop}
             />
-          ))}
+          ))} */}
 
-{lines.map((line, index) => (
+{/* {lines.map((line, index) => (
               <Line
                 key={index}
                 points={line.points}
                 stroke="black"
-                strokeWidth={2}
-              />
-            ))}
+                strokeWidth={2} */}
+              {/* /> */}
+            {/* ))} */}
           </Layer>
         </Stage>
         {/* {console.log(lines)}
