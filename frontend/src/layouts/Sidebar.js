@@ -213,7 +213,7 @@ const Sidebar = () => {
       circle.id === id ? { ...circle, x: newX, y: newY } : circle
     );
     setCircles(updatedCircles);
-    console.log(x)
+    // console.log(x)
   };
   
 
@@ -254,7 +254,14 @@ const Sidebar = () => {
         setStartPoint(null);
         setEndPoint(null);
         setSelectedShape(null);
-        setline4shape(false)
+        setline4shape(false);
+      } else {
+        console.log("HELLO")
+        setIsCreatingLine(false);
+        setEndPoint(null);
+        setStartPoint(null);
+        setSelectedShape(null);
+        setline4shape(false);
       }
     }
   };
@@ -358,7 +365,7 @@ const Sidebar = () => {
                 fill={eachCircle.fill}
                 sidebar={false}
                 handleDrop={(newX, newY) => handleUpdate(newX, newY, eachCircle.id)}
-                isSelected={selectedShape === eachCircle}
+                // isSelected={selectedShape === eachCircle}
                 selectedShape={selectedShape}
                 setSelectedShape={setSelectedShape}
                 setline4shape={setline4shape}
@@ -428,18 +435,18 @@ const Sidebar = () => {
             />
           ))} */}
 
-{/* {lines.map((line, index) => (
+ {lines.map((line, index) => (
               <Line
                 key={index}
                 points={line.points}
                 stroke="black"
-                strokeWidth={2} */}
-              {/* /> */}
-            {/* ))} */}
+                strokeWidth={2} 
+               /> 
+             ))} 
           </Layer>
         </Stage>
-        {/* {console.log(lines)}
-        {console.log(selectedShape)} */}
+         {console.log(lines)}
+        {console.log(selectedShape)}
       </div>
     </div>
   );

@@ -8,7 +8,8 @@ class CircleShape extends Shapes {
     this.state = {
       isHovered: false,
       isDraggable: true,
-      line: false
+      line: false,
+      isSelected: false
     };
   }
 
@@ -37,6 +38,9 @@ class CircleShape extends Shapes {
   handleonClick = (e) => {
     if (this.props.id > 0) {
       this.props.setSelectedShape({props: this.props, isDraggable: this.state.isDraggable})
+      this.setState(prevState => ({ isSelected: !prevState.isSelected }), () => {
+        console.log(this.state.isSelected ? "HELLO" : "hello");
+      });
     } else {
       this.props.setSelectedShape({props: this.props, isDraggable: this.state.isDraggable})
       this.props.circleOnclick(e)
@@ -68,12 +72,13 @@ class CircleShape extends Shapes {
     if(this.state.line){
       this.setState({ isHovered: false });
     }
-    this.props.setSelectedShape(null)
+    this.props.setSelectedShape(null);
+    this.setState({ isHovered: false });
   };
   
   render() {
-    const { id, x, y, handleDrop, isSelected, setSelectedShape, circleOnclick } = this.props;
-    const { isHovered, isDraggable } = this.state;
+    const { id, x, y, handleDrop, setSelectedShape, circleOnclick } = this.props;
+    const { isHovered, isDraggable, isSelected } = this.state;
 
     return (
       <Group
@@ -107,16 +112,16 @@ class CircleShape extends Shapes {
         />
 
         {/* Dot in the middle of the inner circle */}
-        {/* {isHovered && ( */}
-        <Circle
+        {isHovered && isSelected && (
+         <Circle
           x={100 / 2} // Center of the inner circle
           y={100 / 2} // Center of the inner circle
           radius={5} // Adjust the radius as needed for the dot size
           fill='black' // Color of the dot
-          onMouseDown={this.makeline}
-          // onMouseUp={this.na_makeline}
-        />
-      {/* )} */}
+          onMouseEnter={this.makeline}
+          onMouseLeave={this.na_makeline}
+        /> 
+       )}
       </Group>
     );
   }
