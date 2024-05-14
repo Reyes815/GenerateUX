@@ -40,6 +40,8 @@ class ProcessShape extends Shapes {
           strokeWidth={4}
           draggable
         />
+
+        
         <Shape
           x={x}
           y={y}

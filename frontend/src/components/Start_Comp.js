@@ -9,7 +9,8 @@ class CircleShape extends Shapes {
       isHovered: false,
       isDraggable: true,
       line: false,
-      isSelected: false
+      isSelected: false,
+      isHoveredsmall: false,
     };
   }
 
@@ -35,16 +36,48 @@ class CircleShape extends Shapes {
     }
   };
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.selectedShape !== this.props.selectedShape) {
+      if (this.props.selectedShape === null) {
+        // Handle the case when selectedShape is set to null
+        this.setState({ isSelected: false });
+      } else {
+        // Handle other cases if needed
+      }
+    }
+  }
+
   handleonClick = (e) => {
     if (this.props.id > 0) {
-      this.props.setSelectedShape({props: this.props, isDraggable: this.state.isDraggable})
-      this.setState(prevState => ({ isSelected: !prevState.isSelected }), () => {
-        console.log(this.state.isSelected ? "HELLO" : "hello");
-      });
+      // const circle = {id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill};
+      this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill})
+      // console.log(this.props.selectedShape, this.props.id);
+
+      // Schedule the toggle action after ensuring the state is updated
+      setTimeout(() => {
+        if (this.props.selectedShape && this.props.selectedShape.id === this.props.id) {
+          this.setState((prevState) => ({ isSelected: !prevState.isSelected }));
+        }
+      }, 0);
+
+      // if(this.props.selectedShape != null){
+        // if(this.props.selectedShape.id == this.props.id){
+        //   this.setState(prevState => ({ isSelected: !prevState.isSelected }), () => {
+        //     // console.log(this.state.isSelected ? "HELLO" : "hello");
+        //   });
+        // }
+      // }
+      
+      
+      // this.props.setisSelected(prevState => ({ isSelected: !prevState.isSelected }), () => {
+      //   console.log(this.state.isSelected ? "HELLO sdfsdf" : "hello");
+      // });
+      // console.log(this.props.isSelected);
     } else {
-      this.props.setSelectedShape({props: this.props, isDraggable: this.state.isDraggable})
+      this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill})
       this.props.circleOnclick(e)
     }
+    // console.log("gggg");
   };
 
   makeline = (e) => {
@@ -63,21 +96,28 @@ class CircleShape extends Shapes {
 
   handleMouseEnter = (e) => {
     this.setState({ isHovered: true });
-    this.props.setSelectedShape(this.props)
+    if(this.props.startPoint){
+      this.props.setSelectedShape(this.props)
+    }
+    // this.props.setSelectedShape(this.props)
     // console.log(e.target.getClientRect(), "sdfsdfsdfs");
 
   };
+
+  smallcircleMouseEnter = (e) => {
+    this.setState({ isHovered: true });
+  }
 
   handleMouseLeave = () => {
     if(this.state.line){
       this.setState({ isHovered: false });
     }
-    this.props.setSelectedShape(null);
+    // this.props.setSelectedShape(null);
     this.setState({ isHovered: false });
   };
   
   render() {
-    const { id, x, y, handleDrop, setSelectedShape, circleOnclick } = this.props;
+    const { id, x, y, handleDrop, setSelectedShape, circleOnclick, setisSelected } = this.props;
     const { isHovered, isDraggable, isSelected } = this.state;
 
     return (

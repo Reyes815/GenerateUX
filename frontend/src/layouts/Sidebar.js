@@ -22,12 +22,13 @@ const Sidebar = () => {
   const [object, setObjects] = useState([]);
   const stageRef = useRef(null);
   const [r, setR] = useState(1);
-  const [selectedShape, setSelectedShape] = useState(null);
+  const [selectedShape, setSelectedShape] = useState({});
   const Circleid = useRef(0);
   const [isCreatingLine, setIsCreatingLine] = useState(false);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
   const [line4shape, setline4shape] = useState(false);
+  const [isSelected, setisSelected] = useState(false);
 
   function invalid(e, x, y) {
     e.target.to({
@@ -199,7 +200,7 @@ const Sidebar = () => {
     const updatedLines = lines.map(line => {
       if (line.points[0] == x) {
         // Update the first endpoint of the line
-        console.log("sdfsdfsdfsdf")
+        // console.log("sdfsdfsdfsdf")
         return { ...line, points: [newX + 50, newY + 50, line.points[2], line.points[3]] };
       } else if (line.points[2] == x) {
     // //     // Update the second endpoint of the line
@@ -225,13 +226,34 @@ const Sidebar = () => {
     setCircles((prevCircles) => [...prevCircles, newCircle]);
   };
 
+  // METHOD FOR FINDING IF THE USER CLICKS IN A CIRCLE
+  // const isPointInCircle = (point, circle) => {
+  //   const dx = point.x - circle.x;
+  //   const dy = point.y - circle.y;
+  //   const distance = Math.sqrt(dx * dx + dy * dy);
+  //   return distance <= 45;
+  // };
+
   const handleDoubleClick = (e) => {
     // const { layerX, layerY } = e.evt;
+
+    // const clickedPoint = { x: layerX, y: layerY };
+
+    // const circleClicked = circles.some(circle => isPointInCircle(clickedPoint, circle));
 
     if (circles.length !=0 && line4shape) {
       setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 50});
       setIsCreatingLine(true);
+    } else {
+        setSelectedShape(null);
     }
+
+    // if(circleClicked){
+    //   console.log(selectedShape)
+    // } else {
+    //   console.log("GGGG");
+    // }
+    // console.log({layerX, layerY});
   };
 
   const handleMouseMove = (e) => {
@@ -246,7 +268,7 @@ const Sidebar = () => {
     if (startPoint) {
       // Check if there is a shape below the mouse pointer
       // const shapeBelow = selectedShape;
-      if (selectedShape) {
+      if (selectedShape && (selectedShape.x !== startPoint.x - 50 || selectedShape.y !== startPoint.y - 50)) {
         // Create endpoint only if there is a shape below
         setIsCreatingLine(false);
         const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x + 50, selectedShape.y + 50] };
@@ -256,7 +278,7 @@ const Sidebar = () => {
         setSelectedShape(null);
         setline4shape(false);
       } else {
-        console.log("HELLO")
+        // console.log("HELLO")
         setIsCreatingLine(false);
         setEndPoint(null);
         setStartPoint(null);
@@ -265,6 +287,8 @@ const Sidebar = () => {
       }
     }
   };
+
+  
 
 
   return (
@@ -365,7 +389,9 @@ const Sidebar = () => {
                 fill={eachCircle.fill}
                 sidebar={false}
                 handleDrop={(newX, newY) => handleUpdate(newX, newY, eachCircle.id)}
-                // isSelected={selectedShape === eachCircle}
+                // isSelected={eachCircle === selectedShape}
+                setisSelected={setisSelected}
+                startPoint={startPoint}
                 selectedShape={selectedShape}
                 setSelectedShape={setSelectedShape}
                 setline4shape={setline4shape}
@@ -406,7 +432,7 @@ const Sidebar = () => {
                 handleDrop={() => setR(2)}
                 />
               ))}
-            {console.log(end_shape)}
+            {/* {console.log(end_shape)} */}
           {/* {arrow.map((arrow, index) => (
             <ArrowLineShape
               key={index}
@@ -446,7 +472,7 @@ const Sidebar = () => {
           </Layer>
         </Stage>
          {console.log(lines)}
-        {console.log(selectedShape)}
+        {/* {console.log(selectedShape)} */}
       </div>
     </div>
   );
