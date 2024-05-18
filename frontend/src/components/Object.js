@@ -1,12 +1,13 @@
-import React from "react";
-import { Shape, Group, Line } from "react-konva";
-import Shapes from "./Shapes";
+import React, { createRef } from 'react';
+import { Shape, Group, Line } from 'react-konva';
+import Shapes from './Shapes';
+import EditableText from './EditableText';  // Make sure the path is correct
 
 class Object extends Shapes {
   constructor(props) {
     super(props);
-    this.shapeRef = React.createRef();
-    this.handleRef = React.createRef();
+    this.shapeRef = createRef();
+    this.handleRef = createRef();
   }
 
   componentDidMount() {
@@ -21,7 +22,7 @@ class Object extends Shapes {
     };
 
     handleNode.on("dragmove", onMouseMoveResize);
-    // Cleanup on unmount
+
     return () => {
       handleNode.off("dragmove", onMouseMoveResize);
     };
@@ -32,7 +33,6 @@ class Object extends Shapes {
 
     return (
       <Group draggable onDragEnd={(e) => handleDrop(e, "object")}>
-        {/* Resize handle at bottom right corner */}
         <Line
           ref={this.handleRef}
           points={[x + 100, y + 50, x + 110, y + 50, x + 110, y + 60]}
@@ -49,41 +49,23 @@ class Object extends Shapes {
           sceneFunc={(context, shape) => {
             const width = shape.width();
             const height = shape.height();
-            const cornerRadius = 0; // Adjust this value to change the roundness of corners
+            const cornerRadius = 0;
 
             context.beginPath();
-            context.moveTo(cornerRadius, 0); // Top-left corner
-            context.arcTo(
-              width,
-              0,
-              width,
-              cornerRadius,
-              cornerRadius
-            ); // Top-right corner
-            context.arcTo(
-              width,
-              height,
-              width - cornerRadius,
-              height,
-              cornerRadius
-            ); // Bottom-right corner
-            context.arcTo(
-              0,
-              height,
-              0,
-              height - cornerRadius,
-              cornerRadius
-            ); // Bottom-left corner
-            context.arcTo(0, 0, cornerRadius, 0, cornerRadius); // Back to Top-left corner
+            context.moveTo(cornerRadius, 0);
+            context.arcTo(width, 0, width, cornerRadius, cornerRadius);
+            context.arcTo(width, height, width - cornerRadius, height, cornerRadius);
+            context.arcTo(0, height, 0, height - cornerRadius, cornerRadius);
+            context.arcTo(0, 0, cornerRadius, 0, cornerRadius);
             context.closePath();
 
-            // (!) Konva specific method, it is very important
             context.fillStrokeShape(shape);
           }}
           fill={fill}
-          stroke="black" // Add stroke color here
-          strokeWidth={1} // Add stroke width here
+          stroke="black"
+          strokeWidth={1}
         />
+        <EditableText x={x + 5} y={y + 5} />
       </Group>
     );
   }

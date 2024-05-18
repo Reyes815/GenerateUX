@@ -1,6 +1,7 @@
 import React from "react";
 import { Shape, Group, Line } from "react-konva";
 import Shapes from "./Shapes";
+import EditableText from './EditableText'; 
 
 class ProcessShape extends Shapes {
   constructor(props) {
@@ -86,6 +87,8 @@ class ProcessShape extends Shapes {
           stroke="black" // Add stroke color here
           strokeWidth={1} // Add stroke width here
         />
+        <EditableText x={x + 5} y={y + 5} />
+
       </Group>
     );
   }
