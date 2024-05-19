@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Text } from 'react-konva';
 
 const EditableText = ({ x, y, handleDrop }) => {
-  const [text, setText] = useState("Edit me");
+  const [text, setText] = useState("Add Text (Double Click)");
   const [isEditing, setIsEditing] = useState(false);
 
   const handleDblClick = (e) => {
