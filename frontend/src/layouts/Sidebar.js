@@ -10,6 +10,7 @@ import Object from '../components/Object';
 import ProcessShape from "../components/ProcessShape";
 import Shapes from '../components/Shapes';
 import CircleShape from "../components/Start_Comp";
+import EditableText from '../components/EditableText';
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
@@ -29,7 +30,7 @@ const Sidebar = () => {
   const [endPoint, setEndPoint] = useState(null);
   const [line4shape, setline4shape] = useState(false);
   const [isSelected, setisSelected] = useState(false);
-
+  const [text, setText] = useState([]);
   function invalid(e, x, y) {
     e.target.to({
       x: x,
@@ -130,7 +131,17 @@ const Sidebar = () => {
         setObjects((prevObjects) => [...prevObjects, newObjects]);
         e.target.position({ x: 0, y: 0 });
         break;
-    
+      
+        case "text":
+          if (mousePos.x < 260){
+            invalid(e,25,270);
+            return;
+          }
+
+          const newTexts = {x: e.target.x(), y: e.target.y()};
+          setText((prevTexts) => [...prevTexts, newTexts]);
+          e.target.position({x:20, y:270});
+          break;
         // case "arrow":
         //   if (mousePos.x < 260) {
         //     console.log("Cannot drop in the restricted area.");
@@ -321,6 +332,13 @@ const Sidebar = () => {
                   />
                 </Grid>
                 <Grid item xs={6}>
+                  <EditableText
+                    x={25}
+                    y={270}
+                    handleDrop={handleDrop}
+                  />
+                </Grid>
+                <Grid item xs={6}>
                   <ProcessShape
                     x={100}
                     y={25}
@@ -404,6 +422,13 @@ const Sidebar = () => {
                 y={eachProcess.y}
                 fill={eachProcess.fill}
                 handleDrop={() => setR(2)}
+              />
+            ))}
+            {text.map((eachText, index) => (
+              <EditableText
+              x={eachText.x}
+              y={eachText.y}
+              handleDrop={() => setR(2)}
               />
             ))}
             {object.map((eachObjects, index) => (

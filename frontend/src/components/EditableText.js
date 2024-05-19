@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Text } from 'react-konva';
 
-const EditableText = ({ x, y }) => {
+const EditableText = ({ x, y, handleDrop }) => {
   const [text, setText] = useState("Edit me");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -74,6 +74,7 @@ const EditableText = ({ x, y }) => {
     <>
       {!isEditing && (
         <Text
+          onDragEnd={(e) => handleDrop(e, "text")}
           x={x}
           y={y}
           text={text}
