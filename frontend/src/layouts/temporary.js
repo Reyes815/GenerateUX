@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
 import { MainContainer, ChatContainer, MessageList, Message, MessageInput, TypingIndicator } from "@chatscope/chat-ui-kit-react";
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import DOMPurify from 'dompurify';
 
 function Temporary() {
+    
+  const [html, setHtml] = useState('');
     const [typing, setTyping] = useState(false);
     const API_Key = 'AIzaSyB2M82ENZgfYOHWsuBS9NqG3jHyz7xo9TQ';  // Replace with your actual API key
     const [messages, setMessages] = useState([
@@ -32,10 +35,13 @@ function Temporary() {
 
     async function processMessageToAi(chatMessages) {
         try {
+            // Replace with your private API key
             const genAI = new GoogleGenerativeAI(API_Key);
             const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
             const prompt = chatMessages.map(msg => `${msg.sender}: ${msg.message}`).join('\n') + '\nGemini:';
             const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = await response.text();
             const response = await result.response;
             const text = await response.text();
 
@@ -49,7 +55,7 @@ function Temporary() {
                 }
             ]);
             setTyping(false);
-        } catch (error) {
+          } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
