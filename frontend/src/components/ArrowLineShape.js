@@ -3,11 +3,6 @@ import { Arrow } from 'react-konva';
 import Shapes from './Shapes'; // Import the Shapes class
 
 class ArrowLineShape extends Shapes {
-  constructor(props) {
-    super(props);
-    this.shapeRef = React.createRef();
-    this.handleRef = React.createRef();
-  }
 
   render() {
     const { x, y, handleDrop } = this.props;

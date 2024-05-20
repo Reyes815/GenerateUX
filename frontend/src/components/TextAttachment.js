@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from 'react-konva';
 import Shapes from './Shapes';
 
-class EditableText extends Shapes {
+class TextAttachment extends Shapes {
   constructor(props) {
     super(props);
     this.state = {
@@ -77,20 +77,18 @@ class EditableText extends Shapes {
   };
 
   render() {
-    const { x, y, handleDrop } = this.props;
+    const { x, y } = this.props;
     const { text, isEditing } = this.state;
 
     return (
       <>
         {!isEditing && (
           <Text
-            onDragEnd={(e) => handleDrop(e, "text")}
             x={x}
             y={y}
             text={text}
             fontSize={15}
             fill="black"
-            draggable
             onDblClick={this.handleDblClick}
           />
         )}
@@ -99,4 +97,4 @@ class EditableText extends Shapes {
   }
 }
 
-export default EditableText;
+export default TextAttachment;

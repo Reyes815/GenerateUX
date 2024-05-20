@@ -1,7 +1,7 @@
 import React, { createRef } from 'react';
 import { Shape, Group, Line } from 'react-konva';
 import Shapes from './Shapes';
-import EditableText from './EditableText';  // Make sure the path is correct
+import TextAttachment from './TextAttachment';
 
 class Object extends Shapes {
   constructor(props) {
@@ -65,7 +65,7 @@ class Object extends Shapes {
           stroke="black"
           strokeWidth={1}
         />
-        <EditableText x={x + 5} y={y + 5} />
+        <TextAttachment x={x + 5} y={y + 5} />
       </Group>
     );
   }
