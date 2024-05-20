@@ -5,7 +5,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 function Temporary() {
     const [typing, setTyping] = useState(false);
-    const API_Key = "AIzaSyB2M82ENZgfYOHWsuBS9NqG3jHyz7xo9TQ";  // Replace with your actual API key
+    const API_Key = 'AIzaSyB2M82ENZgfYOHWsuBS9NqG3jHyz7xo9TQ';  // Replace with your actual API key
     const [messages, setMessages] = useState([
         {
             message: "Hello Pookie, this is Gemini",
@@ -34,20 +34,16 @@ function Temporary() {
         try {
             const genAI = new GoogleGenerativeAI(API_Key);
             const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
-
-            // Create prompt from chatMessages
             const prompt = chatMessages.map(msg => `${msg.sender}: ${msg.message}`).join('\n') + '\nGemini:';
-
             const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = await response.text();
 
-            const response = await model.generateContent(result);
-
-            const generatedText = await response.text();
-            console.log(generatedText);
+            console.log(text);
             setMessages([
                 ...chatMessages,
                 {
-                    message: generatedText,
+                    message: text,
                     sender: "Gemini",
                     direction: "incoming"
                 }
@@ -55,7 +51,6 @@ function Temporary() {
             setTyping(false);
         } catch (error) {
             console.error('Error fetching data:', error);
-            setTyping(false);
         }
     }
 
