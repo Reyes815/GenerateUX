@@ -31,6 +31,28 @@ const Sidebar = () => {
   const [line4shape, setline4shape] = useState(false);
   const [isSelected, setisSelected] = useState(false);
   const [text, setText] = useState([]);
+  const [jsonOutput, setJsonOutput] = useState('');
+
+  const generateJson = () => {
+    const data = {
+      circles: circles,
+      diamonds: diamonds,
+      endShapes: end_shape,
+      processes: processes.map(process => ({ x: process.x, y: process.y, fill: process.fill, text: process.text })),
+      cancelShapes: cancelShapes,
+      lines: lines,
+      arrows: arrow,
+      objects: object,
+      text: text
+    };
+    
+    return JSON.stringify(data, null, 2);
+  };
+const handleGenerateJson = () => {
+  const jsonData = generateJson();
+  setJsonOutput(jsonData);
+};
+
   function invalid(e, x, y) {
     e.target.to({
       x: x,
@@ -142,32 +164,6 @@ const Sidebar = () => {
           setText((prevTexts) => [...prevTexts, newTexts]);
           e.target.position({x:20, y:270});
           break;
-        // case "arrow":
-        //   if (mousePos.x < 260) {
-        //     console.log("Cannot drop in the restricted area.");
-        //     invalid(e, 50, 250);
-        //     return;
-        //   }
-          
-          // const newX = e.target.x();
-          // const newY = e.target.y();
-          
-          // // Check if the new process overlaps with any existing processes
-          // const overlapping = Shapes.processes.some(process => Shapes.isWithin('rectangle', process.x, process.y, process.radius, newX, newY));
-
-          // if (overlapping) {
-          //   console.log("Cannot drop within another shape.");
-          //   invalid(e, 0, 0);
-          //   return;
-          // }
-        
-          // const newArrow = { x: e.target.x(), y: e.target.y() };
-          // // Assuming setArrow is a state updater function
-          // setArrow((prevArrows) => [...prevArrows, newArrow]); // Add the new arrow to the array of arrows
-          // //console.log("new shape added");
-          // e.target.position({ x: 50, y: 250 });
-          // break;
-        
 
     
       case "cancel":
@@ -180,17 +176,6 @@ const Sidebar = () => {
         setCancelShapes((prevCancelShapes) => [...prevCancelShapes, newCancel]);
         e.target.position({ x: 50, y: 125 });
         break;
-    
-      // case "line":
-      //   if (mousePos.x < 260) {
-      //     console.log("Cannot drop in the restricted area.");
-      //     invalid(e, 100, 250);
-      //     return;
-      //   }
-      //   const newLine = { x: e.target.x(), y: e.target.y() };
-      //   setLines((prevLines) => [...prevLines, newLine]);
-      //   e.target.position({ x: 100, y: 250 });
-      //   break;
     
       default:
         break;
@@ -237,34 +222,13 @@ const Sidebar = () => {
     setCircles((prevCircles) => [...prevCircles, newCircle]);
   };
 
-  // METHOD FOR FINDING IF THE USER CLICKS IN A CIRCLE
-  // const isPointInCircle = (point, circle) => {
-  //   const dx = point.x - circle.x;
-  //   const dy = point.y - circle.y;
-  //   const distance = Math.sqrt(dx * dx + dy * dy);
-  //   return distance <= 45;
-  // };
-
   const handleDoubleClick = (e) => {
-    // const { layerX, layerY } = e.evt;
-
-    // const clickedPoint = { x: layerX, y: layerY };
-
-    // const circleClicked = circles.some(circle => isPointInCircle(clickedPoint, circle));
-
     if (circles.length !=0 && line4shape) {
       setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 50});
       setIsCreatingLine(true);
     } else {
         setSelectedShape(null);
     }
-
-    // if(circleClicked){
-    //   console.log(selectedShape)
-    // } else {
-    //   console.log("GGGG");
-    // }
-    // console.log({layerX, layerY});
   };
 
   const handleMouseMove = (e) => {
@@ -300,7 +264,7 @@ const Sidebar = () => {
   };
 
   
-
+  
 
   return (
     <div className="p-3">
@@ -346,6 +310,7 @@ const Sidebar = () => {
                     stroke="black"
                     strokeWidth={4}
                     handleDrop={handleDrop}
+                    text="Default Text"  // Add default text here
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -373,19 +338,6 @@ const Sidebar = () => {
                     handleDrop={handleDrop}
                   />
                 </Grid>
-                {/* <Grid item xs={6}>
-                  <ArrowLineShape
-                    x={50}
-                    y={250}
-                    handleDrop={handleDrop}
-                  /> */}
-                {/* </Grid><Grid item xs={6}>
-                  <LineShape
-                    x={150}
-                    y={250}
-                    handleDrop={handleDrop}
-                  /> */}
-                {/* </Grid> */}
                 <Grid item xs={6}>
                   <CancelShape
                     x={50}
@@ -422,6 +374,7 @@ const Sidebar = () => {
                 y={eachProcess.y}
                 fill={eachProcess.fill}
                 handleDrop={() => setR(2)}
+                text={eachProcess.text || "Default Text"} // Add text with a fallback to default
               />
             ))}
             {text.map((eachText, index) => (
@@ -457,16 +410,6 @@ const Sidebar = () => {
                 handleDrop={() => setR(2)}
                 />
               ))}
-            {/* {console.log(end_shape)} */}
-          {/* {arrow.map((arrow, index) => (
-            <ArrowLineShape
-              key={index}
-              x={arrow.x}
-              y={arrow.y}
-              handleDrop={handleDrop}
-            />
-          ))} */}
-
           {cancelShapes.map((cancel, index) => (
             <CancelShape
               key={index}
@@ -476,15 +419,6 @@ const Sidebar = () => {
               handleDrop={handleDrop}
             />
           ))}
-
-          {/* {lines.map((line, index) => (
-            <LineShape
-              key={index}
-              x={line.x}
-              y={line.y}
-              handleDrop={handleDrop}
-            />
-          ))} */}
 
  {lines.map((line, index) => (
               <Line
@@ -499,8 +433,19 @@ const Sidebar = () => {
          {console.log(lines)}
         {/* {console.log(selectedShape)} */}
       </div>
+      <button onClick={handleGenerateJson}>Generate JSON</button>
+    <textarea
+      value={jsonOutput}
+      readOnly
+      rows="10"
+      cols="50"
+      style={{ marginTop: '20px', width: '100%' }}
+    />
     </div>
+
+    
   );
+  
 };
 
 export default Sidebar;
