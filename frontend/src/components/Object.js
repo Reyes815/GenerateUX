@@ -1,45 +1,122 @@
-import React, { createRef } from 'react';
-import { Shape, Group, Line } from 'react-konva';
-import Shapes from './Shapes';
-import TextAttachment from './TextAttachment';
+import React, { Component } from "react";
+import { Group, Rect, Transformer, Shape } from "react-konva";
+import TextAttachment from "./TextAttachment";
+import Shapes from "./Shapes";
+
 
 class Object extends Shapes {
   constructor(props) {
     super(props);
-    this.shapeRef = createRef();
-    this.handleRef = createRef();
+    this.shapeRef = React.createRef();
+    this.transformerRef = React.createRef();
+    this.textAttachmentRef = React.createRef();
+    this.state = {
+      textX: props.x + 5,
+      textY: props.y + 5,
+      isSelected: false
+    };
   }
 
   componentDidMount() {
-    const shapeNode = this.shapeRef.current;
-    const handleNode = this.handleRef.current;
-
-    const onMouseMoveResize = (event) => {
-      const dx = event.evt.movementX;
-      const dy = event.evt.movementY;
-      shapeNode.width(shapeNode.width() + dx);
-      shapeNode.height(shapeNode.height() + dy);
-    };
-
-    handleNode.on("dragmove", onMouseMoveResize);
-
-    return () => {
-      handleNode.off("dragmove", onMouseMoveResize);
-    };
+    this.attachTransformer();
   }
 
-  render() {
-    const { x, y, fill, handleDrop } = this.props;
+  componentDidUpdate() {
+    this.attachTransformer();
+  }
 
+  attachTransformer() {
+    const transformer = this.transformerRef.current;
+    const shapeNode = this.shapeRef.current;
+
+    if (transformer && shapeNode) {
+      transformer.nodes([shapeNode]);
+      transformer.getLayer().batchDraw();
+    }
+  }
+
+  handleDragMove = () => {
+    const node = this.shapeRef.current;
+    if (node) {
+      const { x, y } = node;
+      this.setState({
+        textX: x() + 5,
+        textY: y() + 5,
+      });
+
+      const textAttachment = this.textAttachmentRef.current;
+      if (textAttachment && textAttachment.position) {
+        textAttachment.position({ x: x() + 5, y: y() + 5 });
+      }
+    }
+  };
+
+  handleDragEnd = () => {
+    const node = this.shapeRef.current;
+    if (node) {
+      const { id, handleDrop, onTransformEnd } = this.props;
+      const { x, y, width, height } = node;
+      if (id === 0) {
+        handleDrop({ x: x(), y: y() }, "object");
+        this.setState({
+          textX: x() + 5,
+          textY: y() + 5,
+        });
+      } else {
+        const scaleX = node.scaleX();
+        const scaleY = node.scaleY();
+        onTransformEnd({
+          x: x(),
+          y: y(),
+          width: Math.max(5, width() * scaleX),
+          height: Math.max(5, height() * scaleY),
+        });
+      }
+    }
+  };
+
+  handleTransformEnd = () => {
+    const node = this.shapeRef.current;
+    if (node) {
+      const { x, y } = node;
+      const scaleX = node.scaleX();
+      const scaleY = node.scaleY();
+
+      node.scaleX(1);
+      node.scaleY(1);
+
+      this.props.onTransformEnd({
+        x: x(),
+        y: y(),
+        width: Math.max(5, node.width() * scaleX),
+        height: Math.max(5, node.height() * scaleY),
+      });
+
+      this.setState({
+        textX: x() + 5,
+        textY: y() + 5,
+      });
+
+      const textAttachment = this.textAttachmentRef.current;
+      if (textAttachment && textAttachment.position) {
+        textAttachment.position({ x: x() + 5, y: y() + 5 });
+      }
+    }
+  };
+
+  handleOnClick = (e) => {
+    e.cancelBubble = true; // prevent bubbling to Group's onClick
+    this.setState((prevState) => ({
+      isSelected: !prevState.isSelected,
+    }));
+  };
+  
+  render() {
+    const { x, y, width, height, fill, stroke, handleDrop } = this.props;
+    const { textX, textY, isSelected } = this.state;
+  
     return (
-      <Group draggable onDragEnd={(e) => handleDrop(e, "object")}>
-        <Line
-          ref={this.handleRef}
-          points={[x + 100, y + 50, x + 110, y + 50, x + 110, y + 60]}
-          stroke="blue"
-          strokeWidth={4}
-          draggable
-        />
+      <Group draggable onDragEnd={(e) => handleDrop(e, "object")} onClick={this.handleOnClick}>
         <Shape
           x={x}
           y={y}
@@ -50,7 +127,7 @@ class Object extends Shapes {
             const width = shape.width();
             const height = shape.height();
             const cornerRadius = 0;
-
+  
             context.beginPath();
             context.moveTo(cornerRadius, 0);
             context.arcTo(width, 0, width, cornerRadius, cornerRadius);
@@ -58,17 +135,33 @@ class Object extends Shapes {
             context.arcTo(0, height, 0, height - cornerRadius, cornerRadius);
             context.arcTo(0, 0, cornerRadius, 0, cornerRadius);
             context.closePath();
-
+  
             context.fillStrokeShape(shape);
           }}
           fill={fill}
           stroke="black"
           strokeWidth={1}
         />
-        <TextAttachment x={x + 5} y={y + 5} />
+        {isSelected && (
+          <Transformer
+            ref={this.transformerRef}
+            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
+            boundBoxFunc={(oldBox, newBox) => {
+              newBox.width = Math.max(5, newBox.width);
+              newBox.height = Math.max(5, newBox.height);
+              return newBox;
+            }}
+          />
+        )}
+        <TextAttachment
+          ref={this.textAttachmentRef}
+          x={textX}
+          y={textY}
+        />
       </Group>
     );
   }
+  
 }
 
 export default Object;

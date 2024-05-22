@@ -17,24 +17,6 @@ class ProcessShape extends Shapes {
     };
   }
 
-  // componentDidMount() {
-  //   const shapeNode = this.shapeRef.current;
-  //   const handleNode = this.handleRef.current;
-
-  //   const onMouseMoveResize = (event) => {
-  //     const dx = event.evt.movementX;
-  //     const dy = event.evt.movementY;
-  //     shapeNode.width(shapeNode.width() + dx);
-  //     shapeNode.height(shapeNode.height() + dy);
-  //   };
-
-  //   handleNode.on("dragmove", onMouseMoveResize);
-  //   // Cleanup on unmount
-  //   return () => {
-  //     handleNode.off("dragmove", onMouseMoveResize);
-  //   };
-  // }
-
   componentDidMount() {
     this.attachTransformer();
 }
