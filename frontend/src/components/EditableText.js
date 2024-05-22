@@ -23,7 +23,6 @@ class EditableText extends Shapes {
     };
     const textarea = document.createElement("textarea");
     document.body.appendChild(textarea);
-    const currText = textNode.text();
     textarea.value = textNode.text();
     textarea.style.position = "absolute";
     textarea.style.top = areaPosition.y + "px";
@@ -53,27 +52,36 @@ class EditableText extends Shapes {
       document.body.removeChild(textarea);
     };
 
-    textarea.addEventListener("keydown", (e) => {
-      if (e.key === 'Enter') {
-        this.setState({ text: textarea.value });
-        textNode.text(textarea.value);
+    const handleUpdateText = () => {
+      const newText = textarea.value;
+      this.setState({ text: newText }, () => {
+        textNode.text(newText);
         layer.draw();
+        this.props.updateText(this.props.id, newText); // Update parent state
+      });
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        handleUpdateText();
         removeTextarea();
       }
+
       if (e.key === 'Escape') {
         removeTextarea();
       }
-    });
+    };
 
-    textarea.addEventListener("blur", () => {
-      this.setState({ text: textarea.value });
-      textNode.text(textarea.value);
-      layer.draw();
-    });
+    const handleBlur = () => {
+      handleUpdateText();
+    };
+
+    textarea.addEventListener("keydown", handleKeyDown);
+    textarea.addEventListener("blur", handleBlur);
   };
 
   render() {
-    const { x, y, currText, handleDrop } = this.props;
+    const { x, y, handleDrop } = this.props;
     const { text, isEditing } = this.state;
 
     return (
@@ -83,7 +91,6 @@ class EditableText extends Shapes {
             onDragEnd={(e) => handleDrop(e, "text")}
             x={x}
             y={y}
-            currText={currText}
             text={text}
             fontSize={15}
             fill="black"

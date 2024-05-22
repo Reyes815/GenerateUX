@@ -279,6 +279,13 @@ const handleGenerateJson = () => {
     console.log(updatedProcesses);
   };
   
+  const updateText = (id, newText) => {
+    setText(prevTexts =>
+      prevTexts.map(textItem =>
+        textItem.id === id ? { ...textItem, currText: newText } : textItem
+      )
+    );
+  };
 
   const circleOnclick = (e) => {
     const container = stageRef.current.container();
@@ -470,9 +477,11 @@ const handleGenerateJson = () => {
             ))}
             {text.map((eachText, index) => (
               <EditableText
+              key={index}
               x={eachText.x}
               y={eachText.y}
               handleDrop={() => setR(2)}
+              updateText={updateText}
               />
             ))}
             {object.map((eachObjects, index) => (
