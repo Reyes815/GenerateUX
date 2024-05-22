@@ -6,7 +6,7 @@ class EditableText extends Shapes {
   constructor(props) {
     super(props);
     this.state = {
-      text: "Add Text (Double Click)",
+      text: "Edit",
       isEditing: false,
     };
   }

@@ -6,7 +6,7 @@ class TextAttachment extends Shapes {
   constructor(props) {
     super(props);
     this.state = {
-      text: "Add Text (Double Click)",
+      text: "Edit",
       isEditing: false,
     };
     this.textRef = React.createRef(); // Create a ref for the Text component

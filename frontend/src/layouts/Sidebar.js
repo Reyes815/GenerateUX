@@ -1,16 +1,18 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useRef, useState } from "react";
 import { Layer, Line, Stage } from "react-konva";
-import ArrowLineShape from '../components/ArrowLineShape';
+//import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
 import DiamondShape from "../components/Diamond_Comp";
 import CircleWithRing from "../components/End_Comp";
-import LineShape from '../components/LineShape';
+//import LineShape from '../components/LineShape';
 import Object from '../components/Object';
 import ProcessShape from "../components/ProcessShape";
 import Shapes from '../components/Shapes';
 import CircleShape from "../components/Start_Comp";
 import EditableText from '../components/EditableText';
+import Themes from '../../src/components/popup/Themes';
+import "../assets/scss/sidebar.css";
 
 const Sidebar = () => {
   const [circles, setCircles] = useState([]);
@@ -33,13 +35,22 @@ const Sidebar = () => {
   const [isSelected, setisSelected] = useState(false);
   const [text, setText] = useState([]);
   const [jsonOutput, setJsonOutput] = useState('');
+  const [popupOpen, setPopupOpen] = useState(false);
+
+  const handleClosePopup = () => {
+    setPopupOpen(false);
+  };
+  
+  const handleOnClick = () => {
+    setPopupOpen(true);
+  }
 
   const generateJson = () => {
     const data = {
       circles: circles,
       diamonds: diamonds,
       endShapes: end_shape,
-      processes: processes.map(process => ({ x: process.x, y: process.y, fill: process.fill, text: process.text })),
+      processes: processes,
       cancelShapes: cancelShapes,
       lines: lines,
       arrows: arrow,
@@ -514,6 +525,8 @@ const handleGenerateJson = () => {
         {/* {console.log(circles)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
+      <button onClick={handleOnClick}>Choose A Theme</button>
+      {popupOpen && <Themes onClose={handleClosePopup} />}
       <button onClick={handleGenerateJson}>Generate JSON</button>
     <textarea
       value={jsonOutput}
