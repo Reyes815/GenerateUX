@@ -9,10 +9,11 @@ class TextAttachment extends Shapes {
       text: "Add Text (Double Click)",
       isEditing: false,
     };
+    this.textRef = React.createRef(); // Create a ref for the Text component
   }
 
   handleDblClick = (e) => {
-    const textNode = e.target;
+    const textNode = this.textRef.current; // Access the Text component using the ref
     const stage = textNode.getStage();
     const layer = textNode.getLayer();
 
@@ -84,6 +85,7 @@ class TextAttachment extends Shapes {
       <>
         {!isEditing && (
           <Text
+            ref={this.textRef} // Attach the ref to the Text component
             x={x}
             y={y}
             text={text}

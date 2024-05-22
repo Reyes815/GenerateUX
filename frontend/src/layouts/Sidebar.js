@@ -25,12 +25,25 @@ const Sidebar = () => {
   const [r, setR] = useState(1);
   const [selectedShape, setSelectedShape] = useState({});
   const Circleid = useRef(0);
+  const Processid = useRef(0);
   const [isCreatingLine, setIsCreatingLine] = useState(false);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
   const [line4shape, setline4shape] = useState(false);
   const [isSelected, setisSelected] = useState(false);
   const [text, setText] = useState([]);
+
+  const [shapeProps, setShapeProps] = useState({
+    x: 100,
+    y: 25,
+    fill: "skyblue",
+    stroke: "black",
+    width: 100,
+    height: 50,
+    strokeWidth: 4
+  });
+
+
   function invalid(e, x, y) {
     e.target.to({
       x: x,
@@ -38,6 +51,26 @@ const Sidebar = () => {
       duration: 0.1,
     });
   }
+
+  const handleTransformEnd = (id, newAttrs) => {
+    console.log("Transformed shape attributes:", newAttrs);
+
+
+    setProcesses(prevProcesses =>
+      prevProcesses.map(process =>
+        process.id === id
+          ? { ...process, 
+            x: newAttrs.x,
+            y: newAttrs.y,
+            width: newAttrs.width,
+            height: newAttrs.height
+           }
+          : process
+      )
+    );
+
+    // console.log("After: ", shapeProps);
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -67,8 +100,12 @@ const Sidebar = () => {
           invalid(e, 0, 0);
           return;
         }
+
+        // const Pros = e.target.getAbsolutePosition();
+
         const newCircle = { id: ++Circleid.current, x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setCircles((prevCircles) => [...prevCircles, newCircle]);
+        console.log(e);
         e.target.position({ x: 0, y: 0 });
         break;
     
@@ -97,27 +134,38 @@ const Sidebar = () => {
         case "process":
           if (mousePos.x < 260) {
             console.log("Cannot drop in the restricted area.");
-            invalid(e, 0, 0);
+            invalid(e, 50, 12);
             return;
           }
           
           const newX = e.target.x();
           const newY = e.target.y();
+          // const stage = e.target.getStage();
+          // const stagePosition = stage.getPointerPosition();
           
           // Check if the new process overlaps with any existing processes
-          const overlapping = Shapes.processes.some(process => Shapes.isWithin('rectangle', process.x, process.y, process.radius, newX, newY));
+          // const overlapping = Shapes.processes.some(process => Shapes.isWithin('rectangle', process.x, process.y, process.radius, newX, newY));
 
-          if (overlapping) {
-            console.log("Cannot drop within another shape.");
-            invalid(e, 0, 0);
-            return;
-          }
+          // if (overlapping) {
+          //   console.log("Cannot drop within another shape.");
+          //   invalid(e, 0, 0);
+          //   return;
+          // }
 
-          const newProcess = { x: newX, y: newY, fill: "skyblue" };
+          const newProcess = 
+          { id: ++Processid.current, 
+            x: newX, 
+            y: newY, 
+            fill: "skyblue",
+            stroke: "black",
+            width: 100,
+            height: 50,
+            strokeWidth: 4
+          };
           setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
           //Shapes.addProcess(newProcess);
-          console.log("new shape added");
-          e.target.position({ x: 0, y: 0 });
+          console.log("new shape added ", e);
+          e.target.position({ x: 100, y: 25 });
           break;
 
       case "object":
@@ -201,31 +249,37 @@ const Sidebar = () => {
 
   const handleUpdate = (newX, newY, id) => {
     // Update the circles
-    const circletoUpdate = circles.find(circle => circle.id === id);
+    // const circletoUpdate = circles.find(circle => circle.id === id);
+    const ProcesstoUpdate = processes.find(process => process.id === id);
 
-    const x = circletoUpdate.x + 50;
+    // const x = circletoUpdate.x + 50;
 
     
   
-    // Update the endpoints of the lines connected to the moved circle
-    const updatedLines = lines.map(line => {
-      if (line.points[0] == x) {
-        // Update the first endpoint of the line
-        // console.log("sdfsdfsdfsdf")
-        return { ...line, points: [newX + 50, newY + 50, line.points[2], line.points[3]] };
-      } else if (line.points[2] == x) {
-    // //     // Update the second endpoint of the line
-        return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 50] };
-      }
-      return line;
-    });
-    setLines(updatedLines);
+    // // Update the endpoints of the lines connected to the moved circle
+    // const updatedLines = lines.map(line => {
+    //   if (line.points[0] == x) {
+    //     // Update the first endpoint of the line
+    //     // console.log("sdfsdfsdfsdf")
+    //     return { ...line, points: [newX + 50, newY + 50, line.points[2], line.points[3]] };
+    //   } else if (line.points[2] == x) {
+    // // //     // Update the second endpoint of the line
+    //     return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 50] };
+    //   }
+    //   return line;
+    // });
+    // setLines(updatedLines);
 
-    const updatedCircles = circles.map(circle =>
-      circle.id === id ? { ...circle, x: newX, y: newY } : circle
+    // const updatedCircles = circles.map(circle =>
+    //   circle.id === id ? { ...circle, x: newX, y: newY } : circle
+    // );
+    // setCircles(updatedCircles);
+    // const pos = e.target.getAbsolutePosition();
+    const updatedProcesses = processes.map(process => 
+      process.id === id ? { ...process, x: newX, y: newY } : process
     );
-    setCircles(updatedCircles);
-    // console.log(x)
+
+    console.log(updatedProcesses);
   };
   
 
@@ -252,12 +306,12 @@ const Sidebar = () => {
 
     // const circleClicked = circles.some(circle => isPointInCircle(clickedPoint, circle));
 
-    if (circles.length !=0 && line4shape) {
-      setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 50});
-      setIsCreatingLine(true);
-    } else {
-        setSelectedShape(null);
-    }
+    // if (circles.length !=0 && line4shape) {
+    //   setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 50});
+    //   setIsCreatingLine(true);
+    // } else {
+    //     setSelectedShape(null);
+    // }
 
     // if(circleClicked){
     //   console.log(selectedShape)
@@ -265,38 +319,51 @@ const Sidebar = () => {
     //   console.log("GGGG");
     // }
     // console.log({layerX, layerY});
+    const stage = e.target.getStage();
+    const stagepos = stage.getPointerPosition();
+    console.log(stagepos);
   };
 
   const handleMouseMove = (e) => {
-    const { layerX, layerY } = e.evt;
+    // const { layerX, layerY } = e.evt;
 
-    if (startPoint && isCreatingLine) {
-      setEndPoint({ x: layerX, y: layerY });
-    }
+    // if (startPoint && isCreatingLine) {
+    //   setEndPoint({ x: layerX, y: layerY });
+    // }
+
+    const pos = e.target.getAbsolutePosition();
+    console.log(pos);
+    // handleUpdate(e);
   };
 
-  const handleMouseUp = () => {
-    if (startPoint) {
-      // Check if there is a shape below the mouse pointer
-      // const shapeBelow = selectedShape;
-      if (selectedShape && (selectedShape.x !== startPoint.x - 50 || selectedShape.y !== startPoint.y - 50)) {
-        // Create endpoint only if there is a shape below
-        setIsCreatingLine(false);
-        const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x + 50, selectedShape.y + 50] };
-        setLines((prevLines) => [...prevLines, newLine]);
-        setStartPoint(null);
-        setEndPoint(null);
-        setSelectedShape(null);
-        setline4shape(false);
-      } else {
-        // console.log("HELLO")
-        setIsCreatingLine(false);
-        setEndPoint(null);
-        setStartPoint(null);
-        setSelectedShape(null);
-        setline4shape(false);
-      }
-    }
+  const handleMouseUp = (e) => {
+    // if (startPoint) {
+    //   // Check if there is a shape below the mouse pointer
+    //   // const shapeBelow = selectedShape;
+    //   if (selectedShape && (selectedShape.x !== startPoint.x - 50 || selectedShape.y !== startPoint.y - 50)) {
+    //     // Create endpoint only if there is a shape below
+    //     setIsCreatingLine(false);
+    //     const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x + 50, selectedShape.y + 50] };
+    //     setLines((prevLines) => [...prevLines, newLine]);
+    //     setStartPoint(null);
+    //     setEndPoint(null);
+    //     setSelectedShape(null);
+    //     setline4shape(false);
+    //   } else {
+    //     // console.log("HELLO")
+    //     setIsCreatingLine(false);
+    //     setEndPoint(null);
+    //     setStartPoint(null);
+    //     setSelectedShape(null);
+    //     setline4shape(false);
+    //   }
+    // }
+
+    // const pos = e.target.getAbsolutePosition();
+    // handleUpdate(pos.x, pos.y, e.target.index);
+    // console.log(pos);
+    // handleDrop(e, "process")
+    // handleDrop(e, "process")
   };
 
   
@@ -306,8 +373,8 @@ const Sidebar = () => {
     <div className="p-3">
       <div className="d-flex align-items-center">
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}
-              onMouseDown={handleDoubleClick}
-              onMouseMove={handleMouseMove}
+              onClick={handleDoubleClick}
+              // onDragMove={handleMouseMove}
               onMouseUp={handleMouseUp}
         >
           <Layer>
@@ -340,12 +407,10 @@ const Sidebar = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <ProcessShape
-                    x={100}
-                    y={25}
-                    fill="skyblue"
-                    stroke="black"
-                    strokeWidth={4}
+                    id={0}
+                    {... shapeProps}
                     handleDrop={handleDrop}
+                    onTransformEnd={handleTransformEnd}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -418,10 +483,17 @@ const Sidebar = () => {
             {processes.map((eachProcess, index) => (
               <ProcessShape
                 key={index}
+                id={eachProcess.id}
                 x={eachProcess.x}
                 y={eachProcess.y}
+                width={eachProcess.width}
+                height={eachProcess.height}
+                stroke={"black"}
                 fill={eachProcess.fill}
-                handleDrop={() => setR(2)}
+                onTransformEnd={(newAttrs) => handleTransformEnd(eachProcess.id, newAttrs)}
+                // handleDrop={() => setR(2)}
+                isSelected={isSelected}
+                setisSelected={setisSelected}
               />
             ))}
             {text.map((eachText, index) => (
@@ -496,8 +568,10 @@ const Sidebar = () => {
              ))} 
           </Layer>
         </Stage>
-         {console.log(lines)}
-        {/* {console.log(selectedShape)} */}
+         {/* {console.log(lines)} */}
+        {console.log(processes)}
+        {/* {console.log(circles)} */}
+        {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
     </div>
   );

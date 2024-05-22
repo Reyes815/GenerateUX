@@ -1,5 +1,5 @@
 import React from "react";
-import { Shape, Group, Line } from "react-konva";
+import { Shape, Group, Line, Rect, Transformer } from "react-konva";
 import Shapes from "./Shapes";
 import TextAttachment from "./TextAttachment";
 
@@ -7,91 +7,179 @@ class ProcessShape extends Shapes {
   constructor(props) {
     super(props);
     this.shapeRef = React.createRef();
-    this.handleRef = React.createRef();
+    // this.handleRef = React.createRef();
+    this.transformerRef = React.createRef();
+    this.textAttachmentRef = React.createRef();
+    this.state = {
+      textX: props.x + 5,
+      textY: props.y + 5,
+      isSelected: false
+    };
   }
+
+  // componentDidMount() {
+  //   const shapeNode = this.shapeRef.current;
+  //   const handleNode = this.handleRef.current;
+
+  //   const onMouseMoveResize = (event) => {
+  //     const dx = event.evt.movementX;
+  //     const dy = event.evt.movementY;
+  //     shapeNode.width(shapeNode.width() + dx);
+  //     shapeNode.height(shapeNode.height() + dy);
+  //   };
+
+  //   handleNode.on("dragmove", onMouseMoveResize);
+  //   // Cleanup on unmount
+  //   return () => {
+  //     handleNode.off("dragmove", onMouseMoveResize);
+  //   };
+  // }
 
   componentDidMount() {
-    const shapeNode = this.shapeRef.current;
-    const handleNode = this.handleRef.current;
+    this.attachTransformer();
+}
 
-    const onMouseMoveResize = (event) => {
-      const dx = event.evt.movementX;
-      const dy = event.evt.movementY;
-      shapeNode.width(shapeNode.width() + dx);
-      shapeNode.height(shapeNode.height() + dy);
-    };
+componentDidUpdate() {
+    this.attachTransformer();
+}
 
-    handleNode.on("dragmove", onMouseMoveResize);
-    // Cleanup on unmount
-    return () => {
-      handleNode.off("dragmove", onMouseMoveResize);
-    };
+attachTransformer() {
+  const transformer = this.transformerRef.current;
+  const shapeNode = this.shapeRef.current;
+
+  if (transformer && shapeNode) {
+    transformer.nodes([shapeNode]);
+    transformer.getLayer().batchDraw();
+  }
+}
+
+
+handleDragMove = (e) => {
+  const node = this.shapeRef.current;
+  if (node) {
+    this.setState({
+      textX: node.x() + 5,
+      textY: node.y() + 5,
+    });
+
+    const textAttachment = this.textAttachmentRef.current;
+    if (textAttachment && textAttachment.position) { // Check if position method exists
+      textAttachment.position({ x: node.x() + 5, y: node.y() + 5 });
+    }
   }
 
-  render() {
-    const { x, y, fill, handleDrop } = this.props;
 
-    return (
-      <Group draggable onDragEnd={(e) => handleDrop(e, "process")}>
-        {/* Resize handle at bottom right corner */}
-        <Line
-          ref={this.handleRef}
-          points={[x + 100, y + 50, x + 110, y + 50, x + 110, y + 60]}
-          stroke="blue"
-          strokeWidth={4}
-          draggable
-        />
+};
 
-        
-        <Shape
-          x={x}
-          y={y}
-          width={100}
-          height={50}
-          ref={this.shapeRef}
-          sceneFunc={(context, shape) => {
-            const width = shape.width();
-            const height = shape.height();
-            const cornerRadius = 10; // Adjust this value to change the roundness of corners
+handleDragEnd = (e) => {
+  const node = this.shapeRef.current;
+  if(this.props.id == 0){
+    this.props.handleDrop(e, "process")
+    this.setState({
+      textX: node.x() + 5,
+      textY: node.y() + 5,
+    });
+  } else {
+    const scaleX = node.scaleX();
+    const scaleY = node.scaleY();
 
-            context.beginPath();
-            context.moveTo(cornerRadius, 0); // Top-left corner
-            context.arcTo(
-              width,
-              0,
-              width,
-              cornerRadius,
-              cornerRadius
-            ); // Top-right corner
-            context.arcTo(
-              width,
-              height,
-              width - cornerRadius,
-              height,
-              cornerRadius
-            ); // Bottom-right corner
-            context.arcTo(
-              0,
-              height,
-              0,
-              height - cornerRadius,
-              cornerRadius
-            ); // Bottom-left corner
-            context.arcTo(0, 0, cornerRadius, 0, cornerRadius); // Back to Top-left corner
-            context.closePath();
+    this.props.onTransformEnd({
+      x: node.x(),
+      y: node.y(),
+      width: Math.max(5, node.width() * scaleX),
+      height: Math.max(5, node.height() * scaleY),
+    });
+  }
+}
 
-            // (!) Konva specific method, it is very important
-            context.fillStrokeShape(shape);
+handleTransformEnd = (e) => {
+  const node = this.shapeRef.current;
+  if (node) {
+    const scaleX = node.scaleX();
+    const scaleY = node.scaleY();
+
+    node.scaleX(1);
+    node.scaleY(1);
+
+    this.props.onTransformEnd({
+      x: node.x(),
+      y: node.y(),
+      width: Math.max(5, node.width() * scaleX),
+      height: Math.max(5, node.height() * scaleY),
+    });
+
+    this.setState({
+      textX: node.x() + 5,
+      textY: node.y() + 5,
+    });
+
+    const textAttachment = this.textAttachmentRef.current;
+    if (textAttachment && textAttachment.position) { // Check if position method exists
+      textAttachment.position({ x: node.x() + 5, y: node.y() + 5 });
+    }
+  }
+};
+
+handleOnClick = (e) => {
+  this.setState((prevState) => ({
+    isSelected: !prevState.isSelected
+  }));
+}
+
+
+render() {
+  const { x, y, width, height, fill, handleDrop, stroke } = this.props;
+  const { textX, textY, isSelected } = this.state;
+
+  return (
+    <Group>
+      <Rect
+        ref={this.shapeRef}
+        x={x}
+        y={y}
+        onDragEnd={this.handleDragEnd}
+        onDragMove={this.handleDragMove}
+        onClick={this.handleOnClick}
+        width={width}
+        height={height}
+        cornerRadius={10}
+        fill={fill}
+        stroke={stroke}
+        draggable={true}
+        onTransformEnd={(e) => {
+          const node = this.shapeRef.current;
+          const scaleX = node.scaleX();
+          const scaleY = node.scaleY();
+
+          node.scaleX(1);
+          node.scaleY(1);
+          this.props.onTransformEnd({
+            x: node.x(),
+            y: node.y(),
+            width: Math.max(5, node.width() * scaleX),
+            height: Math.max(5, node.height() * scaleY)
+          });
+        }}
+      />
+      {isSelected && ( // Conditionally render Transformer if isSelected is true
+        <Transformer
+          ref={this.transformerRef}
+          enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
+          boundBoxFunc={(oldBox, newBox) => {
+            newBox.width = Math.max(5, newBox.width);
+            newBox.height = Math.max(5, newBox.height);
+            return newBox;
           }}
-          fill={fill}
-          stroke="black" // Add stroke color here
-          strokeWidth={1} // Add stroke width here
         />
-        <TextAttachment x={x + 5} y={y + 5} />
-
-      </Group>
-    );
-  }
+       )} 
+      <TextAttachment
+        ref={this.textAttachmentRef}
+        x={textX}
+        y={textY}
+      />
+    </Group>
+  );
+}
 }
 
 export default ProcessShape;
