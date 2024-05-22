@@ -15,18 +15,15 @@ class EditableText extends Shapes {
     const textNode = e.target;
     const stage = textNode.getStage();
     const layer = textNode.getLayer();
-
     const textPosition = textNode.absolutePosition();
     const stageBox = stage.container().getBoundingClientRect();
-
     const areaPosition = {
       x: stageBox.left + textPosition.x,
       y: stageBox.top + textPosition.y,
     };
-
     const textarea = document.createElement("textarea");
     document.body.appendChild(textarea);
-
+    const currText = textNode.text();
     textarea.value = textNode.text();
     textarea.style.position = "absolute";
     textarea.style.top = areaPosition.y + "px";
@@ -72,12 +69,11 @@ class EditableText extends Shapes {
       this.setState({ text: textarea.value });
       textNode.text(textarea.value);
       layer.draw();
-      removeTextarea();
     });
   };
 
   render() {
-    const { x, y, handleDrop } = this.props;
+    const { x, y, currText, handleDrop } = this.props;
     const { text, isEditing } = this.state;
 
     return (
@@ -87,6 +83,7 @@ class EditableText extends Shapes {
             onDragEnd={(e) => handleDrop(e, "text")}
             x={x}
             y={y}
+            currText={currText}
             text={text}
             fontSize={15}
             fill="black"

@@ -213,16 +213,17 @@ const handleGenerateJson = () => {
         e.target.position({ x: 0, y: 0 });
         break;
       
-        case "text":
-          if (mousePos.x < 260){
-            invalid(e,25,270);
-            return;
-          }
-
-          const newTexts = {x: e.target.x(), y: e.target.y()};
-          setText((prevTexts) => [...prevTexts, newTexts]);
-          e.target.position({x:20, y:270});
-          break;
+      case "text":
+        if (mousePos.x < 260){
+          invalid(e,25,270);
+          return;
+        }
+        const newTexts = {x: e.target.x(), y: e.target.y(), currText: e.target.text()};
+        console.log("testing text");
+        console.log(newTexts.currText);
+        setText((prevTexts) => [...prevTexts, newTexts]);
+        e.target.position({x:20, y:270});
+        break;
 
     
       case "cancel":
