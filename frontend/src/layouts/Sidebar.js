@@ -55,7 +55,7 @@ const Sidebar = () => {
       lines: lines,
       arrows: arrow,
       objects: object,
-      text: text
+      texts: text
     };
     
     return JSON.stringify(data, null, 2);
@@ -73,7 +73,8 @@ const handleGenerateJson = () => {
     stroke: "black",
     width: 100,
     height: 50,
-    strokeWidth: 4
+    strokeWidth: 4,
+    text: ''
   });
 
 
@@ -167,7 +168,7 @@ const handleGenerateJson = () => {
         case "process":
           if (mousePos.x < 260) {
             console.log("Cannot drop in the restricted area.");
-            invalid(e, 50, 12);
+            invalid(e, 100, 25);
             return;
           }
           
@@ -193,7 +194,8 @@ const handleGenerateJson = () => {
             stroke: "black",
             width: 100,
             height: 50,
-            strokeWidth: 4
+            strokeWidth: 4,
+            text: ''
           };
           setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
           //Shapes.addProcess(newProcess);
@@ -213,17 +215,16 @@ const handleGenerateJson = () => {
         e.target.position({ x: 0, y: 0 });
         break;
       
-      case "text":
-        if (mousePos.x < 260){
-          invalid(e,25,270);
-          return;
-        }
-        const newTexts = {x: e.target.x(), y: e.target.y(), currText: e.target.text()};
-        console.log("testing text");
-        console.log(newTexts.currText);
-        setText((prevTexts) => [...prevTexts, newTexts]);
-        e.target.position({x:20, y:270});
-        break;
+        case "text":
+          if (mousePos.x < 260){
+            invalid(e,25,270);
+            return;
+          }
+
+          const newTexts = {x: e.target.x(), y: e.target.y()};
+          setText((prevTexts) => [...prevTexts, newTexts]);
+          e.target.position({x:20, y:270});
+          break;
 
     
       case "cancel":
@@ -244,7 +245,7 @@ const handleGenerateJson = () => {
 
   };
 
-  const handleUpdate = (newX, newY, id) => {
+  const handleUpdate = (newX, newY,newText, id) => {
     // Update the circles
     // const circletoUpdate = circles.find(circle => circle.id === id);
     const ProcesstoUpdate = processes.find(process => process.id === id);
@@ -273,7 +274,7 @@ const handleGenerateJson = () => {
     // setCircles(updatedCircles);
     // const pos = e.target.getAbsolutePosition();
     const updatedProcesses = processes.map(process => 
-      process.id === id ? { ...process, x: newX, y: newY } : process
+      process.id === id ? { ...process, x: newX, y: newY, text:newText } : process
     );
 
     console.log(updatedProcesses);
@@ -462,6 +463,7 @@ const handleGenerateJson = () => {
                 height={eachProcess.height}
                 stroke={"black"}
                 fill={eachProcess.fill}
+                text={eachProcess.text}
                 onTransformEnd={(newAttrs) => handleTransformEnd(eachProcess.id, newAttrs)}
                 // handleDrop={() => setR(2)}
                 isSelected={isSelected}
@@ -522,7 +524,6 @@ const handleGenerateJson = () => {
           </Layer>
         </Stage>
          {/* {console.log(lines)} */}
-        {console.log(processes)}
         {/* {console.log(circles)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
