@@ -50,7 +50,7 @@ class CircleShape extends Shapes {
   handleonClick = (e) => {
     if (this.props.id > 0) {
       // const circle = {id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill};
-      this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill})
+      this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill, type: 'start'})
       // console.log(this.props.selectedShape, this.props.id);
 
       // Schedule the toggle action after ensuring the state is updated
@@ -84,7 +84,7 @@ class CircleShape extends Shapes {
     this.setState({ isDraggable: false }); // Disable draggable property
     this.props.setline4shape(true);
     this.setState({ line: true });
-    console.log("hello" + this.props.id)
+    // console.log("hello" + this.props.id)
   }
 
   na_makeline = (e) => {
@@ -97,7 +97,7 @@ class CircleShape extends Shapes {
   handleMouseEnter = (e) => {
     this.setState({ isHovered: true });
     if(this.props.startPoint){
-      this.props.setSelectedShape(this.props)
+      this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill, type: 'start'})
     }
     // this.props.setSelectedShape(this.props)
     // console.log(e.target.getClientRect(), "sdfsdfsdfs");

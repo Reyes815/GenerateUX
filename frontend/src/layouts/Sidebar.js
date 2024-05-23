@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useRef, useState } from "react";
-import { Layer, Line, Stage } from "react-konva";
+import { Arrow, Layer, Line, Stage } from "react-konva";
 //import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
 import DiamondShape from "../components/Diamond_Comp";
@@ -36,6 +36,7 @@ const Sidebar = () => {
   const [text, setText] = useState([]);
   const [jsonOutput, setJsonOutput] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
+  const [startShape, setStartShape] = useState({});
 
   const handleClosePopup = () => {
     setPopupOpen(false);
@@ -85,8 +86,18 @@ const handleGenerateJson = () => {
     });
   }
 
-  const handleTransformEnd = (id, newAttrs) => {
-    console.log("Transformed shape attributes:", newAttrs);
+  const handleTransformEnd = (id, newAttrs, shapeType) => {
+    // console.log("Transformed shape attributes:", newAttrs);
+
+    const updatedLines = lines.map(line => {
+      if (line.startShapeId === id && line.startShapeType === shapeType) {
+        return { ...line, points: [newAttrs.x + 50, newAttrs.y + 50, line.points[2], line.points[3]] };
+      } else if (line.endShapeId === id && line.endShapeType === shapeType) {
+        return { ...line, points: [line.points[0], line.points[1], newAttrs.x + 50, newAttrs.y] };
+      }
+      return line;
+    });
+    setLines(updatedLines);
 
 
     setProcesses(prevProcesses =>
@@ -138,7 +149,7 @@ const handleGenerateJson = () => {
 
         const newCircle = { id: ++Circleid.current, x: e.target.x(), y: e.target.y(), fill: "skyblue" };
         setCircles((prevCircles) => [...prevCircles, newCircle]);
-        console.log(e);
+        // console.log(e);
         e.target.position({ x: 0, y: 0 });
         break;
     
@@ -243,39 +254,39 @@ const handleGenerateJson = () => {
 
   };
 
-  const handleUpdate = (newX, newY, id) => {
+  const handleUpdate = (newX, newY, id, shapeType) => {
     // Update the circles
     // const circletoUpdate = circles.find(circle => circle.id === id);
-    const ProcesstoUpdate = processes.find(process => process.id === id);
 
     // const x = circletoUpdate.x + 50;
 
-    
-  
     // // Update the endpoints of the lines connected to the moved circle
     // const updatedLines = lines.map(line => {
     //   if (line.points[0] == x) {
     //     // Update the first endpoint of the line
-    //     // console.log("sdfsdfsdfsdf")
-    //     return { ...line, points: [newX + 50, newY + 50, line.points[2], line.points[3]] };
+    //     return { ...line, points: [newX + 50, newY + 80, line.points[2], line.points[3]] };
     //   } else if (line.points[2] == x) {
-    // // //     // Update the second endpoint of the line
-    //     return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 50] };
+    //     // Update the second endpoint of the line
+    //     return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 20] };
     //   }
     //   return line;
     // });
     // setLines(updatedLines);
 
-    // const updatedCircles = circles.map(circle =>
-    //   circle.id === id ? { ...circle, x: newX, y: newY } : circle
-    // );
-    // setCircles(updatedCircles);
-    // const pos = e.target.getAbsolutePosition();
-    const updatedProcesses = processes.map(process => 
-      process.id === id ? { ...process, x: newX, y: newY } : process
-    );
+    const updatedLines = lines.map(line => {
+      if (line.startShapeId === id && line.startShapeType === shapeType) {
+        return { ...line, points: [newX + 50, newY + 80, line.points[2], line.points[3]] };
+      } else if (line.endShapeId === id && line.endShapeType === shapeType) {
+        return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 20] };
+      }
+      return line;
+    });
+    setLines(updatedLines);
 
-    console.log(updatedProcesses);
+    const updatedCircles = circles.map(circle =>
+      circle.id === id ? { ...circle, x: newX, y: newY } : circle
+    );
+    setCircles(updatedCircles);
   };
   
 
@@ -293,12 +304,34 @@ const handleGenerateJson = () => {
     // const clickedPoint = { x: layerX, y: layerY };
 
     // const circleClicked = circles.some(circle => isPointInCircle(clickedPoint, circle));
+    // console.log(selectedShape.type, line4shape)
 
-    if (circles.length !=0 && line4shape) {
-      setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 50});
-      setIsCreatingLine(true);
-    } else {
-        setSelectedShape(null);
+    if (line4shape && selectedShape) {
+      // console.log("ytytyty")
+      switch(selectedShape.type){
+        case 'process':
+          // console.log("hfskjhguh")
+          setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
+          setIsCreatingLine(true);
+          setStartShape(selectedShape);
+          break;
+        case 'start':
+          setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
+          setIsCreatingLine(true);
+          setStartShape(selectedShape);
+          break;
+      }
+    //   if(selectedShape.type === 'start')
+    //   setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
+    //   setIsCreatingLine(true);
+    //   setStartShape(selectedShape);
+    //  } else if(selectedShape.type === 'process'){
+    //   console.log("hfskjhguh")
+    //   setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
+    //   setIsCreatingLine(true);
+    //   setStartShape(selectedShape);
+    // } //else {
+    //   setSelectedShape(null);
     }
 
     // if(circleClicked){
@@ -310,39 +343,73 @@ const handleGenerateJson = () => {
   };
 
   const handleMouseMove = (e) => {
-    // const { layerX, layerY } = e.evt;
+    const { layerX, layerY } = e.evt;
 
-    // if (startPoint && isCreatingLine) {
-    //   setEndPoint({ x: layerX, y: layerY });
-    // }
+    if (startPoint && isCreatingLine) {
+      setEndPoint({ x: layerX, y: layerY });
+    }
 
-    const pos = e.target.getAbsolutePosition();
-    console.log(pos);
+    // const pos = e.target.getAbsolutePosition();
+    // console.log(pos);
     // handleUpdate(e);
   };
 
   const handleMouseUp = (e) => {
-    // if (startPoint) {
-    //   // Check if there is a shape below the mouse pointer
-    //   // const shapeBelow = selectedShape;
-    //   if (selectedShape && (selectedShape.x !== startPoint.x - 50 || selectedShape.y !== startPoint.y - 50)) {
-    //     // Create endpoint only if there is a shape below
-    //     setIsCreatingLine(false);
-    //     const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x + 50, selectedShape.y + 50] };
-    //     setLines((prevLines) => [...prevLines, newLine]);
-    //     setStartPoint(null);
-    //     setEndPoint(null);
-    //     setSelectedShape(null);
-    //     setline4shape(false);
-    //   } else {
-    //     // console.log("HELLO")
-    //     setIsCreatingLine(false);
-    //     setEndPoint(null);
-    //     setStartPoint(null);
-    //     setSelectedShape(null);
-    //     setline4shape(false);
-    //   }
-    // }
+    if (startPoint  && selectedShape.x != startShape.x) {
+      const endShape = selectedShape;
+      // console.log(endShape);
+      // Check if there is a shape below the mouse pointer
+      // const shapeBelow = selectedShape;
+      if (endShape && (endShape.x !== startPoint.x - 50 || endShape.y !== startPoint.y - 50)) {
+        // Create endpoint only if there is a shape below
+        if(endShape.type == 'process'){
+          const newLine = {
+            points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y],
+            startShapeId: startShape.id,
+            startShapeType: startShape.type, // Add shape type
+            endShapeId: endShape.id,
+            endShapeType: endShape.type, // Add shape type
+          };
+
+          setLines((prevLines) => [...prevLines, newLine]);
+        } else {
+          const newLine = {
+            points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y + 20],
+            startShapeId: startShape.id,
+            startShapeType: startShape.type, // Add shape type
+            endShapeId: endShape.id,
+            endShapeType: endShape.type, // Add shape type
+          };
+          setLines((prevLines) => [...prevLines, newLine]);
+        }
+        // setLines((prevLines) => [...prevLines, newLine]);
+        // setIsCreatingLine(false);
+        // const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x + 50, selectedShape.y + 20] };
+        // setLines((prevLines) => [...prevLines, newLine]);
+        // setStartPoint(null);
+        // setEndPoint(null);
+        // setSelectedShape(null);
+        // setline4shape(false);
+       }// else {
+      //   console.log("HELLO")
+      //   setIsCreatingLine(false);
+      //   setEndPoint(null);
+      //   setStartPoint(null);
+      //   setSelectedShape(null);
+      //   setline4shape(false);
+      // }
+      setIsCreatingLine(false);
+      setStartPoint(null);
+      setEndPoint(null);
+      setSelectedShape(null);
+      setline4shape(false);
+    } else {
+      setIsCreatingLine(false);
+      setEndPoint(null);
+      setStartPoint(null);
+      setSelectedShape(null);
+      setline4shape(false);
+    }
 
     // const pos = e.target.getAbsolutePosition();
     // handleUpdate(pos.x, pos.y, e.target.index);
@@ -358,13 +425,13 @@ const handleGenerateJson = () => {
     <div className="p-3">
       <div className="d-flex align-items-center">
         <Stage width={window.innerWidth} height={window.innerHeight} ref={stageRef}
-              onClick={handleDoubleClick}
-              // onDragMove={handleMouseMove}
+              onMouseDown={handleDoubleClick}
+              onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
         >
           <Layer>
           {startPoint && endPoint && (
-                        <Line
+                        <Arrow
                           points={[startPoint.x, startPoint.y, endPoint.x, endPoint.y]}
                           stroke="black"
                           strokeWidth={2}
@@ -381,6 +448,7 @@ const handleGenerateJson = () => {
                     sidebar={true}
                     circleOnclick={circleOnclick}
                     setSelectedShape={setSelectedShape}
+                    setline4shape={setline4shape}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -395,6 +463,7 @@ const handleGenerateJson = () => {
                     id={0}
                     {... shapeProps}
                     handleDrop={handleDrop}
+                    setline4shape={setline4shape}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -442,7 +511,7 @@ const handleGenerateJson = () => {
                 radius={CircleShape.radius}
                 fill={eachCircle.fill}
                 sidebar={false}
-                handleDrop={(newX, newY) => handleUpdate(newX, newY, eachCircle.id)}
+                handleDrop={(newX, newY) => handleUpdate(newX, newY, eachCircle.id, 'start')}
                 // isSelected={eachCircle === selectedShape}
                 setisSelected={setisSelected}
                 startPoint={startPoint}
@@ -461,10 +530,14 @@ const handleGenerateJson = () => {
                 height={eachProcess.height}
                 stroke={"black"}
                 fill={eachProcess.fill}
-                onTransformEnd={(newAttrs) => handleTransformEnd(eachProcess.id, newAttrs)}
+                onTransformEnd={(newAttrs) => handleTransformEnd(eachProcess.id, newAttrs, 'process')}
                 // handleDrop={() => setR(2)}
                 isSelected={isSelected}
                 setisSelected={setisSelected}
+                startPoint={startPoint}
+                selectedShape={selectedShape}
+                setSelectedShape={setSelectedShape}
+                setline4shape={setline4shape}
               />
             ))}
             {text.map((eachText, index) => (
@@ -511,7 +584,7 @@ const handleGenerateJson = () => {
           ))}
 
  {lines.map((line, index) => (
-              <Line
+              <Arrow
                 key={index}
                 points={line.points}
                 stroke="black"
@@ -520,8 +593,9 @@ const handleGenerateJson = () => {
              ))} 
           </Layer>
         </Stage>
-         {/* {console.log(lines)} */}
-        {console.log(processes)}
+         {console.log(lines)}
+        {/* {console.log(selectedShape)} */}
+        {/* {console.log(startShape, " Wazzyo")} */}
         {/* {console.log(circles)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
