@@ -609,9 +609,9 @@ const handleGenerateJson = () => {
         {/* {console.log(circles)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
-      <button onClick={handleOnClick}>Choose A Theme</button>
+      <button className='button' onClick={handleOnClick}>Choose A Theme</button>
       {popupOpen && <Themes onClose={handleClosePopup} />}
-      <button onClick={handleGenerateJson}>Generate JSON</button>
+      <button className='button' onClick={handleGenerateJson}>Generate JSON</button>
     <textarea
       value={jsonOutput}
       readOnly
