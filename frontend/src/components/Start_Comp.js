@@ -19,7 +19,7 @@ class CircleShape extends Shapes {
     const newY = e.target.y();
 
     if (this.props.id > 0) {
-      this.props.handleDrop(newX, newY, this.props.id);
+      this.props.handleDrop(newX, newY, this.props.id, 'start');
     } else {
       this.props.handleDrop(e, "circle");
     }
@@ -30,7 +30,7 @@ class CircleShape extends Shapes {
     const newY = e.target.y();
 
     if (this.props.id > 0) {
-      this.props.handleDrop(newX, newY, this.props.id);
+      this.props.handleDrop(newX, newY, this.props.id, 'start');
     } else {
       // Do something else for the first instance
     }

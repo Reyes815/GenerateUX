@@ -28,6 +28,7 @@ const Sidebar = () => {
   const [selectedShape, setSelectedShape] = useState({});
   const Circleid = useRef(0);
   const Processid = useRef(0);
+  const Endid = useRef(0);
   const [isCreatingLine, setIsCreatingLine] = useState(false);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
@@ -170,7 +171,7 @@ const handleGenerateJson = () => {
           invalid(e, 0, 155);
           return;
         }
-        const newEndShape = { x: e.target.x(), y: e.target.y() };
+        const newEndShape = { id: ++Endid.current, x: e.target.x(), y: e.target.y() };
         setEndShape((prevEnd) => [...prevEnd, newEndShape]);
         e.target.position({ x: 0, y: 155 });
         break;
@@ -284,10 +285,20 @@ const handleGenerateJson = () => {
     });
     setLines(updatedLines);
 
-    const updatedCircles = circles.map(circle =>
-      circle.id === id ? { ...circle, x: newX, y: newY } : circle
-    );
-    setCircles(updatedCircles);
+    switch(shapeType){
+      case "start":
+        const updatedCircles = circles.map(circle =>
+          circle.id === id ? { ...circle, x: newX, y: newY } : circle
+        );
+        setCircles(updatedCircles);
+        break;
+      case "end":
+        const updatedEnd = end_shape.map(end =>
+          end.id === id ? { ...end, x: newX, y: newY } : end
+        );
+        setEndShape(updatedEnd);
+        break;
+    }
   };
   
   const updateText = (id, newText) => {
@@ -497,6 +508,10 @@ const handleGenerateJson = () => {
                     x={0}
                     y={155}
                     handleDrop={handleDrop}
+                    sidebar={true}
+                    circleOnclick={circleOnclick}
+                    setSelectedShape={setSelectedShape}
+                    setline4shape={setline4shape}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -578,9 +593,15 @@ const handleGenerateJson = () => {
               {end_shape.map((eachEnd, index) => (
               <CircleWithRing 
                 key={index}
+                id={eachEnd.id}
                 x={eachEnd.x}
                 y={eachEnd.y}
-                handleDrop={() => setR(2)}
+                handleDrop={(newX, newY) => handleUpdate(newX, newY, eachEnd.id, 'end')}
+                setisSelected={setisSelected}
+                startPoint={startPoint}
+                selectedShape={selectedShape}
+                setSelectedShape={setSelectedShape}
+                setline4shape={setline4shape}
                 />
               ))}
           {cancelShapes.map((cancel, index) => (
@@ -604,7 +625,7 @@ const handleGenerateJson = () => {
           </Layer>
         </Stage>
          {console.log(lines)}
-        {/* {console.log(selectedShape)} */}
+        {console.log(selectedShape)}
         {/* {console.log(startShape, " Wazzyo")} */}
         {/* {console.log(circles)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
