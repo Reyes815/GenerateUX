@@ -198,7 +198,7 @@ render() {
         width={width}
         height={height}
         cornerRadius={10}
-        fill={fill}
+        fill="skyblue"
         stroke={stroke}
         draggable={true}
         onTransformEnd={(e) => {

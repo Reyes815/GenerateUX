@@ -146,7 +146,7 @@ class CircleShape extends Shapes {
           x={100 / 2}
           y={100 / 2}
           radius={30}
-          fill={'skyblue'}
+          fill="skyblue"
           stroke={isSelected ? 'red' : 'black'}
           strokeWidth={1}
         />

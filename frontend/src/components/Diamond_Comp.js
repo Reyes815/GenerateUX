@@ -28,7 +28,7 @@ class DiamondShape extends Shapes {
           // (!) Konva specific method, it is very important
           context.fillStrokeShape(shape);
         }}
-        fill={fill}
+        fill="skyblue"
         draggable
         stroke="black" // Add stroke color here
         strokeWidth={1} // Add stroke width here

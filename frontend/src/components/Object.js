@@ -112,7 +112,7 @@ class Object extends Shapes {
   };
   
   render() {
-    const { x, y, width, height, fill, stroke, handleDrop } = this.props;
+    const { x, y, width, height, stroke, handleDrop } = this.props;
     const { textX, textY, isSelected } = this.state;
   
     return (
@@ -138,7 +138,7 @@ class Object extends Shapes {
   
             context.fillStrokeShape(shape);
           }}
-          fill={fill}
+          fill="skyblue"
           stroke="black"
           strokeWidth={1}
         />
