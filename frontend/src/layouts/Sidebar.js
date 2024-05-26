@@ -88,13 +88,13 @@ const handleGenerateJson = () => {
   }
 
   const handleTransformEnd = (id, newAttrs, shapeType) => {
-    // console.log("Transformed shape attributes:", newAttrs);
+    console.log("Transformed shape attributes:", newAttrs);
 
     const updatedLines = lines.map(line => {
       if (line.startShapeId === id && line.startShapeType === shapeType) {
-        return { ...line, points: [newAttrs.x + 50, newAttrs.y + 50, line.points[2], line.points[3]] };
+        return { ...line, points: [newAttrs.x + (newAttrs.width / 2), newAttrs.y + newAttrs.height, line.points[2], line.points[3]] };
       } else if (line.endShapeId === id && line.endShapeType === shapeType) {
-        return { ...line, points: [line.points[0], line.points[1], newAttrs.x + 50, newAttrs.y] };
+        return { ...line, points: [line.points[0], line.points[1], newAttrs.x + (newAttrs.width / 2), newAttrs.y] };
       }
       return line;
     });
