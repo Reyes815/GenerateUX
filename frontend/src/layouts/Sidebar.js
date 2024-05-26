@@ -145,10 +145,7 @@ const handleGenerateJson = () => {
           invalid(e, 0, 0);
           return;
         }
-
-        // const Pros = e.target.getAbsolutePosition();
-
-        const newCircle = { id: ++Circleid.current, x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+        const newCircle = { id: ++Circleid.current, x: e.target.x(), y: e.target.y() };
         setCircles((prevCircles) => [...prevCircles, newCircle]);
         // console.log(e);
         e.target.position({ x: 0, y: 0 });
@@ -160,7 +157,7 @@ const handleGenerateJson = () => {
           invalid(e, 125, 90);
           return;
         }
-        const newDiamond = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+        const newDiamond = { x: e.target.x(), y: e.target.y()};
         setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
         e.target.position({ x: 125, y: 90 });
         break;
@@ -220,7 +217,7 @@ const handleGenerateJson = () => {
           return;
         }
 
-        const newObjects = { x: e.target.x(), y: e.target.y(), fill: "skyblue" };
+        const newObjects = { x: e.target.x(), y: e.target.y()};
         setObjects((prevObjects) => [...prevObjects, newObjects]);
         e.target.position({ x: 0, y: 0 });
         break;

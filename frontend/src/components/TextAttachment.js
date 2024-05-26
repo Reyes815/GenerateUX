@@ -73,7 +73,6 @@ class TextAttachment extends Shapes {
       this.setState({ text: textarea.value });
       textNode.text(textarea.value);
       layer.draw();
-      removeTextarea();
     });
   };
 
