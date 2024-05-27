@@ -72,8 +72,11 @@ class TextAttachment extends Shapes {
     textarea.addEventListener("blur", () => {
       this.setState({ text: textarea.value });
       textNode.text(textarea.value);
+      this.props.handleText(this.state.text);
       layer.draw();
     });
+
+    // console.log(this.state.text);
   };
 
   render() {

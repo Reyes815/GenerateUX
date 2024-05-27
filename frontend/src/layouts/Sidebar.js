@@ -48,17 +48,21 @@ const Sidebar = () => {
   }
 
   const generateJson = () => {
+    const graph = generateGraph(lines);
+// console.log(graph);
     const data = {
-      circles: circles,
-      diamonds: diamonds,
-      endShapes: end_shape,
-      processes: processes,
-      cancelShapes: cancelShapes,
-      lines: lines,
-      arrows: arrow,
-      objects: object,
-      text: text
+        graph: graph
+      // circles: circles,
+      // diamonds: diamonds,
+      // endShapes: end_shape,
+      // processes: processes,
+      // cancelShapes: cancelShapes,
+      // lines: lines.map((line)),
+      // arrows: arrow,
+      // objects: object,
+      // text: text
     };
+    console.log(graph)
     
     return JSON.stringify(data, null, 2);
   };
@@ -66,6 +70,32 @@ const handleGenerateJson = () => {
   const jsonData = generateJson();
   setJsonOutput(jsonData);
 };
+
+const generateGraph = (lines) => {
+  // Initialize a new array to store the transformed data
+const newNodeArray = [];
+
+// Iterate over each object in the line array
+lines.forEach(({ startShapeId, startShapeType, endShapeId, endShapeType, startshape_text }) => {
+  // Check if the start shape is a process
+  if (startShapeType === 'process' && startShapeId != endShapeId) {
+    newNodeArray.push({ id: startShapeId, type: startShapeType, text: startshape_text });
+  }
+
+  // Check if the end shape is a process
+  // if (endShapeType === 'process' && startShapeId != endShapeId) {
+  //   newNodeArray.push({ id: endShapeId, type: endShapeType, text: text });
+  // }
+});
+
+// Sort the array by the id property
+newNodeArray.sort((a, b) => a.id - b.id);
+
+// Output the new array
+console.log(newNodeArray);
+return newNodeArray
+};
+
 
 
   const [shapeProps, setShapeProps] = useState({
@@ -90,29 +120,50 @@ const handleGenerateJson = () => {
   const handleTransformEnd = (id, newAttrs, shapeType) => {
     console.log("Transformed shape attributes:", newAttrs);
 
-    const updatedLines = lines.map(line => {
-      if (line.startShapeId === id && line.startShapeType === shapeType) {
-        return { ...line, points: [newAttrs.x + (newAttrs.width / 2), newAttrs.y + newAttrs.height, line.points[2], line.points[3]] };
-      } else if (line.endShapeId === id && line.endShapeType === shapeType) {
-        return { ...line, points: [line.points[0], line.points[1], newAttrs.x + (newAttrs.width / 2), newAttrs.y] };
-      }
-      return line;
-    });
-    setLines(updatedLines);
+    if(newAttrs.thistext == true){
+      setProcesses(prevProcesses =>
+        prevProcesses.map(process =>
+          process.id === id
+            ? { ...process, 
+              text: newAttrs.text
+             }
+            : process
+        )
+      );
 
+      const updatedLines = lines.map(line => {
+        if (line.startShapeId === id && line.startShapeType === shapeType) {
+          return { ...line, startshape_text: newAttrs.text };
+        } 
+        return line;
+      });
+      setLines(updatedLines);
 
-    setProcesses(prevProcesses =>
-      prevProcesses.map(process =>
-        process.id === id
-          ? { ...process, 
-            x: newAttrs.x,
-            y: newAttrs.y,
-            width: newAttrs.width,
-            height: newAttrs.height
-           }
-          : process
-      )
-    );
+    } else {
+      const updatedLines = lines.map(line => {
+        if (line.startShapeId === id && line.startShapeType === shapeType) {
+          return { ...line, points: [newAttrs.x + (newAttrs.width / 2), newAttrs.y + newAttrs.height, line.points[2], line.points[3]] };
+        } else if (line.endShapeId === id && line.endShapeType === shapeType) {
+          return { ...line, points: [line.points[0], line.points[1], newAttrs.x + (newAttrs.width / 2), newAttrs.y] };
+        }
+        return line;
+      });
+      setLines(updatedLines);
+  
+  
+      setProcesses(prevProcesses =>
+        prevProcesses.map(process =>
+          process.id === id
+            ? { ...process, 
+              x: newAttrs.x,
+              y: newAttrs.y,
+              width: newAttrs.width,
+              height: newAttrs.height
+             }
+            : process
+        )
+      );
+    }
 
     // console.log("After: ", shapeProps);
   };
@@ -202,7 +253,8 @@ const handleGenerateJson = () => {
             stroke: "black",
             width: 100,
             height: 50,
-            strokeWidth: 4
+            strokeWidth: 4,
+            text: "edit"
           };
           setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
           //Shapes.addProcess(newProcess);
@@ -385,6 +437,8 @@ const handleGenerateJson = () => {
             startShapeType: startShape.type, // Add shape type
             endShapeId: endShape.id,
             endShapeType: endShape.type, // Add shape type
+            startshape_text: startShape.text,
+            endshape_text: endShape.text
           };
 
           setLines((prevLines) => [...prevLines, newLine]);
@@ -480,6 +534,7 @@ const handleGenerateJson = () => {
                     {... shapeProps}
                     handleDrop={handleDrop}
                     setline4shape={setline4shape}
+                    onTransformEnd={handleTransformEnd}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -622,9 +677,9 @@ const handleGenerateJson = () => {
           </Layer>
         </Stage>
          {console.log(lines)}
-        {console.log(selectedShape)}
+        {/* {console.log(selectedShape, " selected")} */}
         {/* {console.log(startShape, " Wazzyo")} */}
-        {/* {console.log(circles)} */}
+        {/* {console.log(processes)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
       <button className='button' onClick={handleOnClick}>Choose A Theme</button>

@@ -18,11 +18,17 @@ class ProcessShape extends Shapes {
       isDraggable: true,
       line: false,
       isHoveredsmall: false,
+      text: ''
     };
   }
 
   componentDidMount() {
     this.attachTransformer();
+    document.addEventListener('keydown', this.handleKeyPress);
+}
+
+componentWillUnmount() {
+  document.removeEventListener('keydown', this.handleKeyPress);
 }
 
 componentDidUpdate() {
@@ -63,6 +69,8 @@ handleDragMove = (e) => {
       y: node.y(),
       width: Math.max(5, node.width() * scaleX),
       height: Math.max(5, node.height() * scaleY),
+      thistext: false,
+      text: this.state.text
     });
   }
 };
@@ -84,13 +92,15 @@ handleDragEnd = (e) => {
       y: node.y(),
       width: Math.max(5, node.width() * scaleX),
       height: Math.max(5, node.height() * scaleY),
+      thistext: false,
+      text: this.state.text
     });
   }
 }
 
 handleTransformEnd = (e) => {
   const node = this.shapeRef.current;
-  if (node) {
+  if (node && this.props.id > 0) {
     const scaleX = node.scaleX();
     const scaleY = node.scaleY();
 
@@ -102,6 +112,8 @@ handleTransformEnd = (e) => {
       y: node.y(),
       width: Math.max(5, node.width() * scaleX),
       height: Math.max(5, node.height() * scaleY),
+      thistext: false,
+      text: this.state.text
     });
 
     this.setState({
@@ -119,7 +131,7 @@ handleTransformEnd = (e) => {
 handleOnClick = (e) => {
   if (this.props.id > 0) {
     // const circle = {id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill};
-    this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill, type: 'process'})
+    this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
     // console.log(this.props.selectedShape, this.props.id);
 
     // Schedule the toggle action after ensuring the state is updated
@@ -143,7 +155,7 @@ handleOnClick = (e) => {
     // });
     // console.log(this.props.isSelected);
   } else {
-    this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill, type: 'process'})
+    this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
     this.props.circleOnclick(e)
   }
   // console.log("gggg");
@@ -152,7 +164,7 @@ handleOnClick = (e) => {
 handleMouseEnter = (e) => {
   this.setState({ isHovered: true });
   if(this.props.startPoint){
-    this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill, type: 'process'})
+    this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
   }
   // this.props.setSelectedShape(this.props)
   // console.log(e.target.getClientRect(), "sdfsdfsdfs");
@@ -181,8 +193,42 @@ na_makeline = (e) => {
   // console.log(this.props.selectedShape.toString() + "sfsdfsdf");
 }
 
+handleText = (text) => {
+  this.setState({ text: text });
+  // console.log(this.state.text);
+  this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
+}
+
+handleKeyPress = (event) => {
+  if (event.key === 'Enter' && this.props.id > 0) {
+    const { x, y } = this.props;
+    const { text } = this.state;
+
+    // console.log(
+    //   {
+    //     id,
+    //     x,
+    //     y,
+    //     width: this.props.width, // Assuming width and height are also needed
+    //     height: this.props.height,
+    //     thistext,
+    //     text,
+    //   }
+    // )
+
+    this.props.onTransformEnd({
+      x: this.props.x,
+      y: this.props.y,
+      width: this.props.width, // Assuming width and height are also needed
+      height: this.props.height,
+      thistext: true,
+      text: this.state.text,
+    });
+  }
+};
+
 render() {
-  const { x, y, width, height, fill, handleDrop, stroke } = this.props;
+  const { x, y, width, height, fill, handleDrop, stroke, id } = this.props;
   const { textX, textY, isSelected } = this.state;
 
   return (
@@ -195,6 +241,7 @@ render() {
         onDragMove={this.handleDragMove}
         onClick={this.handleOnClick}
         onMouseEnter={this.handleMouseEnter}
+        onkeypress
         width={width}
         height={height}
         cornerRadius={10}
@@ -202,18 +249,22 @@ render() {
         stroke={stroke}
         draggable={true}
         onTransformEnd={(e) => {
+          if(this.props.id > 0){
           const node = this.shapeRef.current;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
 
           node.scaleX(1);
           node.scaleY(1);
-          this.props.onTransformEnd({
-            x: node.x(),
-            y: node.y(),
-            width: Math.max(5, node.width() * scaleX),
-            height: Math.max(5, node.height() * scaleY)
-          });
+            this.props.onTransformEnd({
+              x: node.x(),
+              y: node.y(),
+              width: Math.max(5, node.width() * scaleX),
+              height: Math.max(5, node.height() * scaleY),
+              thistext: false,
+              text: this.state.text
+            });
+          }
         }}
       />
       {isSelected && ( // Conditionally render Transformer if isSelected is true
@@ -244,6 +295,8 @@ render() {
         ref={this.textAttachmentRef}
         x={textX}
         y={textY}
+        id={id}
+        handleText={this.handleText}
       />
     </Group>
   );
