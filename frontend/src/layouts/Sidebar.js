@@ -50,16 +50,16 @@ const Sidebar = () => {
   }
 
   const generateJson = () => {
-    const data = {
-      circles: circles,
-      decision: diamonds,
-      end: end_shape,
-      activities: processes,
-      cancel: cancelShapes,
-      lines: lines,
-      arrows: arrow,
-      objects: object,
-      text: text
+    const data = {  
+      // circles: circles,
+      // decision: diamonds,
+      // end: end_shape,
+      activities: processes.map(process => ({ id: process.id,text: process.text })),
+      // cancel: cancelShapes,
+      // lines: lines,
+      // arrows: arrow,
+      objects: object.map(object => ({id: object.id,text : object.text})),
+      // text: text
     };
     
     return JSON.stringify(data, null, 2);
@@ -70,10 +70,24 @@ const Sidebar = () => {
   };
 
   const CreateWireframe = () => {
-    const jsonData = generateJson();
-    const textPrompt = jsonData + " the theme is vintage. I want you to create me an html page based on the activity diagram."
-    navigate('/result', { state: { text: textPrompt } });
-  }
+    const jsonData = generateJson(); 
+    const data = JSON.parse(jsonData);
+    const activities = data.activities;
+    
+    
+    const texts = [];
+  
+    if (Array.isArray(activities)) {
+      activities.forEach(activity => {
+        texts.push("Generate me wireframe of a website's " + activity.text + " page using html and inline css with a color palette of sky blue and dark blue");
+      });
+    } else {
+      console.error('Error: Activities data is not in the expected format.');
+    }
+  
+    navigate('/result', { state: { texts: texts } });
+  };
+  
 
 
   const [shapeProps, setShapeProps] = useState({
