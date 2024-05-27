@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useRef, useState } from "react";
 import { Arrow, Layer, Line, Stage } from "react-konva";
+import { useNavigate } from 'react-router-dom';
 //import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
 import DiamondShape from "../components/Diamond_Comp";
@@ -15,6 +16,7 @@ import Themes from '../../src/components/popup/Themes';
 import "../assets/scss/sidebar.css";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [circles, setCircles] = useState([]);
   const [diamonds, setDiamond] = useState([]);
   const [end_shape, setEndShape] = useState([]);
@@ -50,17 +52,17 @@ const Sidebar = () => {
   const generateJson = () => {
     const graph = generateGraph(lines);
 // console.log(graph);
-    const data = {
+    const data = {  
         graph: graph
-      // circles: circles,
-      // diamonds: diamonds,
-      // endShapes: end_shape,
-      // processes: processes,
-      // cancelShapes: cancelShapes,
-      // lines: lines.map((line)),
-      // arrows: arrow,
-      // objects: object,
-      // text: text
+      // // circles: circles,
+      // // decision: diamonds,
+      // // end: end_shape,
+      // activities: processes.map(process => ({ id: process.id,text: process.text })),
+      // // cancel: cancelShapes,
+      // // lines: lines.map((line)),
+      // // arrows: arrow,
+      // objects: object.map(object => ({id: object.id,text : object.text})),
+      // // text: text
     };
     console.log(graph)
     
@@ -96,6 +98,25 @@ console.log(newNodeArray);
 return newNodeArray
 };
 
+  const CreateWireframe = () => {
+    const jsonData = generateJson(); 
+    const data = JSON.parse(jsonData);
+    const activities = data.activities;
+    
+    
+    const texts = [];
+  
+    if (Array.isArray(activities)) {
+      activities.forEach(activity => {
+        texts.push("Generate me wireframe of a website's " + activity.text + " page using html and inline css with a color palette of sky blue and dark blue");
+      });
+    } else {
+      console.error('Error: Activities data is not in the expected format.');
+    }
+  
+    navigate('/result', { state: { texts: texts } });
+  };
+  
 
 
   const [shapeProps, setShapeProps] = useState({
@@ -227,7 +248,7 @@ return newNodeArray
         case "process":
           if (mousePos.x < 260) {
             console.log("Cannot drop in the restricted area.");
-            invalid(e, 50, 12);
+            invalid(e, 100, 25);
             return;
           }
           
@@ -357,6 +378,22 @@ return newNodeArray
       )
     );
   };
+
+  const updateProcess = (id, newText) => {
+    setProcesses(prevProcess => 
+        prevProcess.map(Process => 
+          Process.id === id ? { ...Process, text: newText} : Process
+        )
+    )
+  }
+
+  const updateObject = (id, newText) => {
+    setObjects(prevObject => 
+        prevObject.map(Object => 
+          Object.id === id ? { ...Object, text: newText} : Object
+        )
+    )
+  }
 
   const circleOnclick = (e) => {
     const container = stageRef.current.container();
@@ -606,6 +643,7 @@ return newNodeArray
                 stroke={"black"}
                 fill={eachProcess.fill}
                 onTransformEnd={(newAttrs) => handleTransformEnd(eachProcess.id, newAttrs, 'process')}
+                updateProcess = {updateProcess}
                 // handleDrop={() => setR(2)}
                 isSelected={isSelected}
                 setisSelected={setisSelected}
@@ -631,6 +669,7 @@ return newNodeArray
                 y={eachObjects.y}
                 fill={eachObjects.fill}
                 handleDrop={() => setR(2)}
+                updateObject={updateObject}
               />
             ))}
             {diamonds.map((eachDia, index) => (
@@ -685,6 +724,7 @@ return newNodeArray
       <button className='button' onClick={handleOnClick}>Choose A Theme</button>
       {popupOpen && <Themes onClose={handleClosePopup} />}
       <button className='button' onClick={handleGenerateJson}>Generate JSON</button>
+      <button className='button' onClick={CreateWireframe}>Generate Wireframe</button>
     <textarea
       value={jsonOutput}
       readOnly

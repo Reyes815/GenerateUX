@@ -2,6 +2,7 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import Temporary from "../layouts/temporary.js";
+import { element, exact } from "prop-types";
 
 /****Layouts*****/
 const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
@@ -14,6 +15,7 @@ const User = lazy(() => import("../views/ui/User.js"));
 const Profile = lazy(() => import("../views/ui/Profile.js"));
 const temp = lazy(() => import("../layouts/temporary.js"));
 const Login = lazy(() => import("../views/ui/Login.js"));
+const Result = lazy(() => import("../views/ui/Result.js"));
 
 
 
@@ -21,8 +23,8 @@ const ThemeRoutes = [
   {
     element: <FullLayout />,
     children: [
-      { path: "/user", exact: true, element: <User /> }, // Updated route for User with dynamic parameter
-      { path: "/profile", exact: true, element: <Profile /> },
+      { path: "/user", exact: true, element: <User/> }, 
+      { path: "/profile", exact: true, element: <Profile/> },
     ],
   },
   {
@@ -36,6 +38,7 @@ const ThemeRoutes = [
       { path: "/", element: <Navigate to="/login" /> },
       { path: "/login", exact: true, element: <Login /> },
       { path: "/register", exact: true, element: <Registration /> },
+      { path: "/result", exact: true, element: <Result/> },
     ],
   },
 ];

@@ -111,6 +111,17 @@ class Object extends Shapes {
     }));
   };
   
+  handleTextAttachmentChange = (newText) => {
+    this.setState({ textAttachment: newText });
+    this.handleUpdateObject(newText)
+  };
+  
+  handleUpdateObject = (newText) => {
+    this.setState({ text: newText }, () => {  
+      this.props.updateObject(this.props.id, newText); // Update parent state
+    });
+  };
+
   render() {
     const { x, y, width, height, stroke, handleDrop } = this.props;
     const { textX, textY, isSelected } = this.state;
@@ -157,6 +168,7 @@ class Object extends Shapes {
           ref={this.textAttachmentRef}
           x={textX}
           y={textY}
+          onChange={this.handleTextAttachmentChange}
         />
       </Group>
     );

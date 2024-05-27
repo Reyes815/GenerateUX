@@ -299,7 +299,7 @@ render() {
         handleText={this.handleText}
       />
     </Group>
-  );
+  );    
 }
 }
 
