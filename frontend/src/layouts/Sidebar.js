@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useRef, useState } from "react";
 import { Arrow, Layer, Line, Stage } from "react-konva";
+import { useNavigate } from 'react-router-dom';
 //import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
 import DiamondShape from "../components/Diamond_Comp";
@@ -15,6 +16,7 @@ import Themes from '../../src/components/popup/Themes';
 import "../assets/scss/sidebar.css";
 
 const Sidebar = () => {
+  const navigate = useNavigate();
   const [circles, setCircles] = useState([]);
   const [diamonds, setDiamond] = useState([]);
   const [end_shape, setEndShape] = useState([]);
@@ -62,10 +64,16 @@ const Sidebar = () => {
     
     return JSON.stringify(data, null, 2);
   };
-const handleGenerateJson = () => {
-  const jsonData = generateJson();
-  setJsonOutput(jsonData);
-};
+  const handleGenerateJson = () => {
+    const jsonData = generateJson();
+    setJsonOutput(jsonData);
+  };
+
+  const CreateWireframe = () => {
+    const jsonData = generateJson();
+    const textPrompt = jsonData + " the theme is vintage. I want you to create me an html page based on the activity diagram."
+    navigate('/result', { state: { text: textPrompt } });
+  }
 
 
   const [shapeProps, setShapeProps] = useState({
@@ -630,6 +638,7 @@ const handleGenerateJson = () => {
       <button className='button' onClick={handleOnClick}>Choose A Theme</button>
       {popupOpen && <Themes onClose={handleClosePopup} />}
       <button className='button' onClick={handleGenerateJson}>Generate JSON</button>
+      <button className='button' onClick={CreateWireframe}>Generate Wireframe</button>
     <textarea
       value={jsonOutput}
       readOnly
