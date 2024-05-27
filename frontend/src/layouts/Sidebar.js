@@ -50,10 +50,10 @@ const Sidebar = () => {
   const generateJson = () => {
     const data = {
       circles: circles,
-      diamonds: diamonds,
-      endShapes: end_shape,
-      processes: processes,
-      cancelShapes: cancelShapes,
+      decision: diamonds,
+      end: end_shape,
+      activities: processes,
+      cancel: cancelShapes,
       lines: lines,
       arrows: arrow,
       objects: object,
@@ -176,7 +176,7 @@ const handleGenerateJson = () => {
         case "process":
           if (mousePos.x < 260) {
             console.log("Cannot drop in the restricted area.");
-            invalid(e, 50, 12);
+            invalid(e, 100, 25);
             return;
           }
           
@@ -310,6 +310,14 @@ const handleGenerateJson = () => {
     setProcesses(prevProcess => 
         prevProcess.map(Process => 
           Process.id === id ? { ...Process, text: newText} : Process
+        )
+    )
+  }
+
+  const updateObject = (id, newText) => {
+    setObjects(prevObject => 
+        prevObject.map(Object => 
+          Object.id === id ? { ...Object, text: newText} : Object
         )
     )
   }
@@ -585,6 +593,7 @@ const handleGenerateJson = () => {
                 y={eachObjects.y}
                 fill={eachObjects.fill}
                 handleDrop={() => setR(2)}
+                updateObject={updateObject}
               />
             ))}
             {diamonds.map((eachDia, index) => (

@@ -258,7 +258,7 @@ render() {
         onChange= {this.handleTextAttachmentChange}
       />
     </Group>
-  );
+  );    
 }
 }
 
