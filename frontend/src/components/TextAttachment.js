@@ -9,13 +9,13 @@ class TextAttachment extends Shapes {
       text: "Edit",
       isEditing: false,
     };
-    this.textRef = React.createRef(); // Create a ref for the Text component
+    this.textRef = React.createRef();
   }
 
-  handleDblClick = (e) => {
-    const textNode = this.textRef.current; // Access the Text component using the ref
+  handleDblClick = () => {
+    const textNode = this.textRef.current;
     const stage = textNode.getStage();
-    const layer = textNode.getLayer();
+    const layer = textNode.getLayer();  
 
     const textPosition = textNode.absolutePosition();
     const stageBox = stage.container().getBoundingClientRect();
@@ -59,9 +59,11 @@ class TextAttachment extends Shapes {
 
     textarea.addEventListener("keydown", (e) => {
       if (e.key === 'Enter') {
-        this.setState({ text: textarea.value });
-        textNode.text(textarea.value);
-        layer.draw();
+        this.setState({ text: textarea.value }, () => {
+          textNode.text(this.state.text);
+          layer.draw();
+          this.props.onChange(this.state.text);
+        });
         removeTextarea();
       }
       if (e.key === 'Escape') {
@@ -70,9 +72,11 @@ class TextAttachment extends Shapes {
     });
 
     textarea.addEventListener("blur", () => {
-      this.setState({ text: textarea.value });
-      textNode.text(textarea.value);
-      layer.draw();
+      this.setState({ text: textarea.value }, () => {
+        textNode.text(this.state.text);
+        layer.draw();
+        this.props.onChange(this.state.text);
+      });
     });
   };
 
@@ -84,7 +88,7 @@ class TextAttachment extends Shapes {
       <>
         {!isEditing && (
           <Text
-            ref={this.textRef} // Attach the ref to the Text component
+            ref={this.textRef}
             x={x}
             y={y}
             text={text}

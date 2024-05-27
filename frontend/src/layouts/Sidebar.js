@@ -306,6 +306,14 @@ const handleGenerateJson = () => {
     );
   };
 
+  const updateProcess = (id, newText) => {
+    setProcesses(prevProcess => 
+        prevProcess.map(Process => 
+          Process.id === id ? { ...Process, text: newText} : Process
+        )
+    )
+  }
+
   const circleOnclick = (e) => {
     const container = stageRef.current.container();
     const width = container.clientWidth;
@@ -551,6 +559,7 @@ const handleGenerateJson = () => {
                 stroke={"black"}
                 fill={eachProcess.fill}
                 onTransformEnd={(newAttrs) => handleTransformEnd(eachProcess.id, newAttrs, 'process')}
+                updateProcess = {updateProcess}
                 // handleDrop={() => setR(2)}
                 isSelected={isSelected}
                 setisSelected={setisSelected}

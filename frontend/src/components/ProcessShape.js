@@ -181,6 +181,17 @@ na_makeline = (e) => {
   // console.log(this.props.selectedShape.toString() + "sfsdfsdf");
 }
 
+handleTextAttachmentChange = (newText) => {
+  this.setState({ textAttachment: newText });
+  this.handleUpdateProcess(newText)
+};
+
+handleUpdateProcess = (newText) => {
+  this.setState({ text: newText }, () => {  
+    this.props.updateProcess(this.props.id, newText); // Update parent state
+  });
+};
+
 render() {
   const { x, y, width, height, fill, handleDrop, stroke } = this.props;
   const { textX, textY, isSelected } = this.state;
@@ -244,6 +255,7 @@ render() {
         ref={this.textAttachmentRef}
         x={textX}
         y={textY}
+        onChange= {this.handleTextAttachmentChange}
       />
     </Group>
   );
