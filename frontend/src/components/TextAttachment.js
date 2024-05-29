@@ -62,7 +62,7 @@ class TextAttachment extends Shapes {
         this.setState({ text: textarea.value }, () => {
           textNode.text(this.state.text);
           layer.draw();
-          this.props.onChange(this.state.text);
+          this.props.handleText(this.state.text);
         });
         removeTextarea();
       }
