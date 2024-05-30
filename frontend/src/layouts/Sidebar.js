@@ -40,7 +40,8 @@ const Sidebar = () => {
   const [isSelected, setisSelected] = useState(false);
   const [text, setText] = useState([]);
   const [jsonOutput, setJsonOutput] = useState('');
-  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupThemesOpen, setThemesPopupOpen] = useState(false);
+  const [popupBisRulesOpen, setBisRulesPopupOpen] = useState(false);
   const [startShape, setStartShape] = useState({});
   const [left_arrow, setLeft_arrow] = useState(false);
   const [right_arrow, setRight_arrow] = useState(false);
@@ -73,13 +74,20 @@ const Sidebar = () => {
     console.log(text);
   }
 
-
-  const handleClosePopup = () => {
-    setPopupOpen(false);
+  const handleThemesClosePopup = () => {
+    setThemesPopupOpen(false);
   };
   
-  const handleOnClick = () => {
-    setPopupOpen(true);
+  const handleThemesOnClick = () => {
+    setThemesPopupOpen(true);
+  }
+
+  const handleBisRulesClosePopup = () => {
+    setBisRulesPopupOpen(false);
+  };
+  
+  const handleBisRulesOnClick = () => {
+    setBisRulesPopupOpen(true);
   }
 
   const generateJson = () => {
@@ -748,10 +756,10 @@ const handleGenerateJson = () => {
         {/* {console.log(processes)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
-      <button className='button' onClick={handleOnClick}>Choose A Theme</button>
-      {popupOpen && <Themes onClose={handleClosePopup} onSubmit={handleThemesPopupSubmit} />}
-      <button className='button' onClick={handleOnClick}>Add Business Rules</button>
-      {popupOpen && <BusinessRules onClose={handleClosePopup} onSubmit={handleBisRulesSubmit} />}
+      <button className='button' onClick={handleThemesOnClick}>Choose A Theme</button>
+      {popupThemesOpen && <Themes onClose={handleThemesClosePopup} onSubmit={handleThemesPopupSubmit} />}
+      <button className='button' onClick={handleBisRulesOnClick}>Add Business Rules</button>
+      {popupBisRulesOpen && <BusinessRules onClose={handleBisRulesClosePopup} onSubmit={handleBisRulesSubmit} />}
       <button className='button' onClick={handleGenerateJson}>Generate JSON</button>
       <button className='button' onClick={CreateWireframe}>Generate Wireframe</button>
     <textarea
