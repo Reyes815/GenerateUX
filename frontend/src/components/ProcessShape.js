@@ -130,7 +130,6 @@ handleTransformEnd = (e) => {
 
 handleOnClick = (e) => {
   if (this.props.id > 0) {
-    // const circle = {id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill};
     this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
     // console.log(this.props.selectedShape, this.props.id);
 
@@ -141,24 +140,10 @@ handleOnClick = (e) => {
       }
     }, 0);
 
-    // if(this.props.selectedShape != null){
-      // if(this.props.selectedShape.id == this.props.id){
-      //   this.setState(prevState => ({ isSelected: !prevState.isSelected }), () => {
-      //     // console.log(this.state.isSelected ? "HELLO" : "hello");
-      //   });
-      // }
-    // }
-    
-    
-    // this.props.setisSelected(prevState => ({ isSelected: !prevState.isSelected }), () => {
-    //   console.log(this.state.isSelected ? "HELLO sdfsdf" : "hello");
-    // });
-    // console.log(this.props.isSelected);
   } else {
     this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
     this.props.circleOnclick(e)
   }
-  // console.log("gggg");
 };
 
 handleMouseEnter = (e) => {
@@ -166,16 +151,12 @@ handleMouseEnter = (e) => {
   if(this.props.startPoint){
     this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
   }
-  // this.props.setSelectedShape(this.props)
-  // console.log(e.target.getClientRect(), "sdfsdfsdfs");
-
 };
 
 handleMouseLeave = () => {
   if(this.state.line){
     this.setState({ isHovered: false });
   }
-  // this.props.setSelectedShape(null);
   this.setState({ isHovered: false });
 };
 
@@ -183,19 +164,16 @@ makeline = (e) => {
   this.setState({ isDraggable: false }); // Disable draggable property
   this.props.setline4shape(true);
   this.setState({ line: true });
-  // console.log("hello" + this.props.id)
 }
 
 na_makeline = (e) => {
   this.setState({ isDraggable: true }); // Disable draggable property
   this.props.setline4shape(false);
   this.setState({ line: false });
-  // console.log(this.props.selectedShape.toString() + "sfsdfsdf");
 }
 
 handleText = (text) => {
   this.setState({ text: text });
-  // console.log(this.state.text);
   this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
 }
 
@@ -203,18 +181,6 @@ handleKeyPress = (event) => {
   if (event.key === 'Enter' && this.props.id > 0) {
     const { x, y } = this.props;
     const { text } = this.state;
-
-    // console.log(
-    //   {
-    //     id,
-    //     x,
-    //     y,
-    //     width: this.props.width, // Assuming width and height are also needed
-    //     height: this.props.height,
-    //     thistext,
-    //     text,
-    //   }
-    // )
 
     this.props.onTransformEnd({
       x: this.props.x,
@@ -287,7 +253,6 @@ render() {
               stroke="black"
               onMouseEnter={this.makeline}
               onMouseLeave={this.na_makeline}
-              // onClick={() => console.log("ddddd")}
             />
             </>
        )} 

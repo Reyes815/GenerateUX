@@ -50,52 +50,24 @@ const Sidebar = () => {
   }
 
   const generateJson = () => {
-    const graph = generateGraph(lines);
-// console.log(graph);
     const data = {  
-        graph: graph
       // // circles: circles,
       // // decision: diamonds,
       // // end: end_shape,
-      // activities: processes.map(process => ({ id: process.id,text: process.text })),
+      activities: processes.map(process => ({ id: process.id,text: process.text })),
       // // cancel: cancelShapes,
       // // lines: lines.map((line)),
       // // arrows: arrow,
       // objects: object.map(object => ({id: object.id,text : object.text})),
       // // text: text
     };
-    console.log(graph)
     
     return JSON.stringify(data, null, 2);
   };
+
 const handleGenerateJson = () => {
   const jsonData = generateJson();
   setJsonOutput(jsonData);
-};
-
-const generateGraph = (lines) => {
-  // Initialize a new array to store the transformed data
-const newNodeArray = [];
-
-// Iterate over each object in the line array
-lines.forEach(({ startShapeId, startShapeType, endShapeId, endShapeType, startshape_text }) => {
-  // Check if the start shape is a process
-  if (startShapeType === 'process' && startShapeId != endShapeId) {
-    newNodeArray.push({ id: startShapeId, type: startShapeType, text: startshape_text });
-  }
-
-  // Check if the end shape is a process
-  // if (endShapeType === 'process' && startShapeId != endShapeId) {
-  //   newNodeArray.push({ id: endShapeId, type: endShapeType, text: text });
-  // }
-});
-
-// Sort the array by the id property
-newNodeArray.sort((a, b) => a.id - b.id);
-
-// Output the new array
-console.log(newNodeArray);
-return newNodeArray
 };
 
   const CreateWireframe = () => {
@@ -113,6 +85,8 @@ return newNodeArray
     } else {
       console.error('Error: Activities data is not in the expected format.');
     }
+
+    // console.log(texts)
   
     navigate('/result', { state: { texts: texts } });
   };
@@ -155,6 +129,10 @@ return newNodeArray
       const updatedLines = lines.map(line => {
         if (line.startShapeId === id && line.startShapeType === shapeType) {
           return { ...line, startshape_text: newAttrs.text };
+        } 
+        
+        if (line.endShapeId === id && line.endShapeType === shapeType) {
+          return { ...line, endshape_text: newAttrs.text };
         } 
         return line;
       });
@@ -328,23 +306,6 @@ return newNodeArray
 
   const handleUpdate = (newX, newY, id, shapeType) => {
     // Update the circles
-    // const circletoUpdate = circles.find(circle => circle.id === id);
-
-    // const x = circletoUpdate.x + 50;
-
-    // // Update the endpoints of the lines connected to the moved circle
-    // const updatedLines = lines.map(line => {
-    //   if (line.points[0] == x) {
-    //     // Update the first endpoint of the line
-    //     return { ...line, points: [newX + 50, newY + 80, line.points[2], line.points[3]] };
-    //   } else if (line.points[2] == x) {
-    //     // Update the second endpoint of the line
-    //     return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 20] };
-    //   }
-    //   return line;
-    // });
-    // setLines(updatedLines);
-
     const updatedLines = lines.map(line => {
       if (line.startShapeId === id && line.startShapeType === shapeType) {
         return { ...line, points: [newX + 50, newY + 80, line.points[2], line.points[3]] };
@@ -404,18 +365,9 @@ return newNodeArray
   };
 
   const handleDoubleClick = (e) => {
-    // const { layerX, layerY } = e.evt;
-
-    // const clickedPoint = { x: layerX, y: layerY };
-
-    // const circleClicked = circles.some(circle => isPointInCircle(clickedPoint, circle));
-    // console.log(selectedShape.type, line4shape)
-
     if (line4shape && selectedShape) {
-      // console.log("ytytyty")
       switch(selectedShape.type){
         case 'process':
-          // console.log("hfskjhguh")
           setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
           setIsCreatingLine(true);
           setStartShape(selectedShape);
@@ -426,25 +378,7 @@ return newNodeArray
           setStartShape(selectedShape);
           break;
       }
-    //   if(selectedShape.type === 'start')
-    //   setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
-    //   setIsCreatingLine(true);
-    //   setStartShape(selectedShape);
-    //  } else if(selectedShape.type === 'process'){
-    //   console.log("hfskjhguh")
-    //   setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
-    //   setIsCreatingLine(true);
-    //   setStartShape(selectedShape);
-    // } //else {
-    //   setSelectedShape(null);
     }
-
-    // if(circleClicked){
-    //   console.log(selectedShape)
-    // } else {
-    //   console.log("GGGG");
-    // }
-    // console.log({layerX, layerY});
   };
 
   const handleMouseMove = (e) => {
@@ -453,18 +387,12 @@ return newNodeArray
     if (startPoint && isCreatingLine) {
       setEndPoint({ x: layerX, y: layerY });
     }
-
-    // const pos = e.target.getAbsolutePosition();
-    // console.log(pos);
-    // handleUpdate(e);
   };
 
   const handleMouseUp = (e) => {
     if (startPoint  && selectedShape.x != startShape.x) {
       const endShape = selectedShape;
-      // console.log(endShape);
       // Check if there is a shape below the mouse pointer
-      // const shapeBelow = selectedShape;
       if (endShape && (endShape.x !== startPoint.x - 50 || endShape.y !== startPoint.y - 50)) {
         // Create endpoint only if there is a shape below
         if(endShape.type == 'process'){
@@ -489,22 +417,7 @@ return newNodeArray
           };
           setLines((prevLines) => [...prevLines, newLine]);
         }
-        // setLines((prevLines) => [...prevLines, newLine]);
-        // setIsCreatingLine(false);
-        // const newLine = { points: [startPoint.x, startPoint.y, selectedShape.x + 50, selectedShape.y + 20] };
-        // setLines((prevLines) => [...prevLines, newLine]);
-        // setStartPoint(null);
-        // setEndPoint(null);
-        // setSelectedShape(null);
-        // setline4shape(false);
-       }// else {
-      //   console.log("HELLO")
-      //   setIsCreatingLine(false);
-      //   setEndPoint(null);
-      //   setStartPoint(null);
-      //   setSelectedShape(null);
-      //   setline4shape(false);
-      // }
+       }
       setIsCreatingLine(false);
       setStartPoint(null);
       setEndPoint(null);
@@ -517,12 +430,6 @@ return newNodeArray
       setSelectedShape(null);
       setline4shape(false);
     }
-
-    // const pos = e.target.getAbsolutePosition();
-    // handleUpdate(pos.x, pos.y, e.target.index);
-    // console.log(pos);
-    // handleDrop(e, "process")
-    // handleDrop(e, "process")
   };
 
   
@@ -624,7 +531,6 @@ return newNodeArray
                 fill={eachCircle.fill}
                 sidebar={false}
                 handleDrop={(newX, newY) => handleUpdate(newX, newY, eachCircle.id, 'start')}
-                // isSelected={eachCircle === selectedShape}
                 setisSelected={setisSelected}
                 startPoint={startPoint}
                 selectedShape={selectedShape}
@@ -644,7 +550,6 @@ return newNodeArray
                 fill={eachProcess.fill}
                 onTransformEnd={(newAttrs) => handleTransformEnd(eachProcess.id, newAttrs, 'process')}
                 updateProcess = {updateProcess}
-                // handleDrop={() => setR(2)}
                 isSelected={isSelected}
                 setisSelected={setisSelected}
                 startPoint={startPoint}
@@ -715,10 +620,10 @@ return newNodeArray
              ))} 
           </Layer>
         </Stage>
-         {console.log(lines)}
+         {/* {console.log(lines)} */}
         {/* {console.log(selectedShape, " selected")} */}
         {/* {console.log(startShape, " Wazzyo")} */}
-        {/* {console.log(processes)} */}
+        {console.log(processes)}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
       <button className='button' onClick={handleOnClick}>Choose A Theme</button>

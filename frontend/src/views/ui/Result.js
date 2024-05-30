@@ -18,10 +18,11 @@ function Result() {
         const generatedHtmls = [];
         
         for (const prompt of texts) {
-          console.log(prompt);
+          console.log(texts);
           const result = await model.generateContent(prompt);
           const response = await result.response;
           const promptText = await response.text();
+          console.log(promptText);
           const sanitizedHtml = DOMPurify.sanitize(promptText);
           generatedHtmls.push(sanitizedHtml);
         }
