@@ -13,6 +13,7 @@ import Shapes from '../components/Shapes';
 import CircleShape from "../components/Start_Comp";
 import EditableText from '../components/EditableText';
 import Themes from '../../src/components/popup/Themes';
+import BusinessRules from '../../src/components/popup/BusinessRules';
 import "../assets/scss/sidebar.css";
 
 const Sidebar = () => {
@@ -43,6 +44,35 @@ const Sidebar = () => {
   const [startShape, setStartShape] = useState({});
   const [left_arrow, setLeft_arrow] = useState(false);
   const [right_arrow, setRight_arrow] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
+  const [submittedText, setSubmittedText] = useState('');
+
+  const getColorsByTheme = (selectedOption) => {
+    switch (selectedOption) {
+        case "Pastel":
+            return "#F1E5D1, #DBB5B5, #C39898 and #987070";
+        case "Vintage":
+            return "#254336, #6B8A7A, #B7B597 and #DAD3BE";
+        case "Retro":
+            return "#01204E, #028391, #F6DCAC and #FEAE6F";
+        case "Light":
+            return "#FFF9D0, #CAF4FF, #A0DEFF and #5AB2FF";
+        case "Dark":
+            return "#222831, #31363F, #76ABAE and #EEEEEE";
+        default:
+            return "none";
+    }
+};
+
+  const handleThemesPopupSubmit = (option) => {
+    setSelectedOption(option);
+  };
+
+  const handleBisRulesSubmit = (text) => {
+    setSubmittedText(text);
+    console.log(text);
+  }
+
 
   const handleClosePopup = () => {
     setPopupOpen(false);
@@ -83,7 +113,9 @@ const handleGenerateJson = () => {
   
     if (Array.isArray(activities)) {
       activities.forEach(activity => {
-        texts.push("Generate me a website's " + activity.text + " page using html and inline css with a color palette of sky blue and dark blue make sure it is symmetrical");
+        texts.push("Generate me a website's " + activity.text + " page using html and inline css with a color palette" + 
+        getColorsByTheme(selectedOption) +"make sure it is symmetrical. Additionally I want " + {submittedText} + ".");
+        console.log({submittedText});
       });
     } else {
       console.error('Error: Activities data is not in the expected format.');
@@ -717,7 +749,9 @@ const handleGenerateJson = () => {
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
       <button className='button' onClick={handleOnClick}>Choose A Theme</button>
-      {popupOpen && <Themes onClose={handleClosePopup} />}
+      {popupOpen && <Themes onClose={handleClosePopup} onSubmit={handleThemesPopupSubmit} />}
+      <button className='button' onClick={handleOnClick}>Add Business Rules</button>
+      {popupOpen && <BusinessRules onClose={handleClosePopup} onSubmit={handleBisRulesSubmit} />}
       <button className='button' onClick={handleGenerateJson}>Generate JSON</button>
       <button className='button' onClick={CreateWireframe}>Generate Wireframe</button>
     <textarea
