@@ -31,6 +31,7 @@ const Sidebar = () => {
   const Circleid = useRef(0);
   const Processid = useRef(0);
   const Endid = useRef(0);
+  const Diamondid = useRef(0);
   const [isCreatingLine, setIsCreatingLine] = useState(false);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
@@ -40,6 +41,8 @@ const Sidebar = () => {
   const [jsonOutput, setJsonOutput] = useState('');
   const [popupOpen, setPopupOpen] = useState(false);
   const [startShape, setStartShape] = useState({});
+  const [left_arrow, setLeft_arrow] = useState(false);
+  const [right_arrow, setRight_arrow] = useState(false);
 
   const handleClosePopup = () => {
     setPopupOpen(false);
@@ -207,7 +210,7 @@ const handleGenerateJson = () => {
           invalid(e, 125, 90);
           return;
         }
-        const newDiamond = { x: e.target.x(), y: e.target.y()};
+        const newDiamond = { id: ++Diamondid.current, x: e.target.x(), y: e.target.y()};
         setDiamond((prevDiamonds) => [...prevDiamonds, newDiamond]);
         e.target.position({ x: 125, y: 90 });
         break;
@@ -306,28 +309,60 @@ const handleGenerateJson = () => {
 
   const handleUpdate = (newX, newY, id, shapeType) => {
     // Update the circles
-    const updatedLines = lines.map(line => {
-      if (line.startShapeId === id && line.startShapeType === shapeType) {
-        return { ...line, points: [newX + 50, newY + 80, line.points[2], line.points[3]] };
-      } else if (line.endShapeId === id && line.endShapeType === shapeType) {
-        return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 20] };
-      }
-      return line;
-    });
-    setLines(updatedLines);
+    var updatedLines = null;
 
     switch(shapeType){
       case "start":
+          updatedLines = lines.map(line => {
+          if (line.startShapeId === id && line.startShapeType === shapeType) {
+            return { ...line, points: [newX + 50, newY + 80, line.points[2], line.points[3]] };
+          } else if (line.endShapeId === id && line.endShapeType === shapeType) {
+            return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 20] };
+          }
+          return line;
+        });
+        setLines(updatedLines);
+
         const updatedCircles = circles.map(circle =>
           circle.id === id ? { ...circle, x: newX, y: newY } : circle
         );
         setCircles(updatedCircles);
         break;
       case "end":
+          updatedLines = lines.map(line => {
+          if (line.startShapeId === id && line.startShapeType === shapeType) {
+            return { ...line, points: [newX + 50, newY + 80, line.points[2], line.points[3]] };
+          } else if (line.endShapeId === id && line.endShapeType === shapeType) {
+            return { ...line, points: [line.points[0], line.points[1], newX + 50, newY + 20] };
+          }
+          return line;
+        });
+        setLines(updatedLines);
+        
         const updatedEnd = end_shape.map(end =>
           end.id === id ? { ...end, x: newX, y: newY } : end
         );
         setEndShape(updatedEnd);
+        break;
+      case "decision":
+        updatedLines = lines.map(line => {
+          if (line.startShapeId === id && line.startShapeType === shapeType) {
+            if(line.direction == 'left'){
+              return { ...line, points: [newX, newY + 20, line.points[2], line.points[3]] };
+            } else if(line.direction == 'right'){
+              return { ...line, points: [newX + 40, newY + 20, line.points[2], line.points[3]] };
+            }
+          } else if (line.endShapeId === id && line.endShapeType === shapeType) {
+            return { ...line, points: [line.points[0], line.points[1], newX + 20, newY] };
+          }
+          return line;
+        });
+        setLines(updatedLines);
+
+        const updateddiamond = diamonds.map(diamond =>
+          diamond.id === id ? { ...diamond, x: newX, y: newY } : diamond
+        );
+        setDiamond(updateddiamond);
         break;
     }
   };
@@ -377,6 +412,23 @@ const handleGenerateJson = () => {
           setIsCreatingLine(true);
           setStartShape(selectedShape);
           break;
+        case 'decision':
+          if(left_arrow){
+            setStartPoint({ x: selectedShape.x, y: selectedShape.y + 20});
+            setIsCreatingLine(true);
+            setStartShape({
+              ...selectedShape,
+              direction: 'left' // Replace 'newKey' and 'newValue' with your actual key and value
+            });
+          } else if(right_arrow){
+            setStartPoint({ x: selectedShape.x + 40, y: selectedShape.y + 20});
+            setIsCreatingLine(true);
+            setStartShape({
+              ...selectedShape,
+              direction: 'right' // Replace 'newKey' and 'newValue' with your actual key and value
+            });
+          }
+          break;
       }
     }
   };
@@ -396,8 +448,34 @@ const handleGenerateJson = () => {
       if (endShape && (endShape.x !== startPoint.x - 50 || endShape.y !== startPoint.y - 50)) {
         // Create endpoint only if there is a shape below
         if(endShape.type == 'process'){
+          if(startShape.type == 'decision'){
+            const newLine = {
+              points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y],
+              startShapeId: startShape.id,
+              startShapeType: startShape.type, // Add shape type
+              endShapeId: endShape.id,
+              endShapeType: endShape.type, // Add shape type
+              startshape_text: startShape.text,
+              endshape_text: endShape.text,
+              direction: startShape.direction
+            };
+            setLines((prevLines) => [...prevLines, newLine]);
+          } else {
+            const newLine = {
+              points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y],
+              startShapeId: startShape.id,
+              startShapeType: startShape.type, // Add shape type
+              endShapeId: endShape.id,
+              endShapeType: endShape.type, // Add shape type
+              startshape_text: startShape.text,
+              endshape_text: endShape.text
+            };
+            setLines((prevLines) => [...prevLines, newLine]);
+          }
+
+        } else if(endShape.type == 'decision'){
           const newLine = {
-            points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y],
+            points: [startPoint.x, startPoint.y, endShape.x + 20, endShape.y],
             startShapeId: startShape.id,
             startShapeType: startShape.type, // Add shape type
             endShapeId: endShape.id,
@@ -423,12 +501,16 @@ const handleGenerateJson = () => {
       setEndPoint(null);
       setSelectedShape(null);
       setline4shape(false);
+      setLeft_arrow(false);
+      setRight_arrow(false);
     } else {
       setIsCreatingLine(false);
       setEndPoint(null);
       setStartPoint(null);
       setSelectedShape(null);
       setline4shape(false);
+      setLeft_arrow(false);
+      setRight_arrow(false);
     }
   };
 
@@ -493,6 +575,7 @@ const handleGenerateJson = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <DiamondShape
+                    id={0}
                     x={125}
                     y={90}
                     fill="skyblue"
@@ -580,10 +663,17 @@ const handleGenerateJson = () => {
             {diamonds.map((eachDia, index) => (
               <DiamondShape 
                 key={index}
+                id={eachDia.id}
                 x={eachDia.x}
                 y={eachDia.y}
                 fill={eachDia.fill}
-                handleDrop={() => setR(2)}
+                handleDrop={(newX, newY) => handleUpdate(newX, newY, eachDia.id, 'decision')}
+                selectedShape={selectedShape}
+                setSelectedShape={setSelectedShape}
+                startPoint={startPoint}
+                setline4shape={setline4shape}
+                setLeft_arrow={setLeft_arrow}
+                setRight_arrow={setRight_arrow}
                 />
               ))}
               {end_shape.map((eachEnd, index) => (
@@ -620,9 +710,9 @@ const handleGenerateJson = () => {
              ))} 
           </Layer>
         </Stage>
-         {/* {console.log(lines)} */}
-        {console.log(selectedShape, " selected")}
-        {/* {console.log(startShape, " Wazzyo")} */}
+         {console.log(lines)}
+        {/* {console.log(selectedShape, " selected")} */}
+        {console.log(startShape, " Wazzyo")}
         {/* {console.log(processes)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
