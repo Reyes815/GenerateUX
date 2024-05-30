@@ -71,7 +71,7 @@ const Sidebar = () => {
 
   const handleBisRulesSubmit = (text) => {
     setSubmittedText(text);
-    console.log(text);
+    //console.log(text);
   }
 
   const handleThemesClosePopup = () => {
@@ -121,9 +121,9 @@ const handleGenerateJson = () => {
   
     if (Array.isArray(activities)) {
       activities.forEach(activity => {
+        console.log(submittedText);
         texts.push("Generate me a website's " + activity.text + " page using html and inline css with a color palette" + 
-        getColorsByTheme(selectedOption) +"make sure it is symmetrical. Additionally I want " + {submittedText} + ".");
-        console.log({submittedText});
+        getColorsByTheme(selectedOption) +"make sure it is symmetrical. Additionally I want " + submittedText + ".");
       });
     } else {
       console.error('Error: Activities data is not in the expected format.');
