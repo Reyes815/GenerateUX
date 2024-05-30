@@ -711,8 +711,8 @@ const handleGenerateJson = () => {
           </Layer>
         </Stage>
          {console.log(lines)}
-        {/* {console.log(selectedShape, " selected")} */}
-        {console.log(startShape, " Wazzyo")}
+        {console.log(selectedShape, " selected")}
+        {/* {console.log(startShape, " Wazzyo")} */}
         {/* {console.log(processes)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>

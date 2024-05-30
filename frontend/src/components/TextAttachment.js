@@ -19,6 +19,8 @@ class TextAttachment extends Shapes {
 
     const textPosition = textNode.absolutePosition();
     const stageBox = stage.container().getBoundingClientRect();
+    console.log(textPosition);
+    console.log(stageBox);
 
     const areaPosition = {
       x: stageBox.left + textPosition.x,
@@ -32,8 +34,8 @@ class TextAttachment extends Shapes {
     textarea.style.position = "absolute";
     textarea.style.top = areaPosition.y + "px";
     textarea.style.left = areaPosition.x + "px";
-    textarea.style.width = textNode.width() - textNode.padding() * 2 + "px";
-    textarea.style.height = textNode.height() - textNode.padding() * 2 + "px";
+    textarea.style.width = /*textNode.width() - textNode.padding() * 2*/ this.props.width - textNode.padding() * 5 + "px";
+    textarea.style.height = /*textNode.height() - textNode.padding() * 2*/this.props.height - textNode.padding() * 10+ "px";
     textarea.style.fontSize = textNode.fontSize() + "px";
     textarea.style.border = "none";
     textarea.style.padding = "0px";
@@ -49,6 +51,17 @@ class TextAttachment extends Shapes {
     textarea.style.color = textNode.fill();
     textarea.style.opacity = 1;
     textarea.focus();
+
+    const resizeTextarea = () => {
+      textarea.style.height = 'auto';  // Reset height to auto to calculate new height
+      textarea.style.width = 'auto';  // Reset width to auto to calculate new width
+      textarea.style.height = textarea.scrollHeight + 'px';
+      textarea.style.width = textarea.scrollWidth + 'px';
+    };
+
+    resizeTextarea();
+
+    textarea.addEventListener("input", resizeTextarea);
 
     this.setState({ isEditing: true });
 
@@ -82,7 +95,7 @@ class TextAttachment extends Shapes {
   };
 
   render() {
-    const { x, y } = this.props;
+    const { x, y, width, height } = this.props;
     const { text, isEditing } = this.state;
 
     return (
@@ -92,9 +105,13 @@ class TextAttachment extends Shapes {
             ref={this.textRef}
             x={x}
             y={y}
+            width={width - 14}
             text={text}
             fontSize={15}
             fill="black"
+            // align='center'
+            // offsetX={this.textRef.current ? this.textRef.current.width() / 2 : 0}
+            // offsetY={this.textRef.current ? this.textRef.current.height() / 2 : 0}
             onDblClick={this.handleDblClick}
           />
         )}
