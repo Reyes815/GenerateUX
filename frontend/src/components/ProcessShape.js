@@ -272,8 +272,9 @@ render() {
               onMouseLeave={this.na_makeline}
             />
             </>
-       )} 
-      <TextAttachment
+       )}
+       {id > 0 && (
+        <TextAttachment
         ref={this.textAttachmentRef}
         x={textX}
         y={textY}
@@ -282,6 +283,7 @@ render() {
         id={id}
         handleText={this.handleText}
       />
+       )}
     </Group>
   );    
 }
