@@ -83,7 +83,7 @@ const handleGenerateJson = () => {
   
     if (Array.isArray(activities)) {
       activities.forEach(activity => {
-        texts.push("Generate me wireframe of a website's " + activity.text + " page using html and inline css with a color palette of sky blue and dark blue");
+        texts.push("Generate me a website's " + activity.text + " page using html and inline css with a color palette of sky blue and dark blue make sure it is symmetrical");
       });
     } else {
       console.error('Error: Activities data is not in the expected format.');

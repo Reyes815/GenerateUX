@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@uiw/react-iframe": "^1.0.3",
+    "iframe-resizer-react": "^1.0.11"
+  }
+}
