@@ -25,6 +25,7 @@ const BusinessRules = ({ onClose, onSubmit }) => {
             value={inputValue}
             onChange={handleChange}
             placeholder="Add business rules or any other remark..."
+            style = {{minWidth: '300px'}}
             />
           <button className="confirm-button" onClick={handleSubmit}>Confirm</button>
           <button className="confirm-button" onClick={onClose}>Close</button>

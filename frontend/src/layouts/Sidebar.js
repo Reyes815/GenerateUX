@@ -13,7 +13,7 @@ import Shapes from '../components/Shapes';
 import CircleShape from "../components/Start_Comp";
 import EditableText from '../components/EditableText';
 import Themes from '../../src/components/popup/Themes';
-import BusinessRules from '../../src/components/popup/BusinessRules';
+import BusinessRules from '../components/popup/BusinessRules.js';
 import "../assets/scss/sidebar.css";
 
 const Sidebar = () => {
