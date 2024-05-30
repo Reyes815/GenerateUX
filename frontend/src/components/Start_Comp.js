@@ -1,5 +1,5 @@
 import React from 'react';
-import { Circle, Group } from 'react-konva';
+import { Arrow, Circle, Group } from 'react-konva';
 import Shapes from './Shapes';
 
 class CircleShape extends Shapes {
@@ -130,14 +130,15 @@ class CircleShape extends Shapes {
 
         {/* Dot in the middle of the inner circle */}
         {isHovered && isSelected && (
-         <Circle
-          x={100 / 2} // Center of the inner circle
-          y={100 / 2} // Center of the inner circle
-          radius={5} // Adjust the radius as needed for the dot size
-          fill='black' // Color of the dot
-          onMouseEnter={this.makeline}
-          onMouseLeave={this.na_makeline}
-        /> 
+         <Arrow
+         points={[100 / 2, 100 / 2 + 30, 100 / 2, 100 / 2 + 45]}
+         pointerLength={10}
+         pointerWidth={10}
+         fill="black"
+         stroke="black"
+         onMouseEnter={this.makeline}
+         onMouseLeave={this.na_makeline}
+       />
        )}
       </Group>
     );

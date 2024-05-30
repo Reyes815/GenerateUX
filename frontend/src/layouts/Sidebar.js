@@ -368,7 +368,7 @@ const handleGenerateJson = () => {
     if (line4shape && selectedShape) {
       switch(selectedShape.type){
         case 'process':
-          setStartPoint({ x: selectedShape.x + 50, y: selectedShape.y + 80});
+          setStartPoint({ x: selectedShape.x + (selectedShape.width / 2), y: selectedShape.y + selectedShape.height});
           setIsCreatingLine(true);
           setStartShape(selectedShape);
           break;
@@ -621,9 +621,9 @@ const handleGenerateJson = () => {
           </Layer>
         </Stage>
          {/* {console.log(lines)} */}
-        {/* {console.log(selectedShape, " selected")} */}
+        {console.log(selectedShape, " selected")}
         {/* {console.log(startShape, " Wazzyo")} */}
-        {console.log(processes)}
+        {/* {console.log(processes)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
       <button className='button' onClick={handleOnClick}>Choose A Theme</button>

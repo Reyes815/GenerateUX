@@ -31,8 +31,17 @@ componentWillUnmount() {
   document.removeEventListener('keydown', this.handleKeyPress);
 }
 
-componentDidUpdate() {
+componentDidUpdate(prevProps) {
     this.attachTransformer();
+
+    if (prevProps.selectedShape !== this.props.selectedShape) {
+      if (this.props.selectedShape === null) {
+        // Handle the case when selectedShape is set to null
+        this.setState({ isSelected: false });
+      } else {
+        // Handle other cases if needed
+      }
+    }
 }
 
 attachTransformer() {
@@ -130,7 +139,15 @@ handleTransformEnd = (e) => {
 
 handleOnClick = (e) => {
   if (this.props.id > 0) {
-    this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, text: this.state.text, type: 'process'})
+    this.props.setSelectedShape({
+      id: this.props.id, 
+      x: this.props.x,
+      y: this.props.y, 
+      text: this.state.text, 
+      type: 'process',
+      width: this.props.width,
+      height: this.props.height
+    })
     // console.log(this.props.selectedShape, this.props.id);
 
     // Schedule the toggle action after ensuring the state is updated
