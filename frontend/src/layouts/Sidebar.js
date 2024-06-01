@@ -33,6 +33,7 @@ const Sidebar = () => {
   const Processid = useRef(0);
   const Endid = useRef(0);
   const Diamondid = useRef(0);
+  const Lineid = useRef(0);
   const [isCreatingLine, setIsCreatingLine] = useState(false);
   const [startPoint, setStartPoint] = useState(null);
   const [endPoint, setEndPoint] = useState(null);
@@ -217,21 +218,34 @@ const handleGenerateJson = () => {
       case 'process':
         const newProcesses = processes.filter(process => process.id !== selectedshape.id);
         setProcesses(newProcesses);
-        setSelectedShape(null);
         break;
       case 'start':
         const newCircles = circles.filter(circle => circle.id !== selectedshape.id);
         setCircles(newCircles);
-        setSelectedShape(null);
+        break;
+      case 'decision':
+        const newDecisions = diamonds.filter(diamond => diamond.id !== selectedshape.id);
+        setDiamond(newDecisions);
+        break;
+      case 'end':
+        const newEndshapes = end_shape.filter(end => end.id !== selectedshape.id);
+        setEndShape(newEndshapes);
         break;
     }
-    // const newItems = items.filter((_, i) => i !== index);
-    // setItems(newItems);
-    // setSelectedIndex(null); // Reset selected index after deletion
+    
+
+    // Remove connections that are linked to the deleted shape
+    const newLines = lines.filter(line =>
+      !(line.startShapeId === selectedshape.id && line.startShapeType === selectedshape.type) &&
+      !(line.endShapeId === selectedshape.id && line.endShapeType === selectedshape.type)
+    );
+    setLines(newLines);
+
+    setSelectedShape(null);
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Delete') {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
       deleteComponent(selectedShape);
     }
   };
@@ -326,7 +340,7 @@ const handleGenerateJson = () => {
             width: 100,
             height: 50,
             strokeWidth: 4,
-            text: "edit"
+            text: "Edit"
           };
           setProcesses((prevProcesses) => [...prevProcesses, newProcess]);
           //Shapes.addProcess(newProcess);
@@ -520,6 +534,7 @@ const handleGenerateJson = () => {
         if(endShape.type == 'process'){
           if(startShape.type == 'decision'){
             const newLine = {
+              line_id : ++Lineid.current,
               points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y],
               startShapeId: startShape.id,
               startShapeType: startShape.type, // Add shape type
@@ -532,6 +547,7 @@ const handleGenerateJson = () => {
             setLines((prevLines) => [...prevLines, newLine]);
           } else {
             const newLine = {
+              line_id : ++Lineid.current,
               points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y],
               startShapeId: startShape.id,
               startShapeType: startShape.type, // Add shape type
@@ -545,6 +561,7 @@ const handleGenerateJson = () => {
 
         } else if(endShape.type == 'decision'){
           const newLine = {
+            line_id : ++Lineid.current,
             points: [startPoint.x, startPoint.y, endShape.x + 20, endShape.y],
             startShapeId: startShape.id,
             startShapeType: startShape.type, // Add shape type
@@ -557,6 +574,7 @@ const handleGenerateJson = () => {
           setLines((prevLines) => [...prevLines, newLine]);
         } else {
           const newLine = {
+            line_id : ++Lineid.current,
             points: [startPoint.x, startPoint.y, endShape.x + 50, endShape.y + 20],
             startShapeId: startShape.id,
             startShapeType: startShape.type, // Add shape type
@@ -689,6 +707,7 @@ const handleGenerateJson = () => {
                 selectedShape={selectedShape}
                 setSelectedShape={setSelectedShape}
                 setline4shape={setline4shape}
+                line4shape={line4shape}
               />
             ))}
             {processes.map((eachProcess, index) => (
@@ -781,9 +800,9 @@ const handleGenerateJson = () => {
           </Layer>
         </Stage>
          {/* {console.log(lines)} */}
-        {/* {console.log(selectedShape, " selected")} */}
+        {console.log(selectedShape, " selected")}
         {/* {console.log(startShape, " Wazzyo")} */}
-        {console.log(processes)}
+        {/* {console.log(processes)} */}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
       <button className='button' onClick={handleThemesOnClick}>Choose A Theme</button>

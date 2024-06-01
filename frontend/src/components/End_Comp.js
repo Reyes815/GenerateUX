@@ -125,7 +125,6 @@ class CustomCircleWithRing extends Shapes {
         x={x}
         y={y}
         draggable={isDraggable}
-        stroke={isSelected ? 'red' : 'black'} // Example: Change stroke color if selected
         strokeWidth={1}
         onDragEnd={this.handleDragEnd}
         onDragMove={this.handleDragMove}
@@ -145,11 +144,11 @@ class CustomCircleWithRing extends Shapes {
           x={100 / 2}
           y={100 / 2}
           radius={30} // Change to desired ring radius
-          stroke="black" // Change to desired ring stroke color
+          stroke={isSelected ? 'red' : 'black'} // Example: Change stroke color if selected
           strokeWidth={2} // Change to desired ring stroke width
         />
 
-      {isHovered && isSelected && (
+      {/* {isHovered && isSelected && (
         <Circle
           x={100 / 2} // Center of the inner circle
           y={100 / 2} // Center of the inner circle
@@ -158,7 +157,7 @@ class CustomCircleWithRing extends Shapes {
           onMouseEnter={this.makeline}
           onMouseLeave={this.na_makeline}
         /> 
-      )}
+      )} */}
       </Group>
     );
   }

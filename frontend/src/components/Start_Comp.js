@@ -1,5 +1,5 @@
 import React from 'react';
-import { Arrow, Circle, Group } from 'react-konva';
+import { Arrow, Circle, Group, Rect } from 'react-konva';
 import Shapes from './Shapes';
 
 class CircleShape extends Shapes {
@@ -41,6 +41,7 @@ class CircleShape extends Shapes {
       if (this.props.selectedShape === null) {
         // Handle the case when selectedShape is set to null
         this.setState({ isSelected: false });
+        this.setState({ isDraggable: true });
       } else {
         // Handle other cases if needed
       }
@@ -55,6 +56,8 @@ class CircleShape extends Shapes {
       setTimeout(() => {
         if (this.props.selectedShape && this.props.selectedShape.id === this.props.id) {
           this.setState((prevState) => ({ isSelected: !prevState.isSelected }));
+          this.setState({ isDraggable: false }); // Disable draggable property
+          this.props.setline4shape(true);
         }
       }, 0);
 
@@ -71,9 +74,9 @@ class CircleShape extends Shapes {
   }
 
   na_makeline = (e) => {
-    this.setState({ isDraggable: true }); // Disable draggable property
+    // this.setState({ isDraggable: true }); // Disable draggable property
     this.setState({ line: false });
-  }
+    this.props.setline4shape(false);  }
 
   handleMouseEnter = (e) => {
     this.setState({ isHovered: true });
@@ -94,15 +97,15 @@ class CircleShape extends Shapes {
   };
   
   render() {
-    const { id, x, y, handleDrop, setSelectedShape, circleOnclick, setisSelected } = this.props;
-    const { isHovered, isDraggable, isSelected } = this.state;
+    const { id, x, y, handleDrop, setSelectedShape, circleOnclick, setisSelected, line4shape } = this.props;
+    const { isHovered, isDraggable, isSelected, line } = this.state;
 
     return (
       <Group
         x={x}
         y={y}
         draggable={isDraggable}
-        stroke={isSelected ? 'red' : 'black'} // Example: Change stroke color if selected
+        stroke={isSelected ? 'red broken' : 'black'} // Example: Change stroke color if selected
         strokeWidth={1}
         onDragEnd={this.handleDragEnd}
         onDragMove={this.handleDragMove}
@@ -111,14 +114,28 @@ class CircleShape extends Shapes {
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
         fill='red'
+        dash={[10, 10]}
+        dashEnabled
       >
-        <Circle
+        {isSelected && (
+        <Rect
+          x={10}
+          y={10}
+          fill='transparent'
+          width={80}
+          height={80}
+          stroke='lightblue'
+          dash={[10, 10]}
+          dashEnabled
+        />
+      )}
+        {/* <Circle
           x={100 / 2}
           y={100 / 2}
           radius={45}
           fill='white'
           opacity={0.5}
-        />
+        /> */}
         <Circle
           x={100 / 2}
           y={100 / 2}
@@ -129,15 +146,17 @@ class CircleShape extends Shapes {
         />
 
         {/* Dot in the middle of the inner circle */}
-        {isHovered && isSelected && (
+        {line4shape && isSelected && (
          <Arrow
-         points={[100 / 2, 100 / 2 + 30, 100 / 2, 100 / 2 + 45]}
+         x={2}
+         y={15}
+         points={[100 / 2, 100 / 2 + 30, 100 / 2, 100 / 2 + 60]}
          pointerLength={10}
          pointerWidth={10}
-         fill="black"
-         stroke="black"
-         onMouseEnter={this.makeline}
-         onMouseLeave={this.na_makeline}
+         stroke="skyblue"
+         strokeWidth={5}
+        //  onMouseEnter={this.makeline}
+         onMouseDown={this.na_makeline}
        />
        )}
       </Group>
