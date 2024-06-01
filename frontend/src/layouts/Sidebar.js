@@ -10,7 +10,7 @@ import CircleWithRing from "../components/End.js";
 import Object from '../components/Object';
 import ProcessShape from "../components/ProcessShape";
 import Shapes from '../components/Shapes';
-import CircleShape from "../components/Start_Comp";
+import CircleShape from "../components/Start.js";
 import EditableText from '../components/EditableText';
 import Themes from '../../src/components/popup/Themes';
 import BusinessRules from '../components/popup/BusinessRules.js';

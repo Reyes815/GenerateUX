@@ -2,7 +2,7 @@ import React from 'react';
 import { Group, Circle } from 'react-konva';
 import Shapes from './Shapes'; // Import the Shapes class
 
-class CustomCircleWithRing extends Shapes {
+class End extends Shapes {
   constructor(props) {
     super(props);
     this.state = {
@@ -163,4 +163,4 @@ class CustomCircleWithRing extends Shapes {
   }
 }
 
-export default CustomCircleWithRing;
+export default End;
