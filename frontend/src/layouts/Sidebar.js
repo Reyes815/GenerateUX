@@ -4,8 +4,8 @@ import { Arrow, Layer, Line, Stage } from "react-konva";
 import { useNavigate } from 'react-router-dom';
 //import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
-import DiamondShape from "../components/Diamond_Comp";
-import CircleWithRing from "../components/End_Comp";
+import DiamondShape from "../components/Diamond.js";
+import CircleWithRing from "../components/End.js";
 //import LineShape from '../components/LineShape';
 import Object from '../components/Object';
 import ProcessShape from "../components/ProcessShape";
@@ -381,7 +381,7 @@ const handleGenerateJson = () => {
           invalid(e, 50, 125);
           return;
         }
-        const newCancel = { x: e.target.x(), y: e.target.y(), radius: 25 };
+        const newCancel = { x: e.target.x(), y: e.target.y()};
         setCancelShapes((prevCancelShapes) => [...prevCancelShapes, newCancel]);
         e.target.position({ x: 50, y: 125 });
         break;
