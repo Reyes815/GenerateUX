@@ -125,8 +125,8 @@ const handleGenerateJson = () => {
     if (Array.isArray(activities) && activities.length > 0 ) {
       activities.forEach(activity => {
         console.log(submittedText);
-        texts.push("Generate me a website's " + activity.text + " page using html and inline css with a color palette" + 
-        getColorsByTheme(selectedOption) +"make sure it is symmetrical. Additionally I want " + submittedText + ".");
+        texts.push("As a web developer, Generate me a website's " + activity.text + " page using html and inline css with a color palette of " + 
+        getColorsByTheme(selectedOption) +" make sure it is symmetrical. Additionally I want " + submittedText + ". Make sure to add a usecase comment under every screen to explain the purpose of the process");
       });
       navigate('/result', { state: { texts: texts } });
     } else {
