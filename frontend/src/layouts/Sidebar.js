@@ -210,6 +210,32 @@ const handleGenerateJson = () => {
     // console.log("After: ", shapeProps);
   };
 
+  const deleteComponent = (selectedshape) => {
+    if (selectedshape === null) return; // Do nothing if no item is selected
+
+    switch(selectedshape.type){
+      case 'process':
+        const newProcesses = processes.filter(process => process.id !== selectedshape.id);
+        setProcesses(newProcesses);
+        setSelectedShape(null);
+        break;
+      case 'start':
+        const newCircles = circles.filter(circle => circle.id !== selectedshape.id);
+        setCircles(newCircles);
+        setSelectedShape(null);
+        break;
+    }
+    // const newItems = items.filter((_, i) => i !== index);
+    // setItems(newItems);
+    // setSelectedIndex(null); // Reset selected index after deletion
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Delete') {
+      deleteComponent(selectedShape);
+    }
+  };
+
   useEffect(() => {
     const handleResize = () => {
       const container = stageRef.current.container();
@@ -222,10 +248,14 @@ const handleGenerateJson = () => {
     window.addEventListener("resize", handleResize);
     handleResize(); // Initial size setup
 
+    window.addEventListener('keydown', handleKeyDown);
+
+
     return () => {
         window.removeEventListener("resize", handleResize);
+        window.removeEventListener('keydown', handleKeyDown);
       };
-    }, []);
+    }, [selectedShape]);
 
     const handleDrop = (e, componentType) => {
     const stage = stageRef.current;
@@ -750,10 +780,10 @@ const handleGenerateJson = () => {
              ))} 
           </Layer>
         </Stage>
-         {console.log(lines)}
-        {console.log(selectedShape, " selected")}
+         {/* {console.log(lines)} */}
+        {/* {console.log(selectedShape, " selected")} */}
         {/* {console.log(startShape, " Wazzyo")} */}
-        {/* {console.log(processes)} */}
+        {console.log(processes)}
         {/* {console.log("After (immediate): ", shapeProps)} */}
       </div>
       <button className='button' onClick={handleThemesOnClick}>Choose A Theme</button>
