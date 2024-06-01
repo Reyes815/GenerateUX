@@ -19,7 +19,7 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
-  const { setUser_id } = useContext(UserContext);
+  const {user_id, setUser_id } = useContext(UserContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -32,6 +32,7 @@ const Login = () => {
     try {
       const { data: user } = await axios.post('http://localhost:4000/login', postData);
       setUser_id(user.id);
+      console.log(user_id);
       navigate(`/user`);
     } catch (error) {
         setMessage("Invalid username or password.");
