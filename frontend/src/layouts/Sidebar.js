@@ -15,6 +15,7 @@ import EditableText from '../components/EditableText';
 import Themes from '../../src/components/popup/Themes';
 import BusinessRules from '../components/popup/BusinessRules.js';
 import "../assets/scss/sidebar.css";
+import Error from '../components/popup/Error.js';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -48,6 +49,7 @@ const Sidebar = () => {
   const [right_arrow, setRight_arrow] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
   const [submittedText, setSubmittedText] = useState('');
+  const [showError, setShowError] = useState(false);
 
   const getColorsByTheme = (selectedOption) => {
     switch (selectedOption) {
@@ -120,22 +122,22 @@ const handleGenerateJson = () => {
     
     const texts = [];
   
-    if (Array.isArray(activities)) {
+    if (Array.isArray(activities) && activities.length > 0 ) {
       activities.forEach(activity => {
         console.log(submittedText);
         texts.push("Generate me a website's " + activity.text + " page using html and inline css with a color palette" + 
         getColorsByTheme(selectedOption) +"make sure it is symmetrical. Additionally I want " + submittedText + ".");
       });
+      navigate('/result', { state: { texts: texts } });
     } else {
       console.error('Error: Activities data is not in the expected format.');
+      setShowError(true);
     }
-
-    // console.log(texts)
-  
-    navigate('/result', { state: { texts: texts } });
   };
   
-
+  const handleErrorClose = () => {
+    setShowError(false);
+  };
 
   const [shapeProps, setShapeProps] = useState({
     x: 100,
@@ -818,6 +820,7 @@ const handleGenerateJson = () => {
       cols="50"
       style={{ marginTop: '20px', width: '100%' }}
     />
+    {showError && <Error onClose={handleErrorClose} />}
     </div>
 
     
