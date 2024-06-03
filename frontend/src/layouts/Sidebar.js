@@ -811,15 +811,15 @@ const handleGenerateJson = () => {
       {popupThemesOpen && <Themes onClose={handleThemesClosePopup} onSubmit={handleThemesPopupSubmit} />}
       <button className='button' onClick={handleBisRulesOnClick}>Add Business Rules</button>
       {popupBisRulesOpen && <BusinessRules onClose={handleBisRulesClosePopup} onSubmit={handleBisRulesSubmit} />}
-      <button className='button' onClick={handleGenerateJson}>Generate JSON</button>
+      {/* <button className='button' onClick={handleGenerateJson}>Generate JSON</button> */}
       <button className='button' onClick={CreateWireframe}>Generate Wireframe</button>
-    <textarea
+    {/* <textarea
       value={jsonOutput}
       readOnly
       rows="10"
       cols="50"
       style={{ marginTop: '20px', width: '100%' }}
-    />
+    /> */}
     {showError && <Error onClose={handleErrorClose} />}
     </div>
 

@@ -49,7 +49,7 @@ const Login = () => {
             className="border-bottom p-3 mb-0"
             style={{ textAlign: "center", color: "#008DDA" }}
           >
-            Welcome to Metro Events!
+            Welcome to GenerateUX!
           </CardTitle>
           <CardBody>
             <Form onSubmit={handleLogin}>

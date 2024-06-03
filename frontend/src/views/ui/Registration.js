@@ -46,7 +46,7 @@ const Registration = () => {
       <Col>
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0" style={{ textAlign: 'center', color: '#008DDA' }}>
-            Start your journey now, here at Metro!
+            Start your journey now, here at GenerateUX!
           </CardTitle>
           <CardBody>
             <Form onSubmit={handleSubmit}>
