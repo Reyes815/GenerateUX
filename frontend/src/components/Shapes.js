@@ -1,5 +1,4 @@
 import React, { Component, useState } from 'react';
-import { Group, Circle } from 'react-konva';
 
 class Shapes extends Component {
     static processes = [];

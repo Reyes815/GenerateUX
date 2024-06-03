@@ -95,7 +95,7 @@ class TextAttachment extends Shapes {
   };
 
   render() {
-    const { x, y, width, height } = this.props;
+    const { x, y, width } = this.props;
     const { text, isEditing } = this.state;
 
     return (

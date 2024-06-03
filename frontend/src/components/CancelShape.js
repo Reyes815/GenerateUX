@@ -4,7 +4,7 @@ import Shapes from "./Shapes";
 
 class CancelShape extends Shapes {
   render() {
-    const { x, y, radius, handleDrop } = this.props;
+    const { x, y, handleDrop } = this.props;
 
     return (
       <Group
@@ -14,26 +14,26 @@ class CancelShape extends Shapes {
         onDragEnd={(e) => handleDrop(e, "cancel")}
       >
         <Circle
-          radius={radius + 2} 
+          radius={27} 
           stroke="black" 
           strokeWidth={2} 
         />
         <Circle
-          radius={radius}
+          radius={25}
         />
         <Line
-          x={-(radius * 0.7)}
-          y={-(radius * 0.7)}
-          points={[0, 0, radius * 1.4, radius * 1.4]}
+          x={-(25 * 0.7)}
+          y={-(25 * 0.7)}
+          points={[0, 0, 25 * 1.4, 25 * 1.4]}
           stroke="black"
           strokeWidth={2}
           lineCap="round"
           lineJoin="round"
         />
         <Line
-          x={-(radius * 0.7)}
-          y={radius * 0.7}
-          points={[0, 0, radius * 1.4, -(radius * 1.4)]}
+          x={-(25 * 0.7)}
+          y={25 * 0.7}
+          points={[0, 0, 25 * 1.4, -(25 * 1.4)]}
           stroke="black"
           strokeWidth={2}
           lineCap="round"

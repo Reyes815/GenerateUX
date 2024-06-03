@@ -4,13 +4,13 @@ import { Arrow, Layer, Line, Stage } from "react-konva";
 import { useNavigate } from 'react-router-dom';
 //import ArrowLineShape from '../components/ArrowLineShape';
 import CancelShape from '../components/CancelShape';
-import DiamondShape from "../components/Diamond_Comp";
-import CircleWithRing from "../components/End_Comp";
+import DiamondShape from "../components/Diamond.js";
+import CircleWithRing from "../components/End.js";
 //import LineShape from '../components/LineShape';
 import Object from '../components/Object';
 import ProcessShape from "../components/ProcessShape";
 import Shapes from '../components/Shapes';
-import CircleShape from "../components/Start_Comp";
+import CircleShape from "../components/Start.js";
 import EditableText from '../components/EditableText';
 import Themes from '../../src/components/popup/Themes';
 import BusinessRules from '../components/popup/BusinessRules.js';
@@ -125,8 +125,8 @@ const handleGenerateJson = () => {
     if (Array.isArray(activities) && activities.length > 0 ) {
       activities.forEach(activity => {
         console.log(submittedText);
-        texts.push("Generate me a website's " + activity.text + " page using html and inline css with a color palette" + 
-        getColorsByTheme(selectedOption) +"make sure it is symmetrical. Additionally I want " + submittedText + ".");
+        texts.push("As a web developer, Generate me a website's " + activity.text + " page using html and inline css with a color palette of " + 
+        getColorsByTheme(selectedOption) +" make sure it is symmetrical. Additionally I want " + submittedText + ". Make sure to add a usecase comment under every screen to explain the purpose of the process");
       });
       navigate('/result', { state: { texts: texts } });
     } else {
@@ -381,7 +381,7 @@ const handleGenerateJson = () => {
           invalid(e, 50, 125);
           return;
         }
-        const newCancel = { x: e.target.x(), y: e.target.y(), radius: 25 };
+        const newCancel = { x: e.target.x(), y: e.target.y()};
         setCancelShapes((prevCancelShapes) => [...prevCancelShapes, newCancel]);
         e.target.position({ x: 50, y: 125 });
         break;

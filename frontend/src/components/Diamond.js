@@ -23,7 +23,7 @@ class DiamondShape extends Shapes {
         // Handle other cases if needed
       }
     }
-  }
+  };
 
   handleDragEnd = (e) => {
     const newX = e.target.x();
@@ -64,7 +64,7 @@ class DiamondShape extends Shapes {
     }
   };
 
-  handleMouseEnter = (e) => {
+  handleMouseEnter = () => {
     this.setState({ isHovered: true });
     if(this.props.startPoint){
       this.props.setSelectedShape({id: this.props.id, x: this.props.x, y: this.props.y, fill: this.props.fill, type: 'decision'})
@@ -78,7 +78,7 @@ class DiamondShape extends Shapes {
     this.setState({ isHovered: false });
   };
 
-  makeline = (e, side) => {
+  makeline = (side) => {
     if(side == 'left'){
       this.props.setLeft_arrow(true);
     } else {
@@ -89,7 +89,7 @@ class DiamondShape extends Shapes {
     this.setState({ line: true });
   }
 
-  na_makeline = (e) => {
+  na_makeline = () => {
     this.setState({ isDraggable: true }); // Disable draggable property
     this.setState({ line: false });
   }
