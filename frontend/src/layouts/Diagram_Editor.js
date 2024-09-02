@@ -34,7 +34,7 @@ const BpmnDiagram = () => {
 
   return (
     <div>
-      <div id="canvas" style={{ width: '100%', height: '800px', border: '1px solid black' }}></div>
+      <div id="canvas" style={{ width: '100%', height: window.innerHeight, border: '1px solid black' }}></div>
     </div>
   );
 };
