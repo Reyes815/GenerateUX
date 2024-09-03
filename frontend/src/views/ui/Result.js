@@ -5,7 +5,6 @@ import Iframe from '../../Iframe';
 import axios from 'axios';
 import { UserContext } from "../../Usercontext"; 
 import DOMPurify from 'dompurify';
-import UXLogo from 'C:/Users/delap/Projects/GenerateUX/frontend/src/assets/images/logos/UX.png';
 
 function Result() {
   const [htmls, setHtmls] = useState([]);

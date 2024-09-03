@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import UXLogo from 'C:/Users/delap/Projects/GenerateUX/frontend/src/assets/images/logos/UX.png';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -45,19 +44,13 @@ const Login = () => {
     <Row>
       <Col>
         <Card>
-        <CardTitle
-  tag="h6"
-  className="border-bottom p-3 mb-0 d-flex align-items-center justify-content-center"
-  style={{ color: "#008DDA" }}
->
-  <img
-    src={UXLogo}
-    alt="UX Logo"
-    style={{ width: "75px", height: "auto", marginRight: "10px", alignSelf: "flex-start" }} 
-  />
-  <span style={{ flex: 1, textAlign: "center" }}>Welcome to GenerateUX!</span>
-</CardTitle>
-
+          <CardTitle
+            tag="h6"
+            className="border-bottom p-3 mb-0"
+            style={{ textAlign: "center", color: "#008DDA" }}
+          >
+            Welcome to GenerateUX!
+          </CardTitle>
           <CardBody>
             <Form onSubmit={handleLogin}>
               <FormGroup>
