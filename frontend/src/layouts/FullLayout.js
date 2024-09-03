@@ -3,7 +3,8 @@ import Header from "./Header";
 import { Container } from "reactstrap";
 import Sidebar from "./Sidebar";
 import BpmnDiagram from "./Diagram_Editor";
-
+import Experiment from "./temporary"
+import PlantUMLGenerator from "./PlantUML";
 const FullLayout = () => {
   return (
     <main>
@@ -13,7 +14,9 @@ const FullLayout = () => {
           {/********header**********/}
           <Header />
           {/********Header End**********/}
-          <BpmnDiagram/>
+          {/* <BpmnDiagram/> */}
+          {/* <Experiment/> */}
+          <PlantUMLGenerator/>
           {/********Sidebar**********/}
           {/* <aside className="sidebarArea shadow" id="sidebarArea">
             <Sidebar />
