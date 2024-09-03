@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import UXLogo from 'C:/Users/delap/Projects/GenerateUX/frontend/src/assets/images/logos/UX.png';
 
 const Registration = () => {
   const [username, setUsername] = useState('');
@@ -45,8 +46,16 @@ const Registration = () => {
     <Row>
       <Col>
         <Card>
-          <CardTitle tag="h6" className="border-bottom p-3 mb-0" style={{ textAlign: 'center', color: '#008DDA' }}>
-            Start your journey now, here at GenerateUX!
+       
+          <CardTitle tag="h6"
+  className="border-bottom p-3 mb-0 d-flex align-items-center justify-content-center"
+  style={{ color: "#008DDA" }}>
+     <img
+    src={UXLogo}
+    alt="UX Logo"
+    style={{ width: "75px", height: "auto", marginRight: "10px", alignSelf: "flex-start" }} 
+  />
+         <span style={{ flex: 1, textAlign: "center" }}>Start your journey now, here at GenerateUX</span>
           </CardTitle>
           <CardBody>
             <Form onSubmit={handleSubmit}>
