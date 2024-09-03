@@ -14,6 +14,7 @@ import {
   Input,
 } from "reactstrap";
 import { UserContext } from "../../Usercontext";
+import UXLogo from "C:/Users/delap/Projects/GenerateUX/frontend/src/assets/images/logos/UX.png";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -45,10 +46,16 @@ const Login = () => {
       <Col>
         <Card>
           <CardTitle
-            tag="h6"
+            tag="h2"
             className="border-bottom p-3 mb-0"
             style={{ textAlign: "center", color: "#008DDA" }}
           >
+            <img
+                src={UXLogo}
+                alt="profile"
+                className="rounded-circle"
+                width="75"
+              ></img>
             Welcome to GenerateUX!
           </CardTitle>
           <CardBody>
