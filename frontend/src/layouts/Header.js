@@ -1,11 +1,9 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { UserContext } from '../../src/Usercontext';
-import { Navbar, Collapse, Nav, NavItem, NavbarBrand, Button } from "reactstrap";
-import { ReactComponent as LogoWhite } from "../assets/images/logos/xtremelogowhite.svg";
-import user1 from "../assets/images/users/user1.jpg";
 import axios from "axios";
-import UXLogo from "C:/Users/delap/Projects/GenerateUX/frontend/src/assets/images/logos/UX.png";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Collapse, Nav, NavItem, Navbar } from "reactstrap";
+import { UserContext } from '../../src/Usercontext';
+import UXLogo from "../assets/images/logos/UX.png";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);

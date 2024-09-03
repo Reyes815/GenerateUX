@@ -14,7 +14,7 @@ import {
   Input,
 } from "reactstrap";
 import { UserContext } from "../../Usercontext";
-import UXLogo from "C:/Users/delap/Projects/GenerateUX/frontend/src/assets/images/logos/UX.png";
+import UXLogo from "../../assets/images/logos/UX.png";
 
 const Login = () => {
   const [username, setUsername] = useState("");
