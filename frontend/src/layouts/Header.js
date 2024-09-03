@@ -5,6 +5,7 @@ import { Navbar, Collapse, Nav, NavItem, NavbarBrand, Button } from "reactstrap"
 import { ReactComponent as LogoWhite } from "../assets/images/logos/xtremelogowhite.svg";
 import user1 from "../assets/images/users/user1.jpg";
 import axios from "axios";
+import UXLogo from "C:/Users/delap/Projects/GenerateUX/frontend/src/assets/images/logos/UX.png";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,7 +75,17 @@ const Header = () => {
             </Link>
           </NavItem>
         </Nav>
-        {/* <Nav className="ml-auto" navbar>
+        <Nav className="ms-auto" navbar>
+          <NavItem>
+              <img
+                src={UXLogo}
+                alt="profile"
+                className="rounded-circle"
+                width="50"
+              ></img>
+          </NavItem> 
+         </Nav>
+        {/* <Nav className="ms-auto" navbar>
           <NavItem>
             <Link to="/profile" className="nav-link">
               <img
@@ -84,8 +95,8 @@ const Header = () => {
                 width="35"
               ></img>
             </Link>
-          </NavItem> */}
-        {/* </Nav> */}
+          </NavItem> 
+         </Nav> */}
       </Collapse>
     </Navbar>
   );
