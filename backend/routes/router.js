@@ -63,5 +63,23 @@ router.post('/wireframe', async (req, res) => {
     }
 });
 
+router.post('/save-diagram', async (req, res) => {
+    const { userId, name, bpmn } = req.body;
+
+    try {
+        const newDiagram = new schemas.Activity_Diagram({
+            user_id: userId,
+            name: name,
+            bpmn: bpmn
+        });
+
+        await newDiagram.save();
+        res.status(201).send('Diagram saved successfully');
+    } catch (error) {
+        console.error('Error saving diagram:', error);
+        res.status(500).send('Error saving diagram');
+    }
+});
+
 
 module.exports = router;

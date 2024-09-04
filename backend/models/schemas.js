@@ -14,12 +14,19 @@ const wireframeSchema = new Schema({
     htmlCode: { type: String, text: true }
 });
 
+const activityDiagramSchema= new Schema ({
+    user_id: { type: Schema.Types.ObjectId, ref: 'Users' }, 
+    bpmn: { type: String, text: true },
+    name: { type: String, text: true}
+});
+
 const Users = mongoose.model('Users', userSchema, 'User');
 const Wireframe = mongoose.model('Wireframe', wireframeSchema, 'Wireframe');
-
+const Activity_Diagram = mongoose.model('Activity_Diagram', activityDiagramSchema, 'Activity_Diagram');
 const mySchemas = {
     'Users': Users,
-    'Wireframe': Wireframe
+    'Wireframe': Wireframe,
+    'Activity_Diagram': Activity_Diagram
 };
 
 module.exports = mySchemas;

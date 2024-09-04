@@ -1,14 +1,17 @@
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import ImportDiagram from './importDiagram';
+import { UserContext } from "../Usercontext"; 
+
+
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
-
+  const [diagramName, setDiagramName] = useState('');
   const modeler = useRef(null);
-
+  const { user_id } = useContext(UserContext); 
   const handleFileSelect = (content) => {
     setFileContent(content);
     openImportedDiagram(content);
@@ -214,6 +217,8 @@ const BpmnDiagram = () => {
       // });
 
       // openDiagram();
+      console.log(`Diagram Name: ${diagramName}`);
+      console.log(`user_id: ${user_id}`);
       
       console.log(plantUML);
 
@@ -222,9 +227,32 @@ const BpmnDiagram = () => {
       console.log(xml);
 
       // You can now save the XML string to a file or send it to a server
+
+      const data1 = {
+        userId: user_id, 
+        name: diagramName,
+        bpmn: xml
+      };
+  
+      // Send the data to your backend
+      const response = await fetch('/save-diagram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data1)
+      });
+  
+      if (response.ok) {
+        console.log('Diagram saved successfully!');
+      } else {
+        console.error('Failed to save diagram');
+      }
     } catch (err) {
       console.error('Could not save BPMN diagram:', err);
     }
+
+    
   };
 
   useEffect(() => {
@@ -244,6 +272,13 @@ const BpmnDiagram = () => {
     <div>
       <h1>BPMN Diagram Modeler</h1>
       <div id="canvas" style={{ width: '100%', height: '600px', border: '1px solid black' }}></div>
+      <input
+        type="text"
+        value={diagramName}
+        onChange={(e) => setDiagramName(e.target.value)}
+        placeholder="Enter Diagram Name"
+        style={{ marginTop: '10px', marginBottom: '10px' }}
+      />
       <button onClick={saveDiagram}>Save Diagram</button>
       <ImportDiagram onFileSelect={handleFileSelect} />
       {/* {fileContent && (
