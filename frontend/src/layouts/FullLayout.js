@@ -14,9 +14,9 @@ const FullLayout = () => {
           {/********header**********/}
           <Header />
           {/********Header End**********/}
-          {/* <BpmnDiagram/> */}
+          <BpmnDiagram/>
           {/* <Experiment/> */}
-          <PlantUMLGenerator/>
+          {/* <PlantUMLGenerator/> */}
           {/********Sidebar**********/}
           {/* <aside className="sidebarArea shadow" id="sidebarArea">
             <Sidebar />
