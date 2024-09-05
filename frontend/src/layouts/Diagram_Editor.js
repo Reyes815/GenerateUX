@@ -4,8 +4,7 @@ import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import ImportDiagram from './importDiagram';
 import { UserContext } from "../Usercontext"; 
-
-
+import saveButton from "../assets/images/buttons/savebutton.png";
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
@@ -232,9 +231,8 @@ const BpmnDiagram = () => {
         userId: user_id, 
         name: diagramName,
         bpmn: xml
-      };
-  
-      // Send the data to your backend
+      }
+
       const response = await fetch('/save-diagram', {
         method: 'POST',
         headers: {
@@ -270,17 +268,24 @@ const BpmnDiagram = () => {
 
   return (
     <div>
-      <h1>BPMN Diagram Modeler</h1>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px', marginBottom: '10px', position: 'relative' }}>
+  <input
+    type="text"
+    value={diagramName}
+    onChange={(e) => setDiagramName(e.target.value)}
+    placeholder="Add Title"
+    style={{ width: '300px', textAlign: 'center' , marginLeft: '800px'}} 
+  />
+  <img 
+    src={saveButton}
+    alt="Save Diagram" 
+    onClick={saveDiagram} 
+    style={{ cursor: 'pointer', width: '30px', height: 'auto', position: 'absolute', right: '0', marginRight:'60px'}} 
+  />
+  <ImportDiagram onFileSelect={handleFileSelect} />
+</div>
       <div id="canvas" style={{ width: '100%', height: '600px', border: '1px solid black' }}></div>
-      <input
-        type="text"
-        value={diagramName}
-        onChange={(e) => setDiagramName(e.target.value)}
-        placeholder="Enter Diagram Name"
-        style={{ marginTop: '10px', marginBottom: '10px' }}
-      />
-      <button onClick={saveDiagram}>Save Diagram</button>
-      <ImportDiagram onFileSelect={handleFileSelect} />
+      
       {/* {fileContent && (
         <div>
           <h2>Uploaded File Content:</h2>

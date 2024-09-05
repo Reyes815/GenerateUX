@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-
+import uploadButton from "../assets/images/buttons/uploadbutton.png";
 function ImportDiagram({ onFileSelect }) {
   const fileInputRef = useRef(null);
 
@@ -22,7 +22,12 @@ function ImportDiagram({ onFileSelect }) {
 
   return (
     <div>
-      <button onClick={handleButtonClick}>Upload BPMN File</button>
+      <img 
+    src={uploadButton}
+    alt="Upload Bpmn" 
+    onClick={handleButtonClick}
+    style={{ cursor: 'pointer', width: '30px', height: 'auto', marginLeft: '750px'}} 
+  />
       <input
         type="file"
         ref={fileInputRef}
