@@ -5,33 +5,69 @@
 }
 
 .contentArea {
+  flex-grow: 1; /* Make this area take up the remaining space */
+  overflow: auto; /* Ensure content is scrollable if it overflows */
+  height: calc(100vh - 60px); /* Subtract the header height */
   display: flex;
-  flex-grow: 1; // Take up remaining space below the header
+}
+.editorContainer {
+  display: flex;
+  height: 100vh; // Make it span the full viewport height
 }
 
 .sidebarArea {
-  width: 250px; // Sidebar width
-  background-color: $sidebarColor; // Sidebar background color
-  flex-shrink: 0; // Prevent shrinking when resizing
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); // Add shadow effect
+  flex-shrink: 0;
+  border-right: 1px solid black;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  .sidenav-bg:hover {
+    background-color: $gray-100;
+    border-radius: $border-radius;
+  }
 }
 
 .diagramArea {
-  flex-grow: 1; // Make this area fill the rest of the available space
-  padding: 20px; // Add padding around the diagram editor
-  background-color: #f5f5f5; // Example background color
+  flex-grow: 1; // This will make the diagram area take the remaining space
+  background-color: #f5f5f5; // Example background color for the diagram area
+  padding: 20px; // Add some padding if needed
 }
 
 @include media-breakpoint-down(lg) {
   .sidebarArea {
     position: fixed;
     height: 100%;
+    overflow: auto;
     z-index: 1;
-    left: -250px; // Hide the sidebar off-canvas initially
-    transition: left 0.2s ease-in-out; // Smooth slide-in effect
-    
+    margin-left: -250px; // Adjust this according to your sidebar width
+    transition: 0.2s ease-in;
     &.showSidebar {
-      left: 0; // Slide in the sidebar when the class is added
+      margin-left: 0px;
     }
   }
+}
+
+.button {
+  background-color: #41C9E2;
+  width: 90%; // Set width to 80% of the parent element's width
+  color: #F7EEDD;
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  display: block; // Ensures the button behaves as a block element for full width
+  text-align: center; // Center the text within the button
+}
+
+.button2 {
+  background-color: #41C9E2;
+  width: 100px; // Set width to 80% of the parent element's width
+  color: #F7EEDD;
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+  text-align: center; // Center the text within the button
+  margin-left: 10px;
 }

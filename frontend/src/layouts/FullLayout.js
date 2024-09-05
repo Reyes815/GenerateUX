@@ -12,6 +12,9 @@ const FullLayout = () => {
             <Dashboard />
           </aside>
           <div className="diagramArea">
+            {/* <Experiment/> */}
+            {/* <PlantUMLGenerator/> */}
+            {/* <BpmnDiagram/> */}
             <BpmnDiagram />
           </div>
         </div>

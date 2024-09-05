@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import BusinessRules from '../components/popup/BusinessRules.js';
 
 const Experiment = () => {
-const [popupBisRulesOpen, setBisRulesPopupOpen] = useState(false);
-const [submittedText, setSubmittedText] = useState('');
+    const [popupBisRulesOpen, setBisRulesPopupOpen] = useState(false);
+    const [submittedText, setSubmittedText] = useState('');
     const handleBisRulesSubmit = (text) => {
         setSubmittedText(text);
     }
