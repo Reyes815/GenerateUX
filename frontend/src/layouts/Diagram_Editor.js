@@ -2,10 +2,9 @@ import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import saveButton from "../assets/images/buttons/savebutton.png";
 import { UserContext } from "../Usercontext";
 import ImportDiagram from './importDiagram';
-import { UserContext } from "../Usercontext"; 
-import saveButton from "../assets/images/buttons/savebutton.png";
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
@@ -283,30 +282,23 @@ const BpmnDiagram = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px', marginBottom: '10px', position: 'relative' }}>
-  <input
-    type="text"
-    value={diagramName}
-    onChange={(e) => setDiagramName(e.target.value)}
-    placeholder="Add Title"
-    style={{ width: '300px', textAlign: 'center' , marginLeft: '800px'}} 
-  />
-  <img 
-    src={saveButton}
-    alt="Save Diagram" 
-    onClick={saveDiagram} 
-    style={{ cursor: 'pointer', width: '30px', height: 'auto', position: 'absolute', right: '0', marginRight:'60px'}} 
-  />
-  <ImportDiagram onFileSelect={handleFileSelect} />
-</div>
-      <div id="canvas" style={{ width: '100%', height: '600px', border: '1px solid black' }}></div>
-      
-      {/* {fileContent && (
-        <div>
-          <h2>Uploaded File Content:</h2>
-          <pre>{fileContent}</pre>
+      <div style={{width: '90%', display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '10px', marginBottom: '10px', position: 'relative' }}>
+        <input
+          type="text"
+          value={diagramName}
+          onChange={(e) => setDiagramName(e.target.value)}
+          placeholder="Add Title"
+          style={{ width: '300px', textAlign: 'center' , marginLeft: '800px'}} 
+        />
+        <img 
+          src={saveButton}
+          alt="Save Diagram" 
+          onClick={saveDiagram} 
+          style={{ cursor: 'pointer', width: '30px', height: 'auto', position: 'absolute', right: '0', marginRight:'60px'}} 
+        />
+          <ImportDiagram onFileSelect={handleFileSelect} />
         </div>
-      )} */}
+      <div id="canvas" style={{ width: '100%', height: '600px', border: '1px solid black' }}></div>
     </div>
   );
 };
