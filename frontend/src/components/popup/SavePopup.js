@@ -13,14 +13,14 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
   };
 
   const handleSubmit = async () => {
-    await saveDiagram();
     onSubmit(inputValue);
+    info.name = inputValue;
+    await saveDiagram();
     onClose();
   };
 
   const saveDiagram = async () => {
     try {
-      
       const diagramInfo = info;
       console.log(`Diagram Name: ${diagramInfo.name}\nUser ID: ${diagramInfo.user_id}\nData: ${JSON.stringify(diagramInfo.bpmn)}\n`);
       const response = await fetch('/save-diagram', {
