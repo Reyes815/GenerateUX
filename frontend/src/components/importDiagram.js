@@ -26,7 +26,12 @@ function ImportDiagram({ onFileSelect }) {
     src={uploadButton}
     alt="Upload Bpmn" 
     onClick={handleButtonClick}
-    style={{ cursor: 'pointer', width: '30px', height: 'auto', marginLeft: '750px'}} 
+    //style={{ cursor: 'pointer', width: '30px', height: 'auto', marginLeft: '750px'}} 
+    style={{
+      cursor: 'pointer',
+      width: '30px',
+      height: 'auto',
+    }}
   />
       <input
         type="file"
