@@ -1,15 +1,14 @@
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { UserContext } from "../Usercontext";
 import ImportDiagram from './importDiagram';
-import { UserContext } from "../Usercontext"; 
-
-
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
   const [diagramName, setDiagramName] = useState('');
+  const [height, setHeight] = useState(window.innerHeight - 250);
   const modeler = useRef(null);
   const { user_id } = useContext(UserContext); 
   const handleFileSelect = (content) => {
@@ -268,10 +267,23 @@ const BpmnDiagram = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(window.innerHeight - 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
     <div>
       <h1>BPMN Diagram Modeler</h1>
-      <div id="canvas" style={{ width: '100%', height: window.innerHeight, border: '1px solid black' }}></div>
+      <div id="canvas" style={{ width: '100%', height: height, border: '1px solid black' }}></div>
       <input
         type="text"
         value={diagramName}

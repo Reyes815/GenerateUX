@@ -3,7 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Themes from '../components/popup/Themes.js';
 import BusinessRules from '../components/popup/BusinessRules.js';
-import "../assets/scss/sidebar.css";
 import Error from '../components/popup/Error.js';
 
 const Dashboard = () => {
@@ -64,12 +63,12 @@ const Dashboard = () => {
     <div className="p-3">
       <h2>Dashboard</h2>
       <div className="d-flex flex-column align-items-start"> {/* Changed to flex-column for stacking */}
-        <button className="button mb-2" onClick={handleThemesOnClick}>
-          Choose A Theme
+        <button className="button" onClick={handleThemesOnClick}>
+          Import
         </button>
         {popupThemesOpen && <Themes onClose={handleThemesClosePopup} onSubmit={handleThemesPopupSubmit} />}
         <button className="button" onClick={handleBisRulesOnClick}>
-          Add Business Rules
+          Save
         </button>
         {popupBisRulesOpen && <BusinessRules onClose={handleBisRulesClosePopup} onSubmit={handleBisRulesSubmit} />}
         {showError && <Error onClose={handleErrorClose} />}
