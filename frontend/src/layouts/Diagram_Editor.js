@@ -102,22 +102,6 @@ const BpmnDiagram = () => {
   
     // Start with basic PlantUML BPMN syntax
     let plantUML = '@startuml\n';
-  
-    // Add the start event flow
-    // if (data.activities.length > 0) {
-    //   plantUML += `(*) --> "${data.activities[0].name}"\n`;
-    // }
-
-    // Add the start event flow
-    // if (data.gateways.length > 0) {
-    //   plantUML += `(*) --> "${data.gateways[0].name}"\n`;
-    // }
-
-  
-    // Add each activity as a PlantUML action
-    // data.activities.forEach(activity => {
-    //   plantUML += `:${activity.name};\n`;
-    // });
 
     // Add sequence flows between activities
     let decision_count = 0;
@@ -132,15 +116,18 @@ const BpmnDiagram = () => {
 
       if(targetGateway && sourceStart === flow.sourceRef){
         plantUML += `(*) --> if "${targetGateway.name}" then\n`
-        // plantUML += `if "${sourceGateway.name}" then`
+      }
+
+      if(targetActivity && sourceStart === flow.sourceRef){
+        plantUML += `(*) --> "${targetActivity.name}"\n`
       }
 
       if (sourceActivity && targetActivity) {
-        // if(sourceActivity.id === data.startEventId){
-        //   plantUML += `(*) --> "${targetActivity.name}"\n`
-        // } else {
           plantUML += `"${sourceActivity.name}" --> "${targetActivity.name}"\n`;
-        // }
+      }
+
+      if(sourceActivity && targetGateway) {
+          plantUML += `"${sourceActivity.name}" --> if "${targetGateway.name}" then\n`
       }
 
       if(sourceActivity && targetEnd) {
@@ -148,24 +135,14 @@ const BpmnDiagram = () => {
       }
 
       if(sourceGateway) {
-        // if(targetGateway.id === sourceStart){
           plantUML += `-->[${flow.name}] "${targetActivity.name}"\n`;
           decision_count++;
 
           if(decision_count == 1){
             plantUML += `else\n`;
           }
-          // plantUML += `if "${sourceGateway.name}" then`
-        // }
       }
     });
-
-    // Add end events
-    // const endEvents = data.endEvents || [];
-    // endEvents.forEach(endEvent => {
-    //   plantUML += `"${endEvent.name}" --> (*)\n`;
-    // });
-
   
     // End the diagram
     plantUML += '@enduml';
@@ -193,6 +170,73 @@ const BpmnDiagram = () => {
     } catch (err) {
       console.error('Error importing diagram:', err);
     }
+  };
+
+  const generateUX = async () => {
+    try{
+      const { xml } = await modeler.current.saveXML({ format: true });
+
+      const data = parseXML(xml);
+
+      const plantUML = translateToPlantUML(data);
+
+      console.log(plantUML);
+      console.log(data);
+      console.log(xml);
+
+    } catch(err) {
+
+    }
+
+  };
+
+  const saveDiagram = async () => {
+    try {
+      const { xml } = await modeler.current.saveXML({ format: true });
+
+      
+
+      // modeler.current.destroy();
+
+
+      // modeler.current = new BpmnJS({
+      //   container: '#canvas',
+      //   keyboard: { bindTo: window },
+      // });
+
+      // openDiagram();
+      console.log(`Diagram Name: ${diagramName}`);
+      console.log(`user_id: ${user_id}`);
+
+      console.log(xml);
+
+      // You can now save the XML string to a file or send it to a server
+
+      const data1 = {
+        userId: user_id, 
+        name: diagramName,
+        bpmn: xml
+      };
+  
+      // Send the data to your backend
+      const response = await fetch('/save-diagram', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data1)
+      });
+  
+      if (response.ok) {
+        console.log('Diagram saved successfully!');
+      } else {
+        console.error('Failed to save diagram');
+      }
+    } catch (err) {
+      console.error('Could not save BPMN diagram:', err);
+    }
+
+    
   };
 
   useEffect(() => {
