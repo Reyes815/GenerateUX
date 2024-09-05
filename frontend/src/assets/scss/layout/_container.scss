@@ -1,38 +1,60 @@
 .pageWrapper {
-  min-height: 100vh;
-}
-.contentArea {
-  flex-grow: 1;
-}
-.wrapper {
-  max-width: 1300px;
-  margin: 0 auto;
-}
-.card {
-  box-shadow: $card-box-shadow;
-  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column; // Header at the top, content below
+  height: 100vh; // Full viewport height
 }
 
-.circle-box {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border-radius: 100%;
-  &.lg-box {
-    width: 60px;
-    height: 60px;
-    font-size: 21px;
-    line-height: 60px;
+.contentArea {
+  flex-grow: 1; /* Make this area take up the remaining space */
+  overflow: auto; /* Ensure content is scrollable if it overflows */
+  height: calc(100vh - 60px); /* Subtract the header height */
+  display: flex;
+}
+.editorContainer {
+  display: flex;
+  height: 100vh; // Make it span the full viewport height
+}
+
+.sidebarArea {
+  flex-shrink: 0;
+  border-right: 1px solid black;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  background-color: #f5f5f5;
+  .sidenav-bg:hover {
+    background-color: $gray-100;
+    border-radius: $border-radius;
   }
 }
-.button-group .btn {
-  margin: 3px;
+
+.diagramArea {
+  flex-grow: 1; // This will make the diagram area take the remaining space
+  background-color: #f5f5f5; // Example background color for the diagram area
+  padding: 20px; // Add some padding if needed
 }
 
-.table>:not(:first-child) {
-  border-top: 2px solid;
+@include media-breakpoint-down(lg) {
+  .sidebarArea {
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    z-index: 1;
+    margin-left: -250px; // Adjust this according to your sidebar width
+    transition: 0.2s ease-in;
+    &.showSidebar {
+      margin-left: 0px;
+    }
+  }
 }
-.table-borderless>:not(:first-child) {
-  border-top-width: 0;
+
+.button {
+  background-color: #41C9E2;
+  width: 90%; // Set width to 80% of the parent element's width
+  color: #F7EEDD;
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  display: block; // Ensures the button behaves as a block element for full width
+  text-align: center; // Center the text within the button
 }

@@ -1,7 +1,8 @@
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import BpmnJS from 'bpmn-js/dist/bpmn-modeler.development.js';
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { UserContext } from "../Usercontext";
 import ImportDiagram from './importDiagram';
 import { UserContext } from "../Usercontext"; 
 import saveButton from "../assets/images/buttons/savebutton.png";
@@ -9,6 +10,7 @@ import saveButton from "../assets/images/buttons/savebutton.png";
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
   const [diagramName, setDiagramName] = useState('');
+  const [height, setHeight] = useState(window.innerHeight - 250);
   const modeler = useRef(null);
   const { user_id } = useContext(UserContext); 
   const handleFileSelect = (content) => {
@@ -263,6 +265,19 @@ const BpmnDiagram = () => {
 
     return () => {
       modeler.current.destroy();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setHeight(window.innerHeight - 100);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 

@@ -60,6 +60,7 @@ const Header = () => {
           <i className="bi bi-list"></i>
         </Button>
       </div>
+      
       <Collapse navbar isOpen={isOpen}>
         <Nav className="me-auto" navbar>
           <NavItem>
@@ -73,28 +74,17 @@ const Header = () => {
             </Link>
           </NavItem>
         </Nav>
+        
         <Nav className="ms-auto" navbar>
           <NavItem>
-              <img
-                src={UXLogo}
-                alt="profile"
-                className="rounded-circle"
-                width="50"
-              ></img>
-          </NavItem> 
-         </Nav>
-        {/* <Nav className="ms-auto" navbar>
-          <NavItem>
-            <Link to="/profile" className="nav-link">
-              <img
-                src={user1}
-                alt="profile"
-                className="rounded-circle"
-                width="35"
-              ></img>
-            </Link>
-          </NavItem> 
-         </Nav> */}
+            <img
+              src={UXLogo}
+              alt="profile"
+              className="rounded-circle"
+              width="50"
+            />
+          </NavItem>
+        </Nav>
       </Collapse>
     </Navbar>
   );
