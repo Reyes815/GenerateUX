@@ -271,7 +271,7 @@ const BpmnDiagram = () => {
   return (
     <div>
       <h1>BPMN Diagram Modeler</h1>
-      <div id="canvas" style={{ width: '100%', height: '600px', border: '1px solid black' }}></div>
+      <div id="canvas" style={{ width: '100%', height: window.innerHeight, border: '1px solid black' }}></div>
       <input
         type="text"
         value={diagramName}
@@ -281,12 +281,6 @@ const BpmnDiagram = () => {
       />
       <button onClick={saveDiagram}>Save Diagram</button>
       <ImportDiagram onFileSelect={handleFileSelect} />
-      {/* {fileContent && (
-        <div>
-          <h2>Uploaded File Content:</h2>
-          <pre>{fileContent}</pre>
-        </div>
-      )} */}
     </div>
   );
 };

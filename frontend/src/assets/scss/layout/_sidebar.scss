@@ -1,11 +1,22 @@
+.editorContainer {
+  display: flex;
+  height: 100vh; // Make it span the full viewport height
+}
+
 .sidebarArea {
   flex-shrink: 0;
-  width: $sidebarWidth;
+  width: 250px; // Set the width for your sidebar
   background-color: $sidebarColor;
   .sidenav-bg:hover {
     background-color: $gray-100;
     border-radius: $border-radius;
   }
+}
+
+.diagramArea {
+  flex-grow: 1; // This will make the diagram area take the remaining space
+  background-color: #f5f5f5; // Example background color for the diagram area
+  padding: 20px; // Add some padding if needed
 }
 
 @include media-breakpoint-down(lg) {
@@ -14,10 +25,66 @@
     height: 100%;
     overflow: auto;
     z-index: 1;
-    margin-left: -$sidebarWidth;
+    margin-left: -250px; // Adjust this according to your sidebar width
     transition: 0.2s ease-in;
     &.showSidebar {
       margin-left: 0px;
     }
   }
+}
+
+.button {
+  background-color: #41C9E2;
+  color: #F7EEDD;
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  align-content: center;
+}
+.editorContainer {
+  display: flex;
+  height: 100vh; // Make it span the full viewport height
+}
+
+.sidebarArea {
+  flex-shrink: 0;
+  width: 250px; // Set the width for your sidebar
+  background-color: $sidebarColor;
+  .sidenav-bg:hover {
+    background-color: $gray-100;
+    border-radius: $border-radius;
+  }
+}
+
+.diagramArea {
+  flex-grow: 1; // This will make the diagram area take the remaining space
+  background-color: #f5f5f5; // Example background color for the diagram area
+  padding: 20px; // Add some padding if needed
+}
+
+@include media-breakpoint-down(lg) {
+  .sidebarArea {
+    position: fixed;
+    height: 100%;
+    overflow: auto;
+    z-index: 1;
+    margin-left: -250px; // Adjust this according to your sidebar width
+    transition: 0.2s ease-in;
+    &.showSidebar {
+      margin-left: 0px;
+    }
+  }
+}
+
+.button {
+  background-color: #41C9E2;
+  color: #F7EEDD;
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  align-content: center;
 }

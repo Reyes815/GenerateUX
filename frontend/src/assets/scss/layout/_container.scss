@@ -1,38 +1,37 @@
 .pageWrapper {
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column; // Header at the top, content below
+  height: 100vh; // Full viewport height
 }
+
 .contentArea {
-  flex-grow: 1;
-}
-.wrapper {
-  max-width: 1300px;
-  margin: 0 auto;
-}
-.card {
-  box-shadow: $card-box-shadow;
-  margin-bottom: 30px;
+  display: flex;
+  flex-grow: 1; // Take up remaining space below the header
 }
 
-.circle-box {
-  width: 40px;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border-radius: 100%;
-  &.lg-box {
-    width: 60px;
-    height: 60px;
-    font-size: 21px;
-    line-height: 60px;
+.sidebarArea {
+  width: 250px; // Sidebar width
+  background-color: $sidebarColor; // Sidebar background color
+  flex-shrink: 0; // Prevent shrinking when resizing
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); // Add shadow effect
+}
+
+.diagramArea {
+  flex-grow: 1; // Make this area fill the rest of the available space
+  padding: 20px; // Add padding around the diagram editor
+  background-color: #f5f5f5; // Example background color
+}
+
+@include media-breakpoint-down(lg) {
+  .sidebarArea {
+    position: fixed;
+    height: 100%;
+    z-index: 1;
+    left: -250px; // Hide the sidebar off-canvas initially
+    transition: left 0.2s ease-in-out; // Smooth slide-in effect
+    
+    &.showSidebar {
+      left: 0; // Slide in the sidebar when the class is added
+    }
   }
-}
-.button-group .btn {
-  margin: 3px;
-}
-
-.table>:not(:first-child) {
-  border-top: 2px solid;
-}
-.table-borderless>:not(:first-child) {
-  border-top-width: 0;
 }
