@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { UserContext } from '../../Usercontext';
+import { UserContext } from '../Usercontext';
 import { Button, Card, CardBody, CardImg, CardSubtitle, CardText, CardTitle } from 'reactstrap';
-import user1 from '../../assets/images/users/user1.jpg';
+import user1 from '../assets/images/users/user1.jpg';
 
 const Profile = () => {
   const { user_id } = useContext(UserContext); // Get the userId from URL params

@@ -1,9 +1,9 @@
-// Define the DiagramInfo class
 class DiagramInfo {
-    constructor(userId, name, bpmn) {
+    constructor(userId, name, bpmn, script) {
       this.userId = userId;
       this.name = name;
       this.bpmn = bpmn;
+      this.script = script;
     }
   
     logDetails() {

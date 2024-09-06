@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import UXLogo from "../../assets/images/logos/UX.png";
+import UXLogo from "../assets/images/logos/UX.png";
 const Registration = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

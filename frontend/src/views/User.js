@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { UserContext } from '../../Usercontext';
+import { UserContext } from '../Usercontext';
 
 
 function UserPage() {
