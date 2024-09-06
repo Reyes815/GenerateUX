@@ -1,5 +1,3 @@
-
-
 const translateToPlantUML = async (data) => {
     // if (!data || !data.startEventId || !data.endEventId) {
     //   return '@startuml\nNo start or end event found\n@enduml';

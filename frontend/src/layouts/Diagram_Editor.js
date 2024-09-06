@@ -9,7 +9,6 @@ import DiagramInfo from "../components/XML_Class";
 import { UserContext } from "../Usercontext";
 import GenerateComponent from '../assets/UtilityComponents/GenerateComponent';
 import parseXML from '../assets/UtilityComponents/ParseXMLComponent';
-import translateToPlantUML from '../assets/UtilityComponents/TranslateUMLComponent';
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
