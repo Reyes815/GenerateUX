@@ -14,7 +14,7 @@ const Registration = lazy(() => import("../views/Registration.js"));
 const User = lazy(() => import("../views/User.js"));
 const Login = lazy(() => import("../views/Login.js"));
 const Result = lazy(() => import("../views/Result.js"));
-
+const BpmnDiagram = lazy(() => import("../layouts/Diagram_Editor.js"));
 
 
 const ThemeRoutes = [
@@ -22,6 +22,7 @@ const ThemeRoutes = [
     element: <FullLayout />,
     children: [
       { path: "/user", exact: true, element: <User/> }, 
+      { path: "/diagram-editor", exact: true, element: <BpmnDiagram /> },
     ],
   },
   {

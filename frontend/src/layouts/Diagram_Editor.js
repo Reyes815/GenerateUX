@@ -9,18 +9,20 @@ import DiagramInfo from "../components/XML_Class";
 import { UserContext } from "../Usercontext";
 import GenerateComponent from '../assets/UtilityComponents/GenerateComponent';
 import parseXML from '../assets/UtilityComponents/ParseXMLComponent';
+import { useLocation } from 'react-router-dom';
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
   const [diagramName, setDiagramName] = useState('');
   const [height, setHeight] = useState(window.innerHeight - 250);
   const modeler = useRef(null);
-  const { user_id } = useContext(UserContext); 
   const [popupSaveOpen, setpopupSaveOpen] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
   const [diagramInfo, setDiagramInfo] = useState(null);
   const [generateInfo, setgenerateInfo] = useState(null);
-
+  const { state } = useLocation();
+  const { diagram } = state || {};
+  const { user_id } = useContext(UserContext); 
   const openDiagram = async () => {
     const response = await fetch('empty_bpmn.bpmn');
     const diagram = await response.text();
@@ -49,12 +51,17 @@ const BpmnDiagram = () => {
       keyboard: { bindTo: window },
     });
 
-    openDiagram();
+    if (diagram) {
+      openImportedDiagram(diagram);  
+      console.log(diagram);
+    }else{
+      openDiagram();
+    }
 
     return () => {
       modeler.current.destroy();
     };
-  }, []);
+  }, [diagram]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -66,6 +73,7 @@ const BpmnDiagram = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+    
   }, []);
 
   const handleXMLSaveSubmit = (text) => {

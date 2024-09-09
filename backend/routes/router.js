@@ -85,7 +85,7 @@ router.get('/diagrams/:user_id', async (req, res) => {
     const { user_id } = req.params;
 
     try {
-        const diagrams = await schemas.Activity_Diagram.find({ user_id: user_id }, { name: 1, _id: 0 }); 
+        const diagrams = await schemas.Activity_Diagram.find({ user_id: user_id }, { name: 1, bpmn: 1,  _id: 0 }); 
         res.json(diagrams);
     } catch (error) {
         console.error('Error fetching diagrams:', error);
