@@ -28,7 +28,7 @@ const BpmnDiagram = () => {
 
     // Initialize an array to store activities and sequence flows
     const activities = [];
-    const sequenceFlows = [];
+    let sequenceFlows = [];
     const gateways = [];
     const endEvents = [];
     // Step 3: Extract and store the id attribute
@@ -44,7 +44,7 @@ const BpmnDiagram = () => {
         sequenceFlows.push({ id, name, sourceRef, targetRef });
     }
 
-    sortSequenceFlows(sequenceFlows, startEventId);
+    sequenceFlows = sortSequenceFlows(sequenceFlows, startEventId);
 
       // Get all tasks
     const tasks = xmlDoc.getElementsByTagName('bpmn2:task');
@@ -102,49 +102,107 @@ const BpmnDiagram = () => {
     //   return '@startuml\nNo start or end event found\n@enduml';
     // }
   
-    // Start with basic PlantUML BPMN syntax
     let plantUML = '@startuml\n';
+    let done = true;
+    let gatewayStack = []; // Stack to track active gateways
+    let gatewayBranches = [];
 
-    // Add sequence flows between activities
-    let decision_count = 0;
-    data.sequenceFlows.forEach(flow => {
-      const sourceStart = data.startEventId;
-      const targetEnd = data.endEvents.find(end => end.id === flow.targetRef);
-      const sourceActivity = data.activities.find(activity => activity.id === flow.sourceRef);
-      const targetActivity = data.activities.find(activity => activity.id === flow.targetRef);
-      const sourceGateway = data.gateways.find(g => g.id === flow.sourceRef);
-      const targetGateway = data.gateways.find(g => g.id === flow.targetRef);
+    data.sequenceFlows.forEach((flow) => {
+        // let currentFlow = queue.shift();
+        const sourceGateway = data.gateways.find(g => g.id === flow.sourceRef);
+        const sourceActivity = data.activities.find(activity => activity.id === flow.sourceRef);
+        const targetActivity = data.activities.find(activity => activity.id === flow.targetRef);
+        const targetGateway = data.gateways.find(g => g.id === flow.targetRef);
+        const targetEnd = data.endEvents.find(end => end.id === flow.targetRef);
 
+        // console.log('source: ', sourceGateway);
+        // console.log('decision stack: ', gatewayStack[gatewayStack.length - 1]);
 
-      if(targetGateway && sourceStart === flow.sourceRef){
-        plantUML += `(*) --> if "${targetGateway.name}" then\n`
-      }
-
-      if(targetActivity && sourceStart === flow.sourceRef){
-        plantUML += `(*) --> "${targetActivity.name}"\n`
-      }
-
-      if (sourceActivity && targetActivity) {
-          plantUML += `"${sourceActivity.name}" --> "${targetActivity.name}"\n`;
-      }
-
-      if(sourceActivity && targetGateway) {
-          plantUML += `"${sourceActivity.name}" --> if "${targetGateway.name}" then\n`
-      }
-
-      if(sourceActivity && targetEnd) {
-          plantUML += `"${sourceActivity.name}" --> (*)\n`;
-      }
-
-      if(sourceGateway) {
-          plantUML += `-->[${flow.name}] "${targetActivity.name}"\n`;
-          decision_count++;
-
-          if(decision_count == 1){
-            plantUML += `else\n`;
+        // Process start event
+        if (flow.sourceRef === data.startEventId) {
+          if (targetGateway) {
+            plantUML += `(*) --> if "${targetGateway.name}" then\n`;
+            // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
+          } else if (targetActivity) {
+            plantUML += `(*) --> "${targetActivity.name}"\n`;
           }
-      }
+        }
+    
+        // Process activity-to-activity transitions
+        if (sourceActivity && targetActivity) {
+          plantUML += `"${sourceActivity.name}" --> "${targetActivity.name}"\n`;
+        }
+    
+        // Process activity to gateway
+        if (sourceActivity && targetGateway) {
+          plantUML += `"${sourceActivity.name}" --> if "${targetGateway.name}" then\n`;
+          // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
+        }
+
+        // Process activity to end event
+        if (sourceActivity && targetEnd) {
+          plantUML += `"${sourceActivity.name}" --> (*)\n`;
+          // if(!done) {
+          //   plantUML += "endif\n";
+          //   done = true;
+          // }
+        }
+
+        if (flow.isGatewayEnd) {
+          // if(gatewayBranches.length == 0) {
+          //   gatewayBranches.push(flow.isEndOfBranch);
+          //   console.log(gatewayBranches)
+          // } else {
+          //   gatewayBranches.pop();
+            plantUML += "endif\n";
+          //   console.log(gatewayBranches)
+          // }
+        }
+    
+        // Process gateway decisions
+        if (sourceGateway) {
+
+          console.log('current: ', sourceGateway.id);
+
+          // Check for else condition before adding the current gateway to the stack
+           if (sourceGateway.id === gatewayStack[gatewayStack.length - 1]) {
+            // console.log(gatewayStack);
+            plantUML += 'else\n';
+            gatewayStack.pop(); // Pop the gateway after processing else
+            console.log('pop: ', gatewayStack);
+
+            if(targetGateway) {
+              plantUML += `-->[${flow.name || 'true'}] if "${targetGateway.name}" then\n`;
+              // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
+            } else {
+              plantUML += `-->[${flow.name || 'true'}] "${targetActivity ? targetActivity.name : targetGateway.name}"\n`;
+            }
+
+            // if(gatewayStack.length > 0 || gatewayStack.length == 0) {
+            //   done = false;
+            // }
+
+          } else {
+            if(targetGateway) {
+              plantUML += `-->[${flow.name || 'true'}] if "${targetGateway.name}" then\n`;
+              // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
+            } else {
+              plantUML += `-->[${flow.name || 'true'}] "${targetActivity ? targetActivity.name : targetGateway.name}"\n`;
+            }
+  
+            // if(!gatewayStack.includes(sourceGateway.id)){
+              gatewayStack.push(sourceGateway.id);
+              console.log('pushed: ', gatewayStack);
+  
+            // }
+  
+            // console.log('gatewaystack: ', gatewayStack[gatewayStack.length - 1], ' ', 'source: ', sourceGateway.id); 
+          }
+        }
+
     });
+
+    console.log('decision stack: ', gatewayStack);
   
     // End the diagram
     plantUML += '@enduml';
@@ -240,10 +298,10 @@ const BpmnDiagram = () => {
   };
 
   const sortSequenceFlows = (sequenceFlows, startEventId) => {
-    // Find the flow that starts with the startEventId
     let sortedFlows = [];
     let flowMap = new Map();
-  
+    let visitedFlows = new Set();
+
     // Create a map for easy lookup of flows by sourceRef
     sequenceFlows.forEach(flow => {
       const sourceRef = flow.sourceRef;
@@ -253,23 +311,51 @@ const BpmnDiagram = () => {
       flowMap.get(sourceRef).push(flow);
     });
 
-    console.log('sorted: ', flowMap);
-  
-    // // Start from the event id (start event) and traverse the flows
-    // let queue = flowMap.get(startEventId) || [];
-  
-    // while (queue.length > 0) {
-    //   let currentFlow = queue.shift();
-    //   sortedFlows.push(currentFlow);
-  
-    //   // Get the next flows whose sourceRef matches the current flow's targetRef
-    //   let nextFlows = flowMap.get(currentFlow.targetRef);
-    //   if (nextFlows) {
-    //     queue.push(...nextFlows);
-    //   }
-    // }
-  
-    return sortedFlows;
+    // Helper function to recursively traverse the flows
+    const traverseFlows = (currentFlows) => {
+      while (currentFlows.length > 0) {
+        let currentFlow = currentFlows.shift();
+
+        if (visitedFlows.has(currentFlow.id)) {
+          // Prevent looping back to the same flow
+          continue;
+        }
+
+        // Mark the flow as visited
+        visitedFlows.add(currentFlow.id);
+        sortedFlows.push(currentFlow);
+
+        // Check if the current flow points to a gateway
+        const nextFlows = flowMap.get(currentFlow.targetRef);
+
+        if (nextFlows) {
+          if (currentFlow.targetRef.startsWith('Gateway')) {
+            // Mark the start of the gateway
+            sortedFlows.push({ isGatewayStart: true, gatewayId: currentFlow.targetRef });
+
+            // Process each branch of the gateway recursively
+            nextFlows.forEach(flow => {
+              traverseFlows([flow]);
+            });
+
+            // After all branches have been processed, mark the end of the gateway
+            sortedFlows.push({ isGatewayEnd: true, gatewayId: currentFlow.targetRef });
+          } else {
+            // Otherwise, just follow the next flow in sequence
+            traverseFlows(nextFlows);
+          }
+        } else {
+          // If there are no next flows, it's the end of a branch
+          sortedFlows.push({ isEndOfBranch: true });
+        }
+      }
+    };
+
+      // Start from the event id (start event) and traverse the flows
+      let initialFlows = flowMap.get(startEventId) || [];
+      traverseFlows(initialFlows);
+
+      return sortedFlows;
   };
   
 
@@ -310,8 +396,10 @@ const BpmnDiagram = () => {
     const { xml } = await modeler.current.saveXML({ format: true });
     const data = parseXML(xml);
 
+
     if (data) {
       const diagramInfo = new DiagramInfo(user_id, diagramName, xml);  // Create DiagramInfo instance
+      console.log('diagramInfo: ', diagramInfo);
       setDiagramInfo(diagramInfo);  // Store it in state
       setpopupSaveOpen(true);  // Open the popup
     } else {

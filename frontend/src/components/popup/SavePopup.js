@@ -4,9 +4,11 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import axios from 'axios';
 import DiagramInfo from "../XML_Class";
+import { UserContext } from "../../Usercontext";
 
 const SavePopup = ({ onClose, onSubmit, info }) => {
   const [inputValue, setInputValue] = useState('');
+  const { user_id } = useContext(UserContext); 
 
   const handleChange = (event) => {
     setInputValue(event.target.value);
@@ -15,6 +17,8 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
   const handleSubmit = async () => {
     onSubmit(inputValue);
     info.name = inputValue;
+    info.userId = user_id;
+    console.log(user_id);
     await saveDiagram();
     onClose();
   };
@@ -22,7 +26,7 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
   const saveDiagram = async () => {
     try {
       const diagramInfo = info;
-      console.log(`Diagram Name: ${diagramInfo.name}\nUser ID: ${diagramInfo.user_id}\nData: ${JSON.stringify(diagramInfo.bpmn)}\n`);
+      console.log(`Diagram Name: ${diagramInfo.name}\nUser ID: ${diagramInfo.userId}\nData: ${JSON.stringify(diagramInfo.bpmn)}\n`);
       const response = await fetch('/save-diagram', {
         method: 'POST',
         headers: {
