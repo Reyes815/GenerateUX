@@ -8,7 +8,7 @@ const GenerateComponent = async (modeler, user_id, setgenerateInfo) => {
         const data = parseXML(xml);
         const plantUML = translateToPlantUML(data);
 
-        const generateInfo = new DiagramInfo(user_id, "", "", plantUML);
+        const generateInfo = new DiagramInfo(user_id, xml, "", plantUML);
         setgenerateInfo(generateInfo);
         
         console.log(generateInfo);
