@@ -1,6 +1,6 @@
 import sortSequenceFlows from "./SortSeqComponent";
 
-const parseXML = async (xmlString) => {
+const parseXML = (xmlString) => {
     // Parse XML string to DOM
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(xmlString, "application/xml");
@@ -10,7 +10,7 @@ const parseXML = async (xmlString) => {
 
     // Initialize an array to store activities and sequence flows
     const activities = [];
-    const sequenceFlows = [];
+    let sequenceFlows = [];
     const gateways = [];
     const endEvents = [];
     // Step 3: Extract and store the id attribute
@@ -26,7 +26,7 @@ const parseXML = async (xmlString) => {
         sequenceFlows.push({ id, name, sourceRef, targetRef });
     }
 
-    sortSequenceFlows(sequenceFlows, startEventId);
+    sequenceFlows = sortSequenceFlows(sequenceFlows, startEventId);
 
       // Get all tasks
     const tasks = xmlDoc.getElementsByTagName('bpmn2:task');

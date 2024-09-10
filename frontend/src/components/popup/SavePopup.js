@@ -8,6 +8,7 @@ import { UserContext } from "../../Usercontext";
 
 const SavePopup = ({ onClose, onSubmit, info }) => {
   const [inputValue, setInputValue] = useState('');
+  const { user_id } = UserContext();
   let diagramInfo = new DiagramInfo();
 
   const handleChange = (event) => {

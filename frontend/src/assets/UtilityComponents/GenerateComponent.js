@@ -12,6 +12,7 @@ const GenerateComponent = async (modeler, user_id, setgenerateInfo) => {
         setgenerateInfo(generateInfo);
         
         console.log(generateInfo);
+        console.log(plantUML);
         console.log("GenerateButton");
     } catch (err) {
     console.log("error", err);
