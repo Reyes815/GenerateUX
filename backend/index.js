@@ -21,7 +21,7 @@ app.use(cors(corsOptions));
 
 app.use('/', router); 
 
-app.post('/generate-plantuml', async (req, res) => {
+app.post('/api/generate-plantuml', async (req, res) => {
     const { script } = req.body;
 
     try {

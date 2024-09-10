@@ -7,7 +7,6 @@ const NoSidebarLayout = () => {
     <main>
       <div className="pageWrapper d-lg-flex">
         <div className="contentArea">
-          <Header />
           <Container className="p-4 wrapper" fluid>
             <Outlet />
           </Container>

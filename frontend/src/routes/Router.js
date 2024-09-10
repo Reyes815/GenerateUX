@@ -15,6 +15,7 @@ const User = lazy(() => import("../views/User.js"));
 const Login = lazy(() => import("../views/Login.js"));
 const Result = lazy(() => import("../views/Result.js"));
 const BpmnDiagram = lazy(() => import("../layouts/Diagram_Editor.js"));
+const GenerateResult = lazy(() => import("../assets/UtilityComponents/GenerateResult.js"));
 
 
 const ThemeRoutes = [
@@ -29,6 +30,7 @@ const ThemeRoutes = [
     element: <NoSidebarLayout />,
     children: [
       { path: "/result", exact: true, element: <Result/> },
+      { path: "/PlantUMLResult", exact: true, element: <GenerateResult/> },
     ],
   },
   {

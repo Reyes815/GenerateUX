@@ -84,28 +84,25 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="p-3">
-      <h2>Dashboard</h2>
-      <div className="d-flex flex-column align-items-start">
-        <ul style={listStyle}>
-          {diagrams.length > 0 ? (
-            diagrams.map((diagram, index) => (
-              <li key={index}>
-                <button 
-                  onClick={() => handleDiagramClick(diagram?.bpmn)} 
-                  style={{ background: 'none', border: 'none', color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
-                >
-                  {diagram.name}
-                </button>
-              </li>
-            ))
-          ) : (
-            <li>No diagrams available</li>
-          )}
-        </ul>
-        {showError && <div>Error loading diagrams.</div>}
-      </div>
+  <div className="p-3">
+    <h2>Dashboard</h2>
+    <div className="d-flex flex-column align-items-center">
+      <ul className="dashboard-list">
+        {diagrams.length > 0 ? (
+          diagrams.map((diagram, index) => (
+            <li key={index}>
+              <button className="dashboard-button" onClick={() => handleDiagramClick(diagram?.bpmn)}>
+                {diagram.name}
+              </button>
+            </li>
+          ))
+        ) : (
+          <li>No diagrams available</li>
+        )}
+      </ul>
+      {showError && <div>Error loading diagrams.</div>}
     </div>
+  </div>
   );
 };
 

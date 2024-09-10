@@ -4,11 +4,9 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import axios from 'axios';
 import DiagramInfo from "../XML_Class";
-import { UserContext } from "../../Usercontext";
 
 const SavePopup = ({ onClose, onSubmit, info }) => {
   const [inputValue, setInputValue] = useState('');
-  const { user_id } = UserContext();
   let diagramInfo = new DiagramInfo();
 
   const handleChange = (event) => {
@@ -18,8 +16,8 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
   const handleSubmit = async () => {
     onSubmit(inputValue);
     info.name = inputValue;
-    info.userId = user_id;
-    console.log(user_id);
+    //info.userId = user_id;
+    //console.log(user_id);
     await saveDiagram();
     onClose();
   };
