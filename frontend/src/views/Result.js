@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import Iframe from '../../Iframe';
+import Iframe from '../Iframe';
 import axios from 'axios';
-import { UserContext } from "../../Usercontext"; 
+import { UserContext } from "../Usercontext"; 
 import DOMPurify from 'dompurify';
 
 function Result() {

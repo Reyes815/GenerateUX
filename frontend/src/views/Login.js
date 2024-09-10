@@ -13,8 +13,8 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { UserContext } from "../../Usercontext";
-import UXLogo from "../../assets/images/logos/UX.png";
+import { UserContext } from "../Usercontext";
+import UXLogo from "../assets/images/logos/UX.png";
 
 const Login = () => {
   const [username, setUsername] = useState("");

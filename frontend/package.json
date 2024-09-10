@@ -38,6 +38,7 @@
     "react-router-dom": "6.12.1",
     "reactstrap": "9.1.10",
     "sass": "1.63.2",
+    "starter-bt5": "file:",
     "web-vitals": "3.3.2"
   },
   "scripts": {

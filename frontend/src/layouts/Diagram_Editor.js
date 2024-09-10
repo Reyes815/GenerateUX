@@ -7,209 +7,22 @@ import ImportDiagram from '../components/importDiagram';
 import SavePopup from '../components/popup/SavePopup';
 import DiagramInfo from "../components/XML_Class";
 import { UserContext } from "../Usercontext";
+import GenerateComponent from '../assets/UtilityComponents/GenerateComponent';
+import parseXML from '../assets/UtilityComponents/ParseXMLComponent';
+import { useLocation } from 'react-router-dom';
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
   const [diagramName, setDiagramName] = useState('');
   const [height, setHeight] = useState(window.innerHeight - 250);
   const modeler = useRef(null);
-  const { user_id } = useContext(UserContext); 
   const [popupSaveOpen, setpopupSaveOpen] = useState(false);
   const [submittedText, setSubmittedText] = useState('');
   const [diagramInfo, setDiagramInfo] = useState(null);
-
-  const parseXML = (xmlString) => {
-    // Parse XML string to DOM
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlString, "application/xml");
-
-    // Step 2: Locate the <bpmn2:startEvent> element
-    const startEvent = xmlDoc.getElementsByTagName('bpmn2:startEvent')[0];
-
-    // Initialize an array to store activities and sequence flows
-    const activities = [];
-    let sequenceFlows = [];
-    const gateways = [];
-    const endEvents = [];
-    // Step 3: Extract and store the id attribute
-    if (startEvent) {
-    const startEventId = startEvent.getAttribute('id');
-      // Get all sequence flows
-    const flows = xmlDoc.getElementsByTagName('bpmn2:sequenceFlow');
-    for (let flow of flows) {
-        const id = flow.getAttribute('id');
-        const name = flow.getAttribute('name');
-        const sourceRef = flow.getAttribute('sourceRef');
-        const targetRef = flow.getAttribute('targetRef');
-        sequenceFlows.push({ id, name, sourceRef, targetRef });
-    }
-
-    sequenceFlows = sortSequenceFlows(sequenceFlows, startEventId);
-
-      // Get all tasks
-    const tasks = xmlDoc.getElementsByTagName('bpmn2:task');
-    for (let task of tasks) {
-        const taskId = task.getAttribute('id');
-        const taskName = task.getAttribute('name');
-
-        // Ensure task has a name
-        if (taskName) {
-        activities.push({
-            id: taskId,
-            name: taskName,
-        });
-        }
-    }
-    // Extract exclusive gateways
-    const gatewayElements = xmlDoc.getElementsByTagName('bpmn2:exclusiveGateway');
-    for (let gateway of gatewayElements) {
-        const id = gateway.getAttribute('id');
-        const name = gateway.getAttribute('name');
-        gateways.push({ id, name });
-    }
-
-    // Extract end events
-    const endEventElements = xmlDoc.getElementsByTagName('bpmn2:endEvent');
-    for (let endEvent of endEventElements) {
-        const id = endEvent.getAttribute('id');
-        // const name = endEvent.getAttribute('name');
-        // if (name) {
-        endEvents.push({ id });
-        // }
-    }
-
-    // Check if every activity is connected by a sequence flow
-    for (let activity of activities) {
-        const isConnected = sequenceFlows.some(flow => 
-        flow.sourceRef === activity.id || flow.targetRef === activity.id
-        );
-
-        if (!isConnected) {
-        console.error(`Error: Activity ${activity.name} (id: ${activity.id}) is not connected by any sequence flow.`);
-        return null; // Stop further processing if an error is found
-        }
-    }
-
-    return { startEventId, endEvents, activities, sequenceFlows, gateways };
-
-    } else {
-    console.error('Start Event not found!');
-    }
-};
-
-  const translateToPlantUML = (data) => {
-    // if (!data || !data.startEventId || !data.endEventId) {
-    //   return '@startuml\nNo start or end event found\n@enduml';
-    // }
-  
-    let plantUML = '@startuml\n';
-    let done = true;
-    let gatewayStack = []; // Stack to track active gateways
-    let gatewayBranches = [];
-
-    data.sequenceFlows.forEach((flow) => {
-        // let currentFlow = queue.shift();
-        const sourceGateway = data.gateways.find(g => g.id === flow.sourceRef);
-        const sourceActivity = data.activities.find(activity => activity.id === flow.sourceRef);
-        const targetActivity = data.activities.find(activity => activity.id === flow.targetRef);
-        const targetGateway = data.gateways.find(g => g.id === flow.targetRef);
-        const targetEnd = data.endEvents.find(end => end.id === flow.targetRef);
-
-        // console.log('source: ', sourceGateway);
-        // console.log('decision stack: ', gatewayStack[gatewayStack.length - 1]);
-
-        // Process start event
-        if (flow.sourceRef === data.startEventId) {
-          if (targetGateway) {
-            plantUML += `(*) --> if "${targetGateway.name}" then\n`;
-            // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
-          } else if (targetActivity) {
-            plantUML += `(*) --> "${targetActivity.name}"\n`;
-          }
-        }
-    
-        // Process activity-to-activity transitions
-        if (sourceActivity && targetActivity) {
-          plantUML += `"${sourceActivity.name}" --> "${targetActivity.name}"\n`;
-        }
-    
-        // Process activity to gateway
-        if (sourceActivity && targetGateway) {
-          plantUML += `"${sourceActivity.name}" --> if "${targetGateway.name}" then\n`;
-          // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
-        }
-
-        // Process activity to end event
-        if (sourceActivity && targetEnd) {
-          plantUML += `"${sourceActivity.name}" --> (*)\n`;
-          // if(!done) {
-          //   plantUML += "endif\n";
-          //   done = true;
-          // }
-        }
-
-        if (flow.isGatewayEnd) {
-          // if(gatewayBranches.length == 0) {
-          //   gatewayBranches.push(flow.isEndOfBranch);
-          //   console.log(gatewayBranches)
-          // } else {
-          //   gatewayBranches.pop();
-            plantUML += "endif\n";
-          //   console.log(gatewayBranches)
-          // }
-        }
-    
-        // Process gateway decisions
-        if (sourceGateway) {
-
-          console.log('current: ', sourceGateway.id);
-
-          // Check for else condition before adding the current gateway to the stack
-           if (sourceGateway.id === gatewayStack[gatewayStack.length - 1]) {
-            // console.log(gatewayStack);
-            plantUML += 'else\n';
-            gatewayStack.pop(); // Pop the gateway after processing else
-            console.log('pop: ', gatewayStack);
-
-            if(targetGateway) {
-              plantUML += `-->[${flow.name || 'true'}] if "${targetGateway.name}" then\n`;
-              // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
-            } else {
-              plantUML += `-->[${flow.name || 'true'}] "${targetActivity ? targetActivity.name : targetGateway.name}"\n`;
-            }
-
-            // if(gatewayStack.length > 0 || gatewayStack.length == 0) {
-            //   done = false;
-            // }
-
-          } else {
-            if(targetGateway) {
-              plantUML += `-->[${flow.name || 'true'}] if "${targetGateway.name}" then\n`;
-              // gatewayStack.push(targetGateway.id); // Push gateway onto the stack
-            } else {
-              plantUML += `-->[${flow.name || 'true'}] "${targetActivity ? targetActivity.name : targetGateway.name}"\n`;
-            }
-  
-            // if(!gatewayStack.includes(sourceGateway.id)){
-              gatewayStack.push(sourceGateway.id);
-              console.log('pushed: ', gatewayStack);
-  
-            // }
-  
-            // console.log('gatewaystack: ', gatewayStack[gatewayStack.length - 1], ' ', 'source: ', sourceGateway.id); 
-          }
-        }
-
-    });
-
-    console.log('decision stack: ', gatewayStack);
-  
-    // End the diagram
-    plantUML += '@enduml';
-  
-    return plantUML;
-  };
-
+  const [generateInfo, setgenerateInfo] = useState(null);
+  const { state } = useLocation();
+  const { diagram } = state || {};
+  const { user_id } = useContext(UserContext); 
   const openDiagram = async () => {
     const response = await fetch('empty_bpmn.bpmn');
     const diagram = await response.text();
@@ -365,12 +178,17 @@ const BpmnDiagram = () => {
       keyboard: { bindTo: window },
     });
 
-    openDiagram();
+    if (diagram) {
+      openImportedDiagram(diagram);  
+      console.log(diagram);
+    }else{
+      openDiagram();
+    }
 
     return () => {
       modeler.current.destroy();
     };
-  }, []);
+  }, [diagram]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -382,6 +200,7 @@ const BpmnDiagram = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
     };
+    
   }, []);
 
   const handleXMLSaveSubmit = (text) => {
@@ -419,7 +238,11 @@ const BpmnDiagram = () => {
       </div>
       <div id="canvas" style={{ width: '100%', height: height, border: '1px solid black' }}></div>
       <div className="d-flex align-items-center">
-        <button onClick={generateUX}>Generate UX</button>
+        <button onClick={() => GenerateComponent(modeler, user_id, setgenerateInfo)}>
+          Generate UX
+        </button>
+        {/* <button onClick={handleGenerate}>Generate UX</button> */}
+        {/* <GenerateResult/> */}
         <ImportDiagram onFileSelect={handleFileSelect} />
         <img
           src={saveButton}

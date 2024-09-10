@@ -8,7 +8,7 @@ import { UserContext } from "../../Usercontext";
 
 const SavePopup = ({ onClose, onSubmit, info }) => {
   const [inputValue, setInputValue] = useState('');
-  const { user_id } = useContext(UserContext); 
+  let diagramInfo = new DiagramInfo();
 
   const handleChange = (event) => {
     setInputValue(event.target.value);
@@ -25,7 +25,7 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
 
   const saveDiagram = async () => {
     try {
-      const diagramInfo = info;
+      diagramInfo = info;
       console.log(`Diagram Name: ${diagramInfo.name}\nUser ID: ${diagramInfo.userId}\nData: ${JSON.stringify(diagramInfo.bpmn)}\n`);
       const response = await fetch('/save-diagram', {
         method: 'POST',
