@@ -81,6 +81,27 @@ router.post('/save-diagram', async (req, res) => {
     }
 });
 
+router.post('/api/generate-plantuml', async (req, res) => {
+    const { script } = req.body;
+
+    try {
+        const krokiUrl = 'https://kroki.io/plantuml/png';
+        const response = await axios.post(krokiUrl, script, {
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            responseType: 'arraybuffer'
+        });
+
+        const imageUrl = `data:image/png;base64,${Buffer.from(response.data).toString('base64')}`;
+        res.json({ imageUrl });
+    } catch (error) {
+        console.error("Error generating PlantUML image with Kroki:", error);
+        res.status(500).json({ error: 'Failed to generate PlantUML image.' });
+    }
+});
+
+
 router.get('/diagrams/:user_id', async (req, res) => {
     const { user_id } = req.params;
 

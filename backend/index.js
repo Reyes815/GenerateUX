@@ -21,26 +21,6 @@ app.use(cors(corsOptions));
 
 app.use('/', router); 
 
-app.post('/api/generate-plantuml', async (req, res) => {
-    const { script } = req.body;
-
-    try {
-        const krokiUrl = 'https://kroki.io/plantuml/png';
-        const response = await axios.post(krokiUrl, script, {
-            headers: {
-                'Content-Type': 'text/plain'
-            },
-            responseType: 'arraybuffer'
-        });
-
-        const imageUrl = `data:image/png;base64,${Buffer.from(response.data).toString('base64')}`;
-        res.json({ imageUrl });
-    } catch (error) {
-        console.error("Error generating PlantUML image with Kroki:", error);
-        res.status(500).json({ error: 'Failed to generate PlantUML image.' });
-    }
-});
-
 mongoose.connect(process.env.DB_URI)
     .then(() => console.log('Database Connection Successful'))
     .catch(err => console.log(err));

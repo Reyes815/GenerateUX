@@ -27,7 +27,6 @@ const BpmnDiagram = () => {
   const { state } = useLocation();
   const { diagram } = state || {};
   const { user_id } = useContext(UserContext); 
-  const [promptText, setPromptText] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const navigate = useNavigate();
 
@@ -101,9 +100,10 @@ const BpmnDiagram = () => {
       const generatedText = await response.text();
       console.log(plantUML);
       console.log(generatedText);
-      setPromptText(generatedText);
-      const newResponse = await axios.post('/api/generate-plantuml', { script: promptText });
-      setImageUrl(newResponse.data.imageUrl);
+      const newResponse = await axios.post('http://localhost:4000/api/generate-plantuml', { script: generatedText });
+      const imageUrl = newResponse.data.imageUrl;
+      //setImageUrl(newResponse.data.imageUrl);
+      navigate('/PlantUMLResult', { state: { imageUrl } });
     } catch(err) {
       console.log("error", err);
     }
@@ -255,7 +255,7 @@ const BpmnDiagram = () => {
             info={diagramInfo}  // Pass diagramInfo to the popup
           />
         )}
-        <img src={imageUrl} alt="Generated PlantUML Diagram" />
+        {/* <img src={imageUrl} alt="Generated PlantUML Diagram" /> */}
       </div>
     </div>
   );

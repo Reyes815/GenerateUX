@@ -12,7 +12,7 @@ function PlantUMLGenerator() {
   const handleSubmit = async () => {
     try {
       // Send the script to your Node.js backend
-      const response = await axios.post('/api/generate-plantuml', { script: inputValue });
+      const response = await axios.post('http://localhost:4000/api/generate-plantuml', { script: inputValue });
       
       // Set the generated image URL to state
       setImageUrl(response.data.imageUrl);
