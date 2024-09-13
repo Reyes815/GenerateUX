@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from "../Usercontext";
-
+import refreshButton from "../assets/images/buttons/refresh-button.png";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [popupThemesOpen, setThemesPopupOpen] = useState(false);
@@ -59,6 +59,28 @@ const Dashboard = () => {
     setShowError(false);
   };
 
+  const fetchDiagrams = () => {
+    if (user_id) {
+      axios.get(`/diagrams/${user_id}`)
+        .then(response => {
+          console.log(response.data);
+          setDiagrams(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching diagrams:', error);
+          setShowError(true);
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchDiagrams();
+  }, [user_id]);
+
+  const refreshDashboard = () => {
+    fetchDiagrams(); // 
+  };
+
   useEffect(() => {
     if (user_id) {
       axios.get(`/diagrams/${user_id}`)
@@ -86,6 +108,20 @@ const Dashboard = () => {
   return (
   <div className="p-3">
     <h2>Dashboard</h2>
+    <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+  <img
+    src={refreshButton}
+    alt="Refresh"
+    onClick={refreshDashboard}
+    style={{
+      cursor: 'pointer',
+      width: '30px',
+      height: 'auto',
+      marginLeft: '10px',
+      marginBottom: '10px'
+    }}
+  />
+</div>
     <div className="d-flex flex-column align-items-center">
       <ul className="dashboard-list">
         {diagrams.length > 0 ? (

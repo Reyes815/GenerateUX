@@ -67,19 +67,32 @@ router.post('/save-diagram', async (req, res) => {
     const { userId, name, bpmn } = req.body;
 
     try {
-        const newDiagram = new schemas.Activity_Diagram({
-            user_id: userId,
-            name: name,
-            bpmn: bpmn
-        });
+        // Try to find and update an existing diagram
+        const updatedDiagram = await schemas.Activity_Diagram.findOneAndUpdate(
+            { user_id: userId, name: name },  // Query to find by userId and name
+            { $set: { bpmn: bpmn } },         // Only update the BPMN field
+            { new: true }                     // Return the updated document
+        );
 
-        await newDiagram.save();
-        res.status(201).send('Diagram saved successfully');
+        if (updatedDiagram) {
+            res.status(200).send('Diagram updated successfully');
+        } else {
+            // If no diagram was found, create a new one
+            const newDiagram = new schemas.Activity_Diagram({
+                user_id: userId,
+                name: name,
+                bpmn: bpmn
+            });
+
+            await newDiagram.save();
+            res.status(201).send('New diagram saved successfully');
+        }
     } catch (error) {
-        console.error('Error saving diagram:', error);
-        res.status(500).send('Error saving diagram');
+        console.error('Error saving/updating diagram:', error);
+        res.status(500).send('Error saving/updating diagram');
     }
 });
+
 
 router.post('/api/generate-plantuml', async (req, res) => {
     const { script } = req.body;
