@@ -52,7 +52,7 @@ const BpmnDiagram = () => {
     }
   };
 
-  const generateUX = async () => {
+  const generateUX = async ( retryCount = 3 ) => {
     try{
       //data prepocessing
       const { xml } = await modeler.current.saveXML({ format: true });
@@ -84,9 +84,9 @@ const BpmnDiagram = () => {
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const generatedText = await response.text();
-      const endoutput = await parseTextToPlantUML(generatedText);
-      console.log(plantUML);
-      console.log(generatedText);
+      const endoutput = parseTextToPlantUML(generatedText);
+      // console.log(plantUML);
+      // console.log(generatedText);
       console.log('endoutput:\n', endoutput);
       const newResponse = await axios.post('http://localhost:4000/api/generate-plantuml', { script: endoutput });
       const imageUrl = newResponse.data.imageUrl;
@@ -94,27 +94,41 @@ const BpmnDiagram = () => {
       navigate('/PlantUMLResult', { state: { imageUrl } });
     } catch(err) {
       console.log("error", err);
+
+      // Retry logic: retryCount controls how many times to retry before giving up
+      if (retryCount > 0) {
+        console.log(`Retrying... Attempts left: ${retryCount - 1}`);
+        await generateUX(retryCount - 1);  // Recursive call with a decremented retryCount
+      } else {
+        console.error("Max retry attempts reached. Failed to generate UX.");
+      }
     }
   };
 
-  const parseTextToPlantUML = async (text) => {
+  const parseTextToPlantUML = (text) => {
     const lines = text.split("\n").map(line => line.trim());
+    console.log(text);
     const screens = [];
     const connections = [];
 
     let parsingScreens = false;
     let parsingConnections = false;
 
+    const screenSectionRegex = /.*(Screens).*/;  // Match headers like "## Screens:" or "**Screens:**"
+    const connectionSectionRegex = /.*(Connections).*/;  // Match headers like "## Connections:"
+
     lines.forEach(line => {
-      if (line.startsWith("**Screens:**")) {
+      console.log('line: ', line, ' | ', screenSectionRegex.test(line));
+      console.log('2line: ', line, ' | ', connectionSectionRegex.test(line));
+      if (screenSectionRegex.test(line)) {
         parsingScreens = true;
         parsingConnections = false;
-      } else if (line.startsWith("**Connections:**")) {
+      } else if (connectionSectionRegex.test(line)) {
         parsingScreens = false;
         parsingConnections = true;
-      } else if (parsingScreens && line.startsWith("-")) {
+      } else if (parsingScreens && line.startsWith("-") || parsingScreens && line.startsWith("*")) {
         screens.push(line.substring(2).trim());
-      } else if (parsingConnections && line.startsWith("-")) {
+      } else if (parsingConnections && line.startsWith("-") || parsingConnections && line.startsWith("*")) {
         const connection = line.substring(2).trim().split(" --> ");
         if (connection.length === 2) {
           const [from, rest] = connection;
@@ -127,6 +141,7 @@ const BpmnDiagram = () => {
     // Generate PlantUML script
     let plantUMLScript = "@startuml\n";
     plantUMLScript += "(*) --> \"" + screens[0] + "\"\n";
+    console.log(screens);
 
     connections.forEach(({ from, to, action }) => {
       plantUMLScript += `"${from}" --> [${action}] "${to}"\n`;
