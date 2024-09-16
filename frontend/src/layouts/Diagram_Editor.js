@@ -56,6 +56,7 @@ const BpmnDiagram = () => {
     try{
       //data prepocessing
       const { xml } = await modeler.current.saveXML({ format: true });
+      console.log(xml);
       const data = parseXML(xml);
       const plantUML = translateToPlantUML(data);
       //save the data into a class
@@ -67,46 +68,73 @@ const BpmnDiagram = () => {
       setgenerateInfo(generateInfo);
       //prompt generation
       const prompt = `
-          Convert the following PlantUML activity diagram script into a state diagram
-          and dont include any other words apart from the script and dont forget to include
-          "@startuml" and "@enduml":
-          use this as an example:
-          @startuml
-          (*) --> action
-          action --> decision
-          decision --> decision1 : yes
-          decision1 --> action2 : yes
-          action2 --> action4
-          action4 --> (*)
-          decision --> decision2 : no
-          decision2 --> action5 : yes
-          action5 --> (*)
-          decision2 --> action6 : no
-          action6 --> (*)
-          decision --> decision3 : no
-          decision3 --> action1 : yes
-          action1 --> action8
-          action8 --> (*)
-          decision3 --> action7 : no
-          action7 --> (*)
-          @enduml
+          Give me the user experience given this activity Diagram for an app:
           Activity Diagram:
           ${plantUML}
-          
-          State Diagram:
+
+          First list the screens of the app.
+          "Screens:"
+
+          Second use the screens to make connections for possible user interactions.
+          Use arrows with the description inbetween them for these connections.
+          Use this format:
+          <Screen X> --> <Screen Y> : <Description>
+          "Connections:"
       `;
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const generatedText = await response.text();
+      const endoutput = await parseTextToPlantUML(generatedText);
       console.log(plantUML);
       console.log(generatedText);
-      const newResponse = await axios.post('http://localhost:4000/api/generate-plantuml', { script: generatedText });
+      console.log('endoutput:\n', endoutput);
+      const newResponse = await axios.post('http://localhost:4000/api/generate-plantuml', { script: endoutput });
       const imageUrl = newResponse.data.imageUrl;
       //setImageUrl(newResponse.data.imageUrl);
       navigate('/PlantUMLResult', { state: { imageUrl } });
     } catch(err) {
       console.log("error", err);
     }
+  };
+
+  const parseTextToPlantUML = async (text) => {
+    const lines = text.split("\n").map(line => line.trim());
+    const screens = [];
+    const connections = [];
+
+    let parsingScreens = false;
+    let parsingConnections = false;
+
+    lines.forEach(line => {
+      if (line.startsWith("**Screens:**")) {
+        parsingScreens = true;
+        parsingConnections = false;
+      } else if (line.startsWith("**Connections:**")) {
+        parsingScreens = false;
+        parsingConnections = true;
+      } else if (parsingScreens && line.startsWith("-")) {
+        screens.push(line.substring(2).trim());
+      } else if (parsingConnections && line.startsWith("-")) {
+        const connection = line.substring(2).trim().split(" --> ");
+        if (connection.length === 2) {
+          const [from, rest] = connection;
+          const [to, action] = rest.split(" : ");
+          connections.push({ from: from.trim(), to: to.trim(), action: action.trim() });
+        }
+      }
+    });
+
+    // Generate PlantUML script
+    let plantUMLScript = "@startuml\n";
+    plantUMLScript += "(*) --> \"" + screens[0] + "\"\n";
+
+    connections.forEach(({ from, to, action }) => {
+      plantUMLScript += `"${from}" --> [${action}] "${to}"\n`;
+    });
+
+    plantUMLScript += "@enduml";
+    // setParsedOutput(plantUMLScript);
+    return plantUMLScript;
   };
 
   const saveDiagram = async () => {
