@@ -54,18 +54,22 @@ const BpmnDiagram = () => {
 
   const generateUX = async ( retryCount = 3 ) => {
     try{
+
       //data prepocessing
       const { xml } = await modeler.current.saveXML({ format: true });
-      console.log(xml);
       const data = parseXML(xml);
       const plantUML = translateToPlantUML(data);
+
       //save the data into a class
       const generateInfo = new DiagramInfo(user_id, xml, "", plantUML);
+
       //prepare the api call
       const genAI = new GoogleGenerativeAI(API_Key);
       const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+
       //set the current info from the one created
       setgenerateInfo(generateInfo);
+
       //prompt generation
       const prompt = `
           Give me the user experience given this activity Diagram for an app:
@@ -85,13 +89,11 @@ const BpmnDiagram = () => {
       const response = await result.response;
       const generatedText = await response.text();
       const endoutput = parseTextToPlantUML(generatedText);
-      // console.log(plantUML);
-      // console.log(generatedText);
-      console.log('endoutput:\n', endoutput);
+      
       const newResponse = await axios.post('http://localhost:4000/api/generate-plantuml', { script: endoutput });
       const imageUrl = newResponse.data.imageUrl;
-      //setImageUrl(newResponse.data.imageUrl);
       navigate('/PlantUMLResult', { state: { imageUrl } });
+
     } catch(err) {
       console.log("error", err);
 
@@ -107,7 +109,6 @@ const BpmnDiagram = () => {
 
   const parseTextToPlantUML = (text) => {
     const lines = text.split("\n").map(line => line.trim());
-    console.log(text);
     const screens = [];
     const connections = [];
 
@@ -118,8 +119,6 @@ const BpmnDiagram = () => {
     const connectionSectionRegex = /.*(Connections).*/;  // Match headers like "## Connections:"
 
     lines.forEach(line => {
-      console.log('line: ', line, ' | ', screenSectionRegex.test(line));
-      console.log('2line: ', line, ' | ', connectionSectionRegex.test(line));
       if (screenSectionRegex.test(line)) {
         parsingScreens = true;
         parsingConnections = false;
@@ -141,14 +140,12 @@ const BpmnDiagram = () => {
     // Generate PlantUML script
     let plantUMLScript = "@startuml\n";
     plantUMLScript += "(*) --> \"" + screens[0] + "\"\n";
-    console.log(screens);
 
     connections.forEach(({ from, to, action }) => {
       plantUMLScript += `"${from}" --> [${action}] "${to}"\n`;
     });
 
     plantUMLScript += "@enduml";
-    // setParsedOutput(plantUMLScript);
     return plantUMLScript;
   };
 
@@ -244,7 +241,6 @@ const BpmnDiagram = () => {
     // console.log(promptText);
     // //window.location.assign(`/#/PlantUMLResult?texts=${promptText}`);
     // navigate('/PlantUMLResult', { state: { texts: promptText } });
-    console.log("navigate");
   };
 
   const handleXMLSaveOnClick = async () => {
