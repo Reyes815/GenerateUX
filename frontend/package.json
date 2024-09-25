@@ -35,6 +35,7 @@
     "react-dom": "18.2.0",
     "react-icons": "^5.0.1",
     "react-konva": "^18.2.10",
+    "react-loading-indicators": "^1.0.0",
     "react-router-dom": "6.12.1",
     "reactstrap": "9.1.10",
     "sass": "1.63.2",

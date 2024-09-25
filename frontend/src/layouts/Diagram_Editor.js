@@ -12,10 +12,14 @@ import { UserContext } from "../Usercontext";
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import translateToPlantUML from '../assets/UtilityComponents/TranslateUMLComponent';
 import { useNavigate } from 'react-router-dom';
+import "react-loading-indicators"
 import axios from 'axios';
+import { Atom } from 'react-loading-indicators';
+import LoadingModal from '../components/popup/LoadingModal';
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
+  const [generating, setGenerating] = useState(false);
   const [diagramName, setDiagramName] = useState('');
   const [height, setHeight] = useState(window.innerHeight - 250);
   const modeler = useRef(null);
@@ -54,6 +58,8 @@ const BpmnDiagram = () => {
 
   const generateUX = async ( retryCount = 3 ) => {
     try{
+      //Set Loading indicator
+      setGenerating(true);
 
       //data prepocessing
       const { xml } = await modeler.current.saveXML({ format: true });
@@ -104,6 +110,8 @@ const BpmnDiagram = () => {
       } else {
         console.error("Max retry attempts reached. Failed to generate UX.");
       }
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -270,6 +278,7 @@ const BpmnDiagram = () => {
       </div> */}
       <div id="canvas" style={{ width: '100%', height: height, border: '1px solid black' }}></div>
       <div className="d-flex align-items-center">
+        <LoadingModal loading={generating} />
         {/* <button onClick={() => GenerateComponent(modeler, user_id, setgenerateInfo)}>
           Generate UX
         </button> */}
