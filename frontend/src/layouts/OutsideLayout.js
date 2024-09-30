@@ -7,7 +7,6 @@ const OutsideLayout = () => {
     <main>
       <div className="pageWrapper d-lg-flex">
         <div className="contentArea">
-          {/********Middle Content**********/}
           <Container className="p-4 wrapper" fluid>
             <Outlet />
           </Container>

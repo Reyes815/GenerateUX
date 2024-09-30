@@ -16,8 +16,6 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
   const handleSubmit = async () => {
     onSubmit(inputValue);
     info.name = inputValue;
-    //info.userId = user_id;
-    //console.log(user_id);
     await saveDiagram();
     onClose();
   };
@@ -52,10 +50,9 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
           <textarea
             value={inputValue}
             onChange={handleChange}
-            placeholder="Add title..."
+            placeholder=""
             style={{
               minWidth: '300px',
-              minHeight: '10px',
               resize: 'none', 
               padding: '5px', 
               boxSizing: 'border-box', 
@@ -63,7 +60,7 @@ const SavePopup = ({ onClose, onSubmit, info }) => {
               whiteSpace: 'pre-wrap', 
             }}
           />
-          <div className="d-flex align-items-center">
+          <div className="button-group">
             <button className="button2" onClick={handleSubmit}>Confirm</button>
             <button className="button2" onClick={onClose}>Close</button>
           </div>

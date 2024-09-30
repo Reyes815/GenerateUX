@@ -42,13 +42,13 @@ const Login = () => {
 
 
   return (
-    <Row>
-      <Col>
+    <Row style={{ justifyContent: 'center' }}>
+      <Col style={{ maxWidth: '800px' }}>
         <Card>
           <CardTitle
             tag="h2"
-            className="border-bottom p-3 mb-0"
-            style={{ textAlign: "center", color: "#008DDA" }}
+            className="p-3 mb-0"
+            style={{ textAlign: "center", color: "#008DDA", borderBottom: "1px solid #41C9E2" }}
           >
             <img
                 src={UXLogo}

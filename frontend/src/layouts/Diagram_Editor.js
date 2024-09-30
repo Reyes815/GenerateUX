@@ -108,52 +108,52 @@ const BpmnDiagram = () => {
     }
   };
 
-  const saveDiagram = async () => {
-    try {
-      const { xml } = await modeler.current.saveXML({ format: true });
+  // const saveDiagram = async () => {
+  //   try {
+  //     const { xml } = await modeler.current.saveXML({ format: true });
 
       
 
-      // modeler.current.destroy();
+  //     // modeler.current.destroy();
 
 
-      // modeler.current = new BpmnJS({
-      //   container: '#canvas',
-      //   keyboard: { bindTo: window },
-      // });
+  //     // modeler.current = new BpmnJS({
+  //     //   container: '#canvas',
+  //     //   keyboard: { bindTo: window },
+  //     // });
 
-      // openDiagram();
-      console.log(`Diagram Name: ${diagramName}`);
-      console.log(`user_id: ${user_id}`);
+  //     // openDiagram();
+  //     console.log(`Diagram Name: ${diagramName}`);
+  //     console.log(`user_id: ${user_id}`);
 
-      console.log(xml);
+  //     console.log(xml);
 
-      // You can now save the XML string to a file or send it to a server
+  //     // You can now save the XML string to a file or send it to a server
 
-      const data1 = {
-        userId: user_id, 
-        name: diagramName,
-        bpmn: xml
-      };
+  //     const data1 = {
+  //       userId: user_id, 
+  //       name: diagramName,
+  //       bpmn: xml
+  //     };
   
-      // Send the data to your backend
-      const response = await fetch('/save-diagram', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data1)
-      });
+  //     // Send the data to your backend
+  //     const response = await fetch('/save-diagram', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(data1)
+  //     });
   
-      if (response.ok) {
-        console.log('Diagram saved successfully!');
-      } else {
-        console.error('Failed to save diagram');
-      }
-    } catch (err) {
-      console.error('Could not save BPMN diagram:', err);
-    }
-  };
+  //     if (response.ok) {
+  //       console.log('Diagram saved successfully!');
+  //     } else {
+  //       console.error('Failed to save diagram');
+  //     }
+  //   } catch (err) {
+  //     console.error('Could not save BPMN diagram:', err);
+  //   }
+  // };
   
 
   useEffect(() => {
@@ -225,8 +225,9 @@ const BpmnDiagram = () => {
         Additional buttons can be placed here
       </div> */}
       <div id="canvas" style={{ width: '100%', height: height, border: '1px solid black' }}></div>
+      <br/>
       <div className="d-flex align-items-center">
-        <button onClick={handleGenerate}>Generate UX</button> 
+        <button onClick={handleGenerate} style={buttonStyle}>Generate UX</button> 
         <ImportDiagram onFileSelect={handleFileSelect} />
         <img
           src={saveButton}
@@ -250,6 +251,14 @@ const BpmnDiagram = () => {
       </div>
     </div>
   );
+};
+
+const buttonStyle = {
+  backgroundColor: "#41C9E2",
+  padding: "8px 20px",
+  borderRadius: "4px",
+  border: "none",
+  cursor: "pointer",
 };
 
 export default BpmnDiagram;

@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import {
+  Row,
+  Col,
+  Card,
+  CardTitle,
+  CardBody,
+  Button, Form,
+  FormGroup,
+  Label,
+  Input } from 'reactstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import UXLogo from "../assets/images/logos/UX.png";
@@ -42,10 +51,14 @@ const Registration = () => {
   };
 
   return (
-    <Row>
-      <Col>
+    <Row style={{ justifyContent: 'center' }}>
+      <Col style={{ maxWidth: '800px' }}>
         <Card>
-          <CardTitle tag="h2" className="border-bottom p-3 mb-0" style={{ textAlign: 'center', color: '#008DDA' }}>
+        <CardTitle
+            tag="h2"
+            className="p-3 mb-0"
+            style={{ textAlign: "center", color: "#008DDA", borderBottom: "1px solid #41C9E2" }}
+          >
           <img
                 src={UXLogo}
                 alt="profile"
@@ -64,6 +77,7 @@ const Registration = () => {
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
+                  style={{ ...inputStyle }}
                 />
               </FormGroup>
               <FormGroup>
@@ -74,6 +88,7 @@ const Registration = () => {
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required
+                  style={{ ...inputStyle }}
                 />
               </FormGroup>
               <FormGroup>
@@ -84,6 +99,7 @@ const Registration = () => {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
+                  style={{ ...inputStyle }}
                 />
               </FormGroup>
               <FormGroup>
@@ -94,6 +110,7 @@ const Registration = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  style={{ ...inputStyle }}
                 />
               </FormGroup>
               <div style={{ textAlign: 'center', marginTop: '10px' }}>
@@ -103,13 +120,7 @@ const Registration = () => {
               <div style={{ textAlign: 'center' }}>
                 <Button
                   className="mt-2"
-                  style={{
-                    backgroundColor: '#41C9E2',
-                    padding: '8px 20px',
-                    borderRadius: '4px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
+                  style={{ ...buttonStyle}}
                   type="submit"
                 >
                   Submit
@@ -122,6 +133,21 @@ const Registration = () => {
       </Col>
     </Row>
   );
+};
+
+const inputStyle = {
+  width: "100%",
+  padding: "5px",
+  borderRadius: "4px",
+  border: "1px solid #41C9E2",
+};
+
+const buttonStyle = {
+  backgroundColor: "#41C9E2",
+  padding: "8px 20px",
+  borderRadius: "4px",
+  border: "none",
+  cursor: "pointer",
 };
 
 export default Registration;
