@@ -17,6 +17,8 @@ import "react-loading-indicators"
 import axios from 'axios';
 import { Atom } from 'react-loading-indicators';
 import LoadingModal from '../components/popup/LoadingModal';
+import { LoadingIndicator } from 'react-loading-indicators';
+
 
 const BpmnDiagram = () => {
   const [fileContent, setFileContent] = useState('');
