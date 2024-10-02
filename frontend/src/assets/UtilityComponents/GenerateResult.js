@@ -14,9 +14,9 @@ const GenerateResult = () => {
     try {
       const saveData = {
         user_id: user_id, 
-        html: imageUrl,  
+        imageUrl: imageUrl,
       };
-
+      console.log('Saving data:', saveData);
       const response = await axios.post('http://localhost:4000/wireframe', saveData);
       
       if (response.status === 200) {
@@ -28,6 +28,7 @@ const GenerateResult = () => {
       console.error("Error while saving UX wireframe:", error);
     }
   };
+  
 
   return (
     <div style={styles.container}>

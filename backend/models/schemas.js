@@ -11,8 +11,9 @@ const userSchema = new Schema({
 
 const wireframeSchema = new Schema({
     user_id: { type: Schema.Types.ObjectId, ref: 'Users' }, 
-    htmlCode: { type: String, text: true }
-});
+    imageUrl: { type: String, required: true } 
+  });
+  
 
 const activityDiagramSchema= new Schema ({
     user_id: { type: Schema.Types.ObjectId, ref: 'Users' }, 
