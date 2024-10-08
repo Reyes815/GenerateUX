@@ -49,7 +49,6 @@ router.get('/users', async (req, res) => {
 
 router.post('/wireframe', async (req, res) => {
     const { user_id, imageUrl } = req.body; 
-    console.log('Data to be saved:', { user_id, imageUrl });
     try {
         const newWireframe = new schemas.Wireframe({
             user_id: user_id,
