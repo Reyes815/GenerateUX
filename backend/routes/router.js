@@ -48,15 +48,15 @@ router.get('/users', async (req, res) => {
 });
 
 router.post('/wireframe', async (req, res) => {
-    const { user_id, imageUrl } = req.body; 
+    const { user_id, imageUrl, title} = req.body; 
     try {
         const newWireframe = new schemas.Wireframe({
             user_id: user_id,
-            imageUrl: imageUrl
+            imageUrl: imageUrl,
+            title: title
         });
 
         const savedWireframe = await newWireframe.save();
-        console.log(`Wireframe created for user with ID ${user_id}.`); 
         res.status(201).send('Wireframe created successfully');
     } catch (error) {
         console.error('Error creating wireframe:', error);
@@ -125,6 +125,23 @@ router.get('/diagrams/:user_id', async (req, res) => {
     } catch (error) {
         console.error('Error fetching diagrams:', error);
         res.status(500).send('Error fetching diagrams');
+    }
+});
+
+router.get('/wireframes/:user_id', async (req, res) => {
+    const { user_id } = req.params;
+
+    try {
+        const wireframes = await schemas.Wireframe.find({ user_id: user_id }, { title: 1, imageUrl: 1, _id: 0 });
+
+        if (wireframes.length > 0) {
+            res.json(wireframes); 
+        } else {
+            res.status(404).send('No wireframes found for this user');
+        }
+    } catch (error) {
+        console.error('Error fetching wireframes:', error);
+        res.status(500).send('Error fetching wireframes');
     }
 });
 

@@ -11,7 +11,8 @@ const userSchema = new Schema({
 
 const wireframeSchema = new Schema({
     user_id: { type: Schema.Types.ObjectId, ref: 'Users' }, 
-    imageUrl: { type: String, required: true } 
+    imageUrl: { type: String, required: true },
+    title: { type: String, required: true } 
   });
   
 
